@@ -231,6 +231,7 @@
             let breakCheck = 0;
             for (let i = 1; i <= 86; i++) {
                 if (breakCheck) {
+                    output = "请检查最终车号, 范围在(40~86)为正确车号\n\n" + output;
                     break;
                 }
                 for (let j = 0; j < 8; j++) {
@@ -319,7 +320,6 @@
         if (output == ""){
             output = "无匹配项";
         }
-        output = "请检查最终车号, 范围在(40~86)为正确车号\n\n" + output;
         return output;
     }
     function line06(id, type) {
