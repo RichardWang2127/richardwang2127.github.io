@@ -94,6 +94,10 @@
     </select>
     <input type="number" id="train-id" placeholder="车号" />
     <input type="number" id="carriage-id" style="display:;" placeholder="车体号" />
+    <select id="line-01-type">
+        <option value="1">01A01~01A04</option>
+        <option value="2">01A05~01A07</option>
+    </select>
     <input type="number" id="train-carriage-id" style="display:none;" placeholder="车厢号" />
     <button onclick="submitInfo()">查询</button>
     <div class="output" id="outputBox">信息：暂无。</div>
@@ -229,9 +233,9 @@
         } else if (type == 1) {
             console.log(id);
             let breakCheck = 0;
-            for (let i = 1; i <= 86; i++) {
+            for (let i = 40; i <= 86; i++) {
                 if (breakCheck) {
-                    output = "请检查最终车号, 范围在(40~86)为正确车号\n\n" + output;
+                    output = "仅查找车号40~86的列车\n\n" + output;
                     break;
                 }
                 for (let j = 0; j < 8; j++) {
@@ -611,7 +615,7 @@
             output = "";
         }
         else {
-            output = "内容未填!";
+            output = "内容未填或有误";
         }
         document.getElementById("outputBox").textContent = output;
     }
