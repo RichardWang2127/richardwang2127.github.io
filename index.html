@@ -64,6 +64,7 @@
                 padding: 15px;
             }
         }
+
         .forbidden {
             cursor: not-allowed;
         }
@@ -101,9 +102,9 @@
         </select>
         <input type="number" id="train-id" placeholder="车号" />
         <select id="line-01-type" style="display:none;">
-            <option value="0" disabled>01A01</option>
-            <option value="1" disabled>01A02~01A04</option>
-            <option value="2" selected>01A05~01A07</option>
+            <option value="0">01A01/01A03</option>
+            <option value="1" selected>01A02/01A04</option>
+            <option value="2">01A05~01A07</option>
         </select>
         <input type="number" id="carriage-id" style="display:true;" placeholder="车体号" />
         <input type="number" id="train-carriage-id" style="display:none;" placeholder="车厢号" />
@@ -239,88 +240,171 @@
                 output = output + `${arr_1[id][0]} ${arr_1[id][1]} ${arr_1[id][2]} ${arr_1[id][3]}\n`;
                 output = output + `${arr_1[id][4]} ${arr_1[id][5]} ${arr_1[id][6]} ${arr_1[id][7]}`;
             } else if (type == 1) {
-                console.log(id);
+                // console.log(id);
                 let breakCheck = 0;
-                const train_04_05 = document.getElementById("train-id").value.trim();
-                if (train_04_05 == "1") {
-
-                }
-                if (id.slice(0, 3) == "257" || id.slice(0, 5) == "01257") {
-                    output = output + `请输入[012373]查找错印的0140车\n`;
-                }
-                for (let i = 40; i <= 86; i++) {
-                    if (breakCheck) {
-                        output = "仅查找车号40~86的列车\n\n" + output;
-                        break;
-                    }
-                    for (let j = 0; j < 8; j++) {
-                        // special: 012373 014681
-                        if (arr_1[i][j] == ("01" + id)) {
-                            console.log(id);
-                            if (i > 39 && i < 56) {
-                                output = output + `1号线 01${i} 第${j + 1}节\n01A05 胖头鱼(0140~0155)\n`;
-                            } else if (i > 55 && i < 67) {
-                                output = output + `1号线 01${i} 第${j + 1}节\n01A06 钢铁侠(0156~0166)\n`;
-                            } else {
-                                output = output + `1号线 010${i} 第${j + 1}节\n01A07 钢铁侠二世(01067~01086)\n`
-                            }
-                            output = output + `${arr_1[i][0]} ${arr_1[i][1]} ${arr_1[i][2]} ${arr_1[i][3]}\n`;
-                            output = output + `${arr_1[i][4]} ${arr_1[i][5]} ${arr_1[i][6]} ${arr_1[i][7]}`;
-                            breakCheck = 1;
+                const train_04_05 = document.getElementById("line-01-type").value.trim();
+                // console.log(train_04_05)
+                if (train_04_05 == "0") {
+                    console.log("0th type");
+                    for (let i = 1; i <= 25; i++) {
+                        if (breakCheck) {
+                            output = "仅查找车号1~10,14,17~25的列车\n\n" + output;
                             break;
                         }
-                        else if (arr_1[i][j] == id) {
-                            if (i > 39 && i < 56) {
-                                output = output + `1号线 01${i} 第${j + 1}节\n01A05 胖头鱼(0140~0155)\n`;
-                            } else if (i > 55 && i < 67) {
-                                output = output + `1号线 01${i} 第${j + 1}节\n01A06 钢铁侠(0156~0166)\n`;
-                            } else {
-                                output = output + `1号线 010${i} 第${j + 1}节\n01A07 钢铁侠二世(01067~01086)\n`
-                            }
-                            output = output + `${arr_1[i][0]} ${arr_1[i][1]} ${arr_1[i][2]} ${arr_1[i][3]}\n`;
-                            output = output + `${arr_1[i][4]} ${arr_1[i][5]} ${arr_1[i][6]} ${arr_1[i][7]}`;
-                            breakCheck = 1;
-                            break;
+                        if (i > 10 && i < 14 || i > 14 && i < 17) {
+                            continue;
                         }
-                        //012373[错印为012573] 014681[开始错印]
-                        else if (id == "2373" && arr_1[i][j] == "012373[错印为012573]" || id == "4681" && arr_1[i][j] == "014681[开始错印]") {
-                            if (i > 39 && i < 56) {
-                                output = output + `1号线 01${i} 第${j + 1}节\n01A05 胖头鱼(0140~0155)\n`;
-                            } else if (i > 55 && i < 67) {
-                                output = output + `1号线 01${i} 第${j + 1}节\n01A06 钢铁侠(0156~0166)\n`;
-                            } else {
-                                output = output + `1号线 010${i} 第${j + 1}节\n01A07 钢铁侠二世(01067~01086)\n`
-                            }
-                            output = output + `${arr_1[i][0]} ${arr_1[i][1]} ${arr_1[i][2]} ${arr_1[i][3]}\n`;
-                            output = output + `${arr_1[i][4]} ${arr_1[i][5]} ${arr_1[i][6]} ${arr_1[i][7]}`;
-                            breakCheck = 1;
-                            break;
-                        }
-                        else {
-                            let status = 0;
-                            if (arr_1[i][j] == undefined) {
-                                continue;
-                            }
-                            console.log(arr_1[i][j]);
-                            if (arr_1[i][j].slice(0, 5) == "01" + id.slice(0, 3)) {
-                                status = 1;
-                            }
-                            else if (arr_1[i][j].slice(0, 5) == id.slice(0, 5)) {
-                                status = 2;
-                            }
-                            if (status) {
-                                // console.log(status, i);
-                                if (i > 39 && i < 56) {
-                                    output = output + `你可能想找${arr_1[i][j]}\n1号线 01${i} 第${j + 1}节\n01A05 胖头鱼(0140~0155)\n`;
-                                } else if (i > 55 && i < 67) {
-                                    output = output + `你可能想找${arr_1[i][j]}\n1号线 01${i} 第${j + 1}节\n01A06 钢铁侠(0156~0166)\n`;
-                                } else {
-                                    output = output + `你可能想找${arr_1[i][j]}\n1号线 010${i} 第${j + 1}节\n01A07 钢铁侠二世(01067~01086)\n`
+                        for (let j = 0; j < 8; j++) {
+                            if (arr_1[i][j] == id) {
+                                // console.log(i, j);
+                                if (i > 0 && i < 11 && i != 2 || i == 14) {
+                                    let p = "";
+                                    if (i < 10) p = "0";
+                                    output = output + `1号线 1${p}${i}\n数据准确度未知, 仅参考\n01A01 老老八(101, 103~110, 114)\n`;
+                                } else if (i == 2) {
+                                    output = output + `1号线 102\n01A01 不死老老八(102)\n`;
+                                } else if (i > 10 && i < 17 && i != 14) {
+                                    output = output + `1号线 1${i}\n01A02 伪八二世(111~113, 115, 116)\n`;
+                                } else if (i == 17) {
+                                    output = output + `1号线 117\n01A03 不死老八(117)\n`;
+                                } else if (i > 17 && i < 26) {
+                                    output = output + `1号线 1${i}\n01A03 老八(118~125)\n`;
+                                } else if (i > 25 && i < 38) {
+                                    output = output + `1号线 1${i}\n01A04 伪八(126~137)\n`;
                                 }
                                 output = output + `${arr_1[i][0]} ${arr_1[i][1]} ${arr_1[i][2]} ${arr_1[i][3]}\n`;
                                 output = output + `${arr_1[i][4]} ${arr_1[i][5]} ${arr_1[i][6]} ${arr_1[i][7]}`;
                                 breakCheck = 1;
                                 break;
+                            }
+                            // else if (arr_1[i][j])
+                        }
+                    }
+                }
+                if (train_04_05 == "1") {
+                    // console.log("first type");
+                    for (let i = 11; i <= 37; i++) {
+                        if (breakCheck) {
+                            output = "仅查找车号11~13, 14~16, 26~37的列车\n\n" + output;
+                            break;
+                        }
+                        if (i == 14 || 17 <= i && i <= 25) {
+                            continue;
+                        }
+                        for (let j = 0; j < 8; j++) {
+                            if (arr_1[i][j] == ("01" + id)) {
+                                // console.log(id);
+                                if (i > 10 && i < 17 && i != 14) {
+                                    output = output + `1号线 1${i}\n01A02 伪八二世(111~113, 115, 116)\n`;
+                                } else if (i == 17) {
+                                    output = output + `1号线 117\n01A03 不死老八(117)\n`;
+                                } else if (i > 17 && i < 26) {
+                                    output = output + `1号线 1${i}\n01A03 老八(118~125)\n`;
+                                } else if (i > 25 && i < 38) {
+                                    output = output + `1号线 1${i}\n01A04 伪八(126~137)\n`;
+                                }
+                                output = output + `${arr_1[i][0]} ${arr_1[i][1]} ${arr_1[i][2]} ${arr_1[i][3]}\n`;
+                                output = output + `${arr_1[i][4]} ${arr_1[i][5]} ${arr_1[i][6]} ${arr_1[i][7]}`;
+                                breakCheck = 1;
+                                break;
+                            }
+                            else if (arr_1[i][j] == id) {
+                                if (i > 10 && i < 17 && i != 14) {
+                                    output = output + `1号线 1${i}\n01A02 伪八二世(111~113, 115, 116)\n`;
+                                } else if (i == 17) {
+                                    output = output + `1号线 117\n01A03 不死老八(117)\n`;
+                                } else if (i > 17 && i < 26) {
+                                    output = output + `1号线 1${i}\n01A03 老八(118~125)\n`;
+                                } else if (i > 25 && i < 38) {
+                                    output = output + `1号线 1${i}\n01A04 伪八(126~137)\n`;
+                                }
+                                output = output + `${arr_1[i][0]} ${arr_1[i][1]} ${arr_1[i][2]} ${arr_1[i][3]}\n`;
+                                output = output + `${arr_1[i][4]} ${arr_1[i][5]} ${arr_1[i][6]} ${arr_1[i][7]}`;
+                                breakCheck = 1;
+                                break;
+                            }
+                            // else if (arr_1[i][j])
+                        }
+                    }
+                }
+                if (train_04_05 == "2") {
+                    if (id.slice(0, 3) == "257" || id.slice(0, 5) == "01257") {
+                        output = output + `请输入[012373]查找错印的0140车\n`;
+                    }
+                    for (let i = 40; i <= 86; i++) {
+                        if (breakCheck) {
+                            output = "仅查找车号40~86的列车\n\n" + output;
+                            break;
+                        }
+                        for (let j = 0; j < 8; j++) {
+                            // special: 012373 014681
+                            if (arr_1[i][j] == ("01" + id)) {
+                                // console.log(id);
+                                if (i > 39 && i < 56) {
+                                    output = output + `1号线 01${i} 第${j + 1}节\n01A05 胖头鱼(0140~0155)\n`;
+                                } else if (i > 55 && i < 67) {
+                                    output = output + `1号线 01${i} 第${j + 1}节\n01A06 钢铁侠(0156~0166)\n`;
+                                } else {
+                                    output = output + `1号线 010${i} 第${j + 1}节\n01A07 钢铁侠二世(01067~01086)\n`
+                                }
+                                output = output + `${arr_1[i][0]} ${arr_1[i][1]} ${arr_1[i][2]} ${arr_1[i][3]}\n`;
+                                output = output + `${arr_1[i][4]} ${arr_1[i][5]} ${arr_1[i][6]} ${arr_1[i][7]}`;
+                                breakCheck = 1;
+                                break;
+                            }
+                            else if (arr_1[i][j] == id) {
+                                if (i > 39 && i < 56) {
+                                    output = output + `1号线 01${i} 第${j + 1}节\n01A05 胖头鱼(0140~0155)\n`;
+                                } else if (i > 55 && i < 67) {
+                                    output = output + `1号线 01${i} 第${j + 1}节\n01A06 钢铁侠(0156~0166)\n`;
+                                } else {
+                                    output = output + `1号线 010${i} 第${j + 1}节\n01A07 钢铁侠二世(01067~01086)\n`
+                                }
+                                output = output + `${arr_1[i][0]} ${arr_1[i][1]} ${arr_1[i][2]} ${arr_1[i][3]}\n`;
+                                output = output + `${arr_1[i][4]} ${arr_1[i][5]} ${arr_1[i][6]} ${arr_1[i][7]}`;
+                                breakCheck = 1;
+                                break;
+                            }
+                            //012373[错印为012573] 014681[开始错印]
+                            else if (id == "2373" && arr_1[i][j] == "012373[错印为012573]" || id == "4681" && arr_1[i][j] == "014681[开始错印]") {
+                                if (i > 39 && i < 56) {
+                                    output = output + `1号线 01${i} 第${j + 1}节\n01A05 胖头鱼(0140~0155)\n`;
+                                } else if (i > 55 && i < 67) {
+                                    output = output + `1号线 01${i} 第${j + 1}节\n01A06 钢铁侠(0156~0166)\n`;
+                                } else {
+                                    output = output + `1号线 010${i} 第${j + 1}节\n01A07 钢铁侠二世(01067~01086)\n`
+                                }
+                                output = output + `${arr_1[i][0]} ${arr_1[i][1]} ${arr_1[i][2]} ${arr_1[i][3]}\n`;
+                                output = output + `${arr_1[i][4]} ${arr_1[i][5]} ${arr_1[i][6]} ${arr_1[i][7]}`;
+                                breakCheck = 1;
+                                break;
+                            }
+                            else {
+                                let status = 0;
+                                if (arr_1[i][j] == undefined) {
+                                    continue;
+                                }
+                                console.log(arr_1[i][j]);
+                                if (arr_1[i][j].slice(0, 5) == "01" + id.slice(0, 3)) {
+                                    status = 1;
+                                }
+                                else if (arr_1[i][j].slice(0, 5) == id.slice(0, 5)) {
+                                    status = 2;
+                                }
+                                if (status) {
+                                    // console.log(status, i);
+                                    if (i > 39 && i < 56) {
+                                        output = output + `你可能想找${arr_1[i][j]}\n1号线 01${i} 第${j + 1}节\n01A05 胖头鱼(0140~0155)\n`;
+                                    } else if (i > 55 && i < 67) {
+                                        output = output + `你可能想找${arr_1[i][j]}\n1号线 01${i} 第${j + 1}节\n01A06 钢铁侠(0156~0166)\n`;
+                                    } else {
+                                        output = output + `你可能想找${arr_1[i][j]}\n1号线 010${i} 第${j + 1}节\n01A07 钢铁侠二世(01067~01086)\n`
+                                    }
+                                    output = output + `${arr_1[i][0]} ${arr_1[i][1]} ${arr_1[i][2]} ${arr_1[i][3]}\n`;
+                                    output = output + `${arr_1[i][4]} ${arr_1[i][5]} ${arr_1[i][6]} ${arr_1[i][7]}`;
+                                    breakCheck = 1;
+                                    break;
+                                }
                             }
                         }
                     }
@@ -461,34 +545,22 @@
                         p = '';
                     }
                     output = output + `8号线 080${p}${id}\n08C01 蓝精灵(08001~08028)\n`;
-                    // /*
                     let id_ = id - 1, train_type;
                     let base = id_ * 6;
                     let cur = base;
                     for (let X = 1; X <= 6; X++) {
                         cur = base + X;
-                        if (cur < 10) {
-                            cur = `00${cur}`;
-                        }
-                        else if (cur < 100) {
-                            cur = `0${cur}`
-                        }
-                        if (X == 1 || X == 6) {
-                            train_type = 1;
-                        }
-                        else if (X == 2 || X == 5) {
-                            train_type = 2;
-                        }
-                        else {
-                            train_type = 3;
-                        }
+                        if (cur < 10) cur = `00${cur}`;
+                        else if (cur < 100) cur = `0${cur}`
+                        if (X == 1 || X == 6) train_type = 1;
+                        else if (X == 2 || X == 5) train_type = 2;
+                        else train_type = 3;
                         output = output + `08${cur}${train_type} `;
                     }
-                    // */
                     // output = output + `${arr_8[id][0]} ${arr_8[id][1]} ${arr_8[id][2]} `;
                     // output = output + `${arr_8[id][3]} ${arr_8[id][4]} ${arr_8[id][5]}`;
                 }
-                else{
+                else {
                     if (id >= 29 && id <= 46) {
                         output = output + `8号线 080${id}\n08C02 泥鳅(08029~08046)\n`;
                     } else if (id >= 47 && id <= 66) {
@@ -650,7 +722,7 @@
         });
         selects.forEach(select => {
             select.addEventListener('input', submitInfo);
-        }); 
+        });
         submitInfo();
     </script>
 </body>
