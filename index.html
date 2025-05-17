@@ -76,18 +76,19 @@
         <h1>列车查询</h1>
         <select id="line">
             <option value="select-notice-line" disabled>选择线路: </option>
-            <option value="line-01">1号线(-新功能开发中-)</option>
-            <option value="line-06">6号线(-初测-)</option>
-            <option value="line-08" selected>8号线(-初测-)</option>
-            <option value="line-09">9号线(-初测-)</option>
+            <option value="line-01">1号线(有更新)</option>
+            <option value="line-06">6号线(-50%-)</option>
+            <option value="line-07">7号线(新!-初测-)</option>
+            <option value="line-08">8号线(-50%-)</option>
+            <option value="line-09">9号线(-50%-)</option>
             <option value="line-02" disabled>2号线(-未支持-)</option>
             <option value="line-03" disabled>3号线(-未支持-)</option>
             <option value="line-04" disabled>4号线(-未支持-)</option>
             <option value="line-05" disabled>5号线(-未支持-)</option>
-            <!--<option value="line-06" disabled>6号线(-开发中-)</option>-->
-            <option value="line-07" disabled>7号线(-未支持-)</option>
-            <!--<option value="line-08" disabled>8号线(-开发中-)</option>-->
-            <!--<option value="line-09" selected>9号线(初测)</option>-->
+            <!--<option value="line-06">6号线</option>-->
+            <!-- <option value="line-07">7号线</option> -->
+            <!--<option value="line-08">8号线</option>-->
+            <!--<option value="line-09">9号线</option>-->
             <option value="line-10" disabled>10号线(-未支持-)</option>
             <option value="line-11" disabled>11号线(-未支持-)</option>
             <option value="line-12" disabled>12号线(-未支持-)</option>
@@ -97,8 +98,9 @@
             <option value="line-16" disabled>16号线(-未支持-)</option>
             <option value="line-17" disabled>17号线(-未支持-)</option>
             <option value="line-18" disabled>18号线(-未支持-)</option>
-            <option value="line-mag" disabled>磁浮线(-未支持-)</option>
-            <option value="line-jc" disabled>机场联络线(-未支持-)</option>
+            <option value="line-t01" disabled>浦江线(-未支持-)</option>
+            <!-- <option value="line-mag" disabled>磁浮线(-未支持-)</option> -->
+            <!-- <option value="line-jc" disabled>机场联络线(-未支持-)</option> -->
         </select>
         <input type="number" id="train-id" placeholder="车号" />
         <select id="line-01-type" style="display:none;">
@@ -112,6 +114,10 @@
         <div class="output" id="outputBox">信息：暂无。</div>
     </div>
     <p class="footer" align="center" style="font-size: 13px;">Update: 2025.5.17 10:00; Version: 0.1.6</p>
+    <div class="container">
+        <p class="footer" align="center" style="font-size: 13px;">显示开发信息<input type="checkbox" id="developNews" name="develop" value="show" style="display: inline-block;"></p>
+        <div class="output" id="developBox" style="display:none;">开发信息：<br>下一计划: <br>10号线50%;<br>6号线100%。</div>
+    </div>
     <script>
         function line01(id, type) {
             //01A01~01A07 Table
@@ -236,7 +242,7 @@
                 if (id == 67 || id == 68) {
                     output = output + `特殊: 车门蜂鸣与01A06相同\n`
                 }
-                console.log(arr_1[id][1], id);
+                // console.log(arr_1[id][1], id);
                 output = output + `${arr_1[id][0]} ${arr_1[id][1]} ${arr_1[id][2]} ${arr_1[id][3]}\n`;
                 output = output + `${arr_1[id][4]} ${arr_1[id][5]} ${arr_1[id][6]} ${arr_1[id][7]}`;
             } else if (type == 1) {
@@ -245,7 +251,7 @@
                 const train_04_05 = document.getElementById("line-01-type").value.trim();
                 // console.log(train_04_05)
                 if (train_04_05 == "0") {
-                    console.log("0th type");
+                    // console.log("0th type");
                     for (let i = 1; i <= 25; i++) {
                         if (breakCheck) {
                             output = "仅查找车号1~10,14,17~25的列车\n\n" + output;
@@ -384,7 +390,7 @@
                                 if (arr_1[i][j] == undefined) {
                                     continue;
                                 }
-                                console.log(arr_1[i][j]);
+                                // console.log(arr_1[i][j]);
                                 if (arr_1[i][j].slice(0, 5) == "01" + id.slice(0, 3)) {
                                     status = 1;
                                 }
@@ -530,8 +536,51 @@
             }
             return output;
         }
+        function line07(id, type) {
+            //07A Table
+            // 07A Tc Mp M M Mp Tc
+            let output = ``;
+            if (type == 0) {
+                if (!(id > 0 && id < 80)) {
+                    return "此列车不存在, 7号线允许车号: 1~79";
+                }
+                if (id >= 1 && id <= 42) {
+                    let p = '';
+                    if (id < 10) {
+                        p = "0";
+                    }
+                    output = output + `7号线 07${p}${id}\n07A01 芬达(0701~0742)\n`;
+                } else if (id >= 43 && id <= 72) {
+                    output = output + `7号线 07${id}\n07A02 邦迪(0743~0772)\n`;
+                } else if (id >= 73 && id <= 79) {
+                    output = output + `7号线 070${id}\n07A03 邦迪二世(07073~07079)\n`;
+                }
+                // console.log(id);
+                let id_ = id - 1, train_type;
+                let base = id_ * 6;
+                let cur = base;
+                for (let X = 1; X <= 6; X++) {
+                    cur = base + X;
+                    if (cur < 10) cur = `00${cur}`
+                    else if (cur < 100) cur = `0${cur}`;
+                    else cur = `${cur}`;
+                    if (X == 1 || X == 6) train_type = 1;
+                    else if (X == 2 || X == 5) train_type = 2;
+                    else train_type = 3;
+                    // console.log(X, cur, train_type);
+                    output = output + `07${cur}${train_type} `;
+                    // if (X == 3) output = output + '\n';
+                }
+                // console.log(output);
+                // output = output + `${arr_8[id][0]} ${arr_8[id][1]} ${arr_8[id][2]} ${arr_8[id][3]} `;
+                // output = output + `${arr_8[id][4]} ${arr_8[id][5]} ${arr_8[id][6]}`;
+            } else if (type == 1) {
+
+            }
+            return output;
+        }
         function line08(id, type) {
-            //08C Table
+            //08C Table deleted
             // 08C01 Tc Mp M M Mp Tc
             // 08C02~04 Tc Mp M M M Mp Tc
             let output = ``;
@@ -646,6 +695,14 @@
             const carry = document.getElementById("carriage-id").value.trim();
             const t_car = document.getElementById("train-carriage-id").value.trim();
             const line = document.getElementById("line").value.trim();
+            const showDev = document.getElementById("developNews");
+            // console.log(showDev);
+            if (showDev.checked) {
+                document.getElementById('developBox').style.display = "";
+            }
+            else {
+                document.getElementById('developBox').style.display = "none";
+            }
             console.log(line);
             let output = "";
             if (line == "select-notice-line") {
@@ -677,6 +734,9 @@
                 }
                 else if (line == "line-06") {
                     output = line06(parseInt(train), 0);
+                }
+                else if (line == "line-07") {
+                    output = line07(parseInt(train), 0);
                 }
                 else if (line == "line-08") {
                     output = line08(parseInt(train), 0);
