@@ -718,13 +718,43 @@
                     else if (X == 2 || X == cars - 1) train_type = 2;
                     else train_type = 3;
                     // console.log(X, cur, train_type);
-                    output = output + `09${cur}${train_type} `;
+                    output = output + `10${cur}${train_type} `;
                     // if (X == 4) output = output + '\n';
                 }
                 // output = output + `${arr_9[id][0]} ${arr_9[id][1]} ${arr_9[id][2]} `;
                 // output = output + `${arr_9[id][3]} ${arr_9[id][4]} ${arr_9[id][5]}`;
             } else if (type == 1) {
-
+                if (!(1 <= id && id <= 402)) {
+                    return "此车厢不存在, 10号线允许车体号: 1~402";
+                }
+                let A = parseInt(id / 6) + 1, X = id % 6;
+                if (X == 0) {
+                    X = 6;
+                    A--;
+                }
+                if (A > 0 && A <= 41) {
+                    let p = '0';
+                    if (A >= 10) {
+                        p = '';
+                    }
+                    output = output + `10号线 100${p}${A}\n10A01 热带鱼(10001~10041)\n`;
+                } else {
+                    output = output + `10号线 100${A}\n10A02 热带鱼二世(10042~10067)\n`;
+                }
+                let cars = 6, id_ = A - 1, train_type;
+                let base = id_ * cars;
+                let cur = base;
+                for (let X = 1; X <= cars; X++) {
+                    cur = base + X;
+                    if (cur < 10) cur = `00${cur}`;
+                    else if (cur < 100) cur = `0${cur}`;
+                    if (X == 1 || X == cars) train_type = 1;
+                    else if (X == 2 || X == cars - 1) train_type = 2;
+                    else train_type = 3;
+                    // console.log(X, cur, train_type);
+                    output = output + `10${cur}${train_type} `;
+                    // if (X == 4) output = output + '\n';
+                }
             }
             return output;
         }
@@ -735,6 +765,7 @@
             const t_car = document.getElementById("train-carriage-id").value.trim();
             const line = document.getElementById("line").value.trim();
             console.log(line);
+            console.log(train, carry);
             let output = "";
             if (line == "select-notice-line") {
                 output = "请选择线路";
@@ -797,10 +828,52 @@
                 if (line == "line-01") {
                     output = line01(carry, 1);
                 }
+                else if (line == "line-02") {
+                    output = line02(carry, 1);
+                }
+                else if (line == "line-03") {
+                    output = line03(carry, 1);
+                }
+                else if (line == "line-04") {
+                    output = line04(carry, 1);
+                }
+                else if (line == "line-05") {
+                    output = line05(carry, 1);
+                }
+                else if (line == "line-06") {
+                    output = line06(carry, 1);
+                }
+                else if (line == "line-07") {
+                    output = line07(carry, 1);
+                }
+                else if (line == "line-08") {
+                    output = line08(carry, 1);
+                }
+                else if (line == "line-09") {
+                    output = line09(carry, 1);
+                }
+                else if (line == "line-10") {
+                    output = line10(carry, 1);
+                }
+                else if (line == "line-11") {
+                    output = line11(carry, 1);
+                }
+                else if (line == "line-12") {
+                    output = line12(carry, 1);
+                }
+                else if (line == "line-13") {
+                    output = line13(carry, 1);
+                }
+                else if (line == "line-14") {
+                    output = line14(carry, 1);
+                }
+                else if (line == "line-15") {
+                    output = line15(carry, 1);
+                }
             }
-            else if (t_car) {
-                output = "";
-            }
+            // else if (t_car) {
+            //     output = "";
+            // }
             else {
                 output = "内容未填或有误";
             }
