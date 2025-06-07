@@ -1,6 +1,7 @@
-# 上海地铁列车查询 Shanghai Metro Train Query
-### [网页链接 Website Link-建议] (位于第三方网站Netlify. Located at third-party website Netlify)
-### [网页链接 Website link-备用] (位于Github. Located at Github)
+# RichardWang2127的网站 RichardWang2127's Website
+## 上海地铁列车查询 Shanghai Metro Train Query
+### [网页链接 Website Link-1] (位于第三方网站Netlify. Located at third-party website Netlify)
+### [网页链接 Website Link-2] (位于Github. Located at Github)
 
 具体 For more info: [上海地铁列车 Shmetro Trains]
 
@@ -12,6 +13,6 @@
 | Github | richardwang2127 |
 
 
-[网页链接 Website link-建议]: https://sp1900.netlify.app/shmetro/
-[网页链接 Website link-备用]: https://richardwang2127.github.io/shmetro/
+[网页链接 Website link-1]: https://sp1900.netlify.app/shmetro/
+[网页链接 Website link-2]: https://richardwang2127.github.io/shmetro/
 [上海地铁列车 Shmetro Trains]: https://github.com/RichardWang2127/richardwang2127.github.io/tree/main/shmetro
