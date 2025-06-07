@@ -1,5 +1,6 @@
 # 上海地铁列车查询 Shanghai Metro Train Query
-### [网页链接 Website link] (仅中文 Chinese Version Only)
+### [网页链接 Website Link-建议] (位于第三方网站Netlify. Located at third-party website Netlify)
+### [网页链接 Website link-备用] (位于Github. Located at Github)
 可以转换列车的车号和车体号
 Change between train number and carriage number
 #### API ❌
@@ -26,4 +27,5 @@ Change between train number and carriage number
 | Github | richardwang2127 |
 
 
-[网页链接 Website link]: https://shtrains.netlify.app
+[网页链接 Website link-建议]: https://sp1900.netlify.app/shmetro/
+[网页链接 Website link-备用]: https://richardwang2127.github.io/shmetro/
