@@ -75,12 +75,60 @@
     <div class="container">
         <h1>RichardWang2127的网站</h1>
         <button onclick="location.href=('/shmetro/')"><!--查询-->上海地铁列车查询工具</button>
-        <div class="output" id="outputBox">信息：暂无。</div>
+        <div class="output" id="outputBox">信息：<br>年龄: <p id="age" style="display: inline;">好几</p>岁。<br>城市: 浙江宁波。</div>
     </div>
     <!-- <p class="footer" align="center" style="font-size: 13px;">Update: 2025.5.21 16:54; Version: <a href="https://github.com/RichardWang2127/richardwang2127.github.io"; id="version">Beta</a> </p>
     <div class="container">
         <div class="output" id="developBox" style="display:true;">开发信息：<br>图例: 测试中-*-, 50% -/-, 开发中..., 未开发✕<br>下一计划: <br>10号线50%✅;<br>6号线100%<br>11号线50%。</div>
     </div> -->
+    <script>
+        
+        function calculateAge() {
+            const birthDate = new Date(2011, 4, 11);
+            const currentDate = new Date();
+            
+            // 基础年龄计算
+            let age = currentDate.getFullYear() - birthDate.getFullYear();
+            
+            // 调整未过生日的情况
+            if (currentDate.getMonth() < birthDate.getMonth() || 
+                (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate())) {
+                age--;
+            }
+            
+            // 计算今年生日日期
+            const thisYearsBirthday = new Date(
+                currentDate.getFullYear(), 
+                birthDate.getMonth(), 
+                birthDate.getDate()
+            );
+            
+            // 计算下一个生日日期
+            const nextBirthday = new Date(
+                currentDate.getFullYear() + (currentDate < thisYearsBirthday ? 0 : 1),
+                birthDate.getMonth(),
+                birthDate.getDate()
+            );
+            
+            // 计算年龄小数部分
+            const lastBirthday = currentDate < thisYearsBirthday 
+                ? new Date(currentDate.getFullYear() - 1, birthDate.getMonth(), birthDate.getDate())
+                : thisYearsBirthday;
+            
+            const daysInYear = (nextBirthday - lastBirthday) / (1000 * 60 * 60 * 24);
+            const daysSinceBirthday = (currentDate - lastBirthday) / (1000 * 60 * 60 * 24);
+            const fractionOfYear = daysSinceBirthday / daysInYear;
+            
+            const preciseAge = age + fractionOfYear;
+            return preciseAge.toFixed(13);
+        }
+        function updateAge() {
+            document.getElementById("age").innerText = `${calculateAge()}`;
+        }
+        setInterval(updateAge, 50);
+        updateAge();
+
+    </script>
 </body>
 
 </html>
