@@ -406,7 +406,7 @@
                         </tr>
                         <tr>
                             <td><button onclick="location.href=('/nbmetro_line1/')">🛤️ 宁波轨道交通1号线闪灯图模拟</button></td>
-                            <td>0.1 Python(提供exe)</td>
+                            <td>0.1 Python</td>
                         </tr>
                     </table>
                 </div>
@@ -432,7 +432,7 @@
 
                 <!-- 倒计时 -->
                 <div class="output">
-                    <strong>📅 离暑假还有：<span id="countdown"></span></strong>
+                    <strong>📅 离国庆还有：<span id="countdown"></span></strong>
                 </div>
 
                 <!-- 背景音乐播放按钮 -->
@@ -498,6 +498,7 @@
             }, 0);
         }
         mainContent.classList.remove('initial-hide');
+        entered = true;
         musicCheck();
         
         setTimeout(function() {
@@ -588,11 +589,11 @@
 
         // 倒计时功能
         function updateCountdown() {
-            const startDate = new Date("2025-07-01 00:00:00+08:00");
+            const startDate = new Date("2025/10/01 00:00:00+08:00");
             const currentDate = new Date();
             const timeDifference = startDate - currentDate;
             const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-            console.log(timeDifference - (daysLeft * 1000 * 60 * 60 * 24));
+            // console.log(timeDifference - (daysLeft * 1000 * 60 * 60 * 24));
             document.getElementById('countdown').textContent = `${daysLeft} 天`;
         }
 
