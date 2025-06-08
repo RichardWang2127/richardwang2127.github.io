@@ -1,36 +1,77 @@
 <!DOCTYPE html>
-<html lang="zh">
+<html lang="zh" data-theme="light">
 
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>东铁线SP1900</title>
     <style>
+        :root {
+            --bg-color-light: #f7f7f7;
+            --text-color-light: #333;
+            --bg-color-dark: #1a1a1a;
+            --text-color-dark: #e0e0e0;
+            --card-color-light: #ffffff;
+            --card-color-dark: #2a2a2a;
+            --btn-bg-light: #007BFF;
+            --btn-bg-dark: #0056b3;
+            --btn-hover-light: #0056b3;
+            --btn-hover-dark: #3399ff;
+            --progress-color: #007BFF;
+            --icon-size: 20px;
+        }
+
+        [data-theme="light"] {
+            --bg-color: var(--bg-color-light);
+            --text-color: var(--text-color-light);
+            --card-color: var(--card-color-light);
+            --btn-bg: var(--btn-bg-light);
+            --btn-hover: var(--btn-hover-light);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: var(--bg-color-dark);
+            --text-color: var(--text-color-dark);
+            --card-color: var(--card-color-dark);
+            --btn-bg: var(--btn-bg-dark);
+            --btn-hover: var(--btn-hover-dark);
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f7f7f7;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+            background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.05), transparent 40%),
+                            radial-gradient(circle at 80% 30%, rgba(255,255,255,0.05), transparent 40%);
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
         }
 
         .container {
-            max-width: 500px;
+            width: 100%;
+            max-width: 1000px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 12px;
+            box-sizing: border-box;
         }
 
         h1 {
             text-align: center;
-            color: #333;
-            margin-bottom: 20px;
+            color: var(--text-color);
+            margin-bottom: 12px;
+            padding-top: 50px;
         }
 
         input,
         button,
         textarea {
             width: 100%;
-            padding: 12px;
-            margin: 8px 0;
+            padding: 8px;
+            margin: 4px 0;
             border: 1px solid #ccc;
             border-radius: 8px;
             box-sizing: border-box;
@@ -38,51 +79,348 @@
         }
 
         button {
-            background-color: #007BFF;
+            background-color: var(--btn-bg);
             color: white;
             border: none;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: transform 0.2s ease, background-color 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 16px;
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: var(--btn-hover);
+            transform: scale(1.06);
         }
 
         .output {
-            background-color: white;
+            background-color: var(--card-color);
             border: 1px solid #ccc;
             border-radius: 8px;
-            padding: 16px;
-            margin-top: 20px;
-            min-height: 60px;
-            white-space: pre-wrap;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 15px;
-            }
+            padding: 10px;
+            margin-top: 8px;
+            font-size: 14px;
+            white-space: nowrap;
+            line-height: 1.3;
+            overflow: hidden;
         }
 
         .forbidden {
             cursor: not-allowed;
         }
+
+        #themeToggle {
+            position: fixed;
+            top: 60px;
+            right: 12px;
+            background-color: var(--card-color);
+            border: 2px solid var(--text-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            z-index: 101;
+            cursor: pointer;
+        }
+
+        #musicToggle {
+            position: fixed;
+            top: 100px;
+            right: 12px;
+            background-color: var(--card-color);
+            border: 2px solid var(--text-color);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            z-index: 101;
+            cursor: pointer;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            table-layout: fixed;
+        }
+
+        td {
+            padding: 6px;
+            vertical-align: middle;
+            word-wrap: break-word;
+        }
+
+        progress {
+            max-width: 100%;
+            height: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+        }
+
+        progress[value] {
+            appearance: none;
+        }
+
+        progress[value]::-webkit-progress-bar {
+            background-color: #f0f0f0;
+            border-radius: 8px;
+        }
+
+        progress[value]::-webkit-progress-value {
+            background-color: var(--progress-color);
+            border-radius: 8px;
+        }
+
+        #navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--card-color);
+            z-index: 100;
+            padding: 10px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        #navbar a {
+            padding: 12px;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        #navbar a:hover {
+            background-color: var(--btn-hover);
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+                margin-top: 50px;
+            }
+            
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+            
+            #themeToggle {
+                top: 12px;
+                right: 12px;
+            }
+            
+            .output {
+                white-space: normal;
+            }
+        }
+
+        #enterButton {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1000;
+            padding: 20px 40px;
+            font-size: 24px;
+            background: linear-gradient(135deg, #007BFF, #00BFFF);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
+            transition: all 0.3s ease;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4); }
+            70% { box-shadow: 0 0 0 15px rgba(0, 123, 255, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+        }
+        
+        #loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 28px;
+            font-weight: bold;
+            z-index: 999;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        #loader.show {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        #mainContent {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+        
+        #mainContent.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .initial-hide {
+            display: none;
+        }
+        
+        .content {
+            padding: 20px;
+            /* height: 2000px; 仅为演示 */
+        }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <h1>RichardWang2127的网站</h1>
-        <button onclick="location.href=('/shmetro/')"><!--查询-->上海地铁列车查询工具</button>
-        <div class="output" id="outputBox">信息：<br>年龄: <p id="age" style="display: inline;">好几</p>岁。<br>城市: 浙江宁波。</div>
+    <button id="enterButton" class="initial-hide" onclick="enterSite()">🚇 进入地铁站</button>
+    <div id="loader">🚇 地铁门正在打开...</div>
+    <div id="mainContent" class="initial-hide">
+        <div class="content">
+            <button id="themeToggle" onclick="toggleTheme()">🌓</button>
+            <button id="musicToggle" onclick="toggleMusic()">🎶</button>
+
+            <!-- 顶部悬浮导航栏 -->
+            <div id="navbar">
+                <a href="#appBox">首页</a>
+                <a href="#progressBoard">项目进度</a>
+                <a href="#outputBox">关于我</a>
+                <a href="#gallery">图库</a>
+            </div>
+
+            <div class="container">
+                <h1>RichardWang2127的网站</h1>
+                <div class="output" id="appBox">
+                    <table>
+                        <tr>
+                            <td><button onclick="location.href=('/shmetro/')">🚇 上海地铁列车查询工具</button></td>
+                            <td>0.1.7 网页</td>
+                        </tr>
+                        <tr>
+                            <td><button onclick="location.href=('/nbmetro_line1/')">🛤️ 宁波轨道交通1号线闪灯图模拟</button></td>
+                            <td>0.1 Python(提供exe)</td>
+                        </tr>
+                    </table>
+                </div>
+
+                <!-- 项目进度 -->
+                <div class="output" id="progressBoard">
+                    <strong>🧱 项目开发进度：</strong><br>
+                    上海地铁工具：<progress value="80" max="100"></progress> 80%<br>
+                    宁波闪灯模拟：<progress value="60" max="100"></progress> 60%
+                </div>
+
+                <!-- 项目描述 -->
+                <div class="output">
+                    <strong>🔧 项目描述：</strong><br>
+                    <p>这个网站旨在为上海地铁和宁波轨道交通提供便捷的查询工具，帮助用户更快速地掌握实时信息。</p>
+                </div>
+
+                <div class="output" id="outputBox">信息：<br>年龄: <span id="age">好几</span>岁。<br>城市: 浙江宁波。</div>
+
+                <!-- 图库 -->
+                <div id="gallery" class="output">
+                    <strong>📸 图库</strong><br>
+                    <div class="gallery">
+                        <img src="your_image_path.jpg" alt="地铁车站">
+                        <img src="your_image_path_2.jpg" alt="宁波港">
+                        <img src="your_image_path_3.jpg" alt="模型图">
+                    </div>
+                </div>
+
+                <!-- 倒计时 -->
+                <div class="output">
+                    <strong>📅 离暑假还有：<span id="countdown"></span></strong>
+                </div>
+
+                <!-- 背景音乐播放按钮 -->
+                <audio id="backgroundMusic" loop>
+                    <source src="resources/music.mp3" type="audio/mp3">
+                </audio>
+                <!-- <button onclick="toggleMusic()">🎶 播放/暂停音乐</button> -->
+            </div>
+        </div>
     </div>
-    <!-- <p class="footer" align="center" style="font-size: 13px;">Update: 2025.5.21 16:54; Version: <a href="https://github.com/RichardWang2127/richardwang2127.github.io"; id="version">Beta</a> </p>
-    <div class="container">
-        <div class="output" id="developBox" style="display:true;">开发信息：<br>图例: 测试中-*-, 50% -/-, 开发中..., 未开发✕<br>下一计划: <br>10号线50%✅;<br>6号线100%<br>11号线50%。</div>
-    </div> -->
+
+    
+
     <script>
+        var entered = false;
+        // 显示进入按钮
+        window.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('enterButton').classList.remove('initial-hide');
+        });
         
+        // 进入网站函数
+        function enterSite() {
+            console.log("按钮被点击"); // 调试用
+            
+            const enterBtn = document.getElementById('enterButton');
+            const loader = document.getElementById('loader');
+            const mainContent = document.getElementById('mainContent');
+            
+            // 隐藏进入按钮
+            enterBtn.style.transition = 'all 0.5s ease';
+            enterBtn.style.opacity = '0';
+            enterBtn.style.transform = 'translate(-50%, -50%) scale(0.8)';
+            
+            setTimeout(function() {
+                enterBtn.style.display = 'none';
+                loader.classList.add('show');
+                
+                // 2秒后显示主要内容
+                setTimeout(function() {
+                    loader.classList.remove('show');
+                    mainContent.classList.remove('initial-hide');
+                    entered = true;
+                    musicCheck();
+                    
+                    setTimeout(function() {
+                        mainContent.classList.add('show');
+                        document.body.style.overflow = 'auto';
+                    }, 50);
+                }, 2000);
+            }, 500);
+        }
+
+        // 音乐控制函数
+        function toggleMusic() {
+            const audio = document.getElementById("backgroundMusic");
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+            localStorage.setItem("musicState", audio.paused ? "paused" : "playing");
+        }
+
         function calculateAge() {
             const birthDate = new Date(2011, 4, 11);
             const currentDate = new Date();
@@ -120,7 +458,7 @@
             const fractionOfYear = daysSinceBirthday / daysInYear;
             
             const preciseAge = age + fractionOfYear;
-            return preciseAge.toFixed(13);
+            return preciseAge.toFixed(9);
         }
         function updateAge() {
             document.getElementById("age").innerText = `${calculateAge()}`;
@@ -128,6 +466,42 @@
         setInterval(updateAge, 50);
         updateAge();
 
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute("data-theme") === "dark";
+            html.setAttribute("data-theme", isDark ? "light" : "dark");
+            localStorage.setItem("preferred-theme", isDark ? "light" : "dark");
+        }
+
+        // 恢复上次音乐状态
+        function musicCheck() {
+            if (!entered) {
+                return;
+            }
+            const savedMusicState = localStorage.getItem("musicState") || "paused";
+            console.log("恢复音乐状态:", savedMusicState);
+            if (savedMusicState === "playing") {
+                document.getElementById("backgroundMusic").play();
+            }
+        }
+        try{
+            musicCheck();
+        }
+        catch (e) {
+            console.error("无法恢复音乐状态:", e);
+        }
+
+        // 倒计时功能
+        function updateCountdown() {
+            const startDate = new Date("2025-07-01");
+            const currentDate = new Date();
+            const timeDifference = startDate - currentDate;
+            const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+            document.getElementById('countdown').textContent = `${daysLeft} 天`;
+        }
+
+        setInterval(updateCountdown, ); // 每天更新
+        updateCountdown();
     </script>
 </body>
 
