@@ -67,9 +67,14 @@
         }
 
         input,
-        button,
         textarea {
             width: 100%;
+        }
+
+        input,
+        button,
+        textarea {
+            /* width: 100%; */
             padding: 8px;
             margin: 4px 0;
             border: 1px solid #ccc;
@@ -102,7 +107,7 @@
             border-radius: 8px;
             padding: 10px;
             margin-top: 8px;
-            font-size: 14px;
+            font-size: 16px;
             white-space: nowrap;
             line-height: 1.3;
             overflow: hidden;
@@ -244,8 +249,19 @@
             border-radius: 50px;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-            transition: all 0.3s ease;
+            transition: all 0.5s ease;
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0.8);
+            pointer-events: none;
+            display: none;
+        }
+
+        #enterButton.ready {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            pointer-events: auto;
             animation: pulse 2s infinite;
+            display: none;
         }
         
         @keyframes pulse {
@@ -296,12 +312,77 @@
             padding: 20px;
             /* height: 2000px; 仅为演示 */
         }
+
+        .subway-doors {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 900;
+            display: none;
+        }
+
+        .subway-door {
+            width: 50%;
+            height: 100%;
+            background-color: #333;
+            transition: all 2s ease;
+        }
+
+        .subway-door.left {
+            transform: translateX(0);
+        }
+
+        .subway-door.right {
+            transform: translateX(0);
+        }
+
+        .subway-doors.opening {
+            opacity: 1;
+        }
+
+        .subway-doors.opening .subway-door.left {
+            transform: translateX(-100%);
+        }
+
+        .subway-doors.opening .subway-door.right {
+            transform: translateX(100%);
+        }
+
+        /* 门后面的文字 */
+        #doorText {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+            opacity: 0;
+            z-index: 800;
+            transition: opacity 0.5s ease;
+        }
+
+        .subway-doors.opening + #doorText {
+            opacity: 1;
+        }
     </style>
 </head>
 
 <body>
-    <button id="enterButton" class="initial-hide" onclick="enterSite()">🚇 进入地铁站</button>
-    <div id="loader">🚇 地铁门正在打开...</div>
+    <button id="enterButton" class="initial-hide" onclick="enterSite()">🚇 进入</button>
+    <!-- <div id="loader">🚇 地铁门正在打开...</div> -->
+    <div class="subway-doors" id="subwayDoors">
+        <div class="subway-door left"></div>
+        <div class="subway-door right"></div>
+    </div>
+
+    <div id="doorText">🚇 地铁门正在打开...</div>
     <div id="mainContent" class="initial-hide">
         <div class="content">
             <button id="themeToggle" onclick="toggleTheme()">🌓</button>
@@ -332,14 +413,14 @@
 
                 <!-- 项目进度 -->
                 <div class="output" id="progressBoard">
-                    <strong>🧱 项目开发进度：</strong><br>
-                    上海地铁工具：<progress value="80" max="100"></progress> 80%<br>
-                    宁波闪灯模拟：<progress value="60" max="100"></progress> 60%
+                    <strong class="subheading">🧱 项目开发进度：</strong><br>
+                    上海地铁工具：<progress value="30" max="100"></progress> 30%<br>
+                    宁波闪灯模拟：<progress value="90" max="100"></progress> 90%
                 </div>
 
                 <!-- 项目描述 -->
                 <div class="output">
-                    <strong>🔧 项目描述：</strong><br>
+                    <strong class>🔧 项目描述：</strong><br>
                     <p>这个网站旨在为上海地铁和宁波轨道交通提供便捷的查询工具，帮助用户更快速地掌握实时信息。</p>
                 </div>
 
@@ -373,6 +454,13 @@
 
     <script>
         var entered = false;
+        window.addEventListener('load', function() {
+            // 短暂延迟后添加ready类触发过渡
+            setTimeout(function() {
+                const enterBtn = document.getElementById('enterButton');
+                enterBtn.classList.add('ready');
+            }, 300); // 300毫秒延迟让页面完全稳定
+        });
         // 显示进入按钮
         window.addEventListener('DOMContentLoaded', function() {
             document.getElementById('enterButton').classList.remove('initial-hide');
@@ -383,32 +471,45 @@
             console.log("按钮被点击"); // 调试用
             
             const enterBtn = document.getElementById('enterButton');
-            const loader = document.getElementById('loader');
+            // const loader = document.getElementById('loader');
+            const subwayDoors = document.getElementById('subwayDoors');
             const mainContent = document.getElementById('mainContent');
             
             // 隐藏进入按钮
             enterBtn.style.transition = 'all 0.5s ease';
             enterBtn.style.opacity = '0';
             enterBtn.style.transform = 'translate(-50%, -50%) scale(0.8)';
+            enterBtn.classList.remove('ready');
+
+            subwayDoors.classList.add('opening');
+            
             
             setTimeout(function() {
                 enterBtn.style.display = 'none';
-                loader.classList.add('show');
+                // loader.classList.add('show');
                 
                 // 2秒后显示主要内容
                 setTimeout(function() {
-                    loader.classList.remove('show');
+                    // loader.classList.remove('show');
                     mainContent.classList.remove('initial-hide');
+                    document.getElementById('doorText').style.opacity = '0';
                     entered = true;
                     musicCheck();
                     
                     setTimeout(function() {
                         mainContent.classList.add('show');
                         document.body.style.overflow = 'auto';
-                    }, 50);
-                }, 1000);
-            }, 500);
+                    }, 200);
+                }, 0);
+            }, 0);
         }
+        mainContent.classList.remove('initial-hide');
+        musicCheck();
+        
+        setTimeout(function() {
+            mainContent.classList.add('show');
+            document.body.style.overflow = 'auto';
+        }, 200);
 
         // 音乐控制函数
         function toggleMusic() {
@@ -493,10 +594,11 @@
 
         // 倒计时功能
         function updateCountdown() {
-            const startDate = new Date("2025-07-01");
+            const startDate = new Date("2025-07-01 00:00:00+08:00");
             const currentDate = new Date();
             const timeDifference = startDate - currentDate;
             const daysLeft = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+            console.log(timeDifference - (daysLeft * 1000 * 60 * 60 * 24));
             document.getElementById('countdown').textContent = `${daysLeft} 天`;
         }
 
