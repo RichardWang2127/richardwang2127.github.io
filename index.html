@@ -371,6 +371,43 @@
         .subway-doors.opening + #doorText {
             opacity: 1;
         }
+
+        /* 弹窗样式 */
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;  /* 默认隐藏 */
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        .popup-content {
+            background-color: var(--card-color);
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .popup button {
+            margin: 10px;
+            padding: 10px 20px;
+            background-color: var(--btn-bg);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .popup button:hover {
+            background-color: var(--btn-hover);
+        }
     </style>
 </head>
 
@@ -383,6 +420,14 @@
     </div>
 
     <div id="doorText">🚇 地铁门正在打开...</div>
+    <!-- 跳转确认弹窗 -->
+    <div id="domainRedirectPopup" class="popup">
+        <div class="popup-content">
+            <p id="domainRedirectPopupText">本域名将减少维护，建议访问新网站。是否跳转到新域名075038.xyz？</p>
+            <button id="redirectYesButton">是</button>
+            <button id="redirectNoButton">否</button>
+        </div>
+    </div>
     <div id="mainContent" class="initial-hide">
         <div class="content">
             <button id="themeToggle" onclick="toggleTheme()">🌓</button>
@@ -494,10 +539,12 @@
                         mainContent.classList.add('show');
                         document.body.style.overflow = 'auto';
                     }, 200);
-                }, 0);
-            }, 0);
+                }, 2000);
+            }, 2000);
         }
         mainContent.classList.remove('initial-hide');
+        // console.log(processDomain(redirect = false));
+        processDomain();
         entered = true;
         musicCheck();
         
@@ -561,6 +608,77 @@
         }
         setInterval(updateAge, 50);
         updateAge();
+        
+        function decidePopup() {
+            const savedPopupState = localStorage.getItem("PopupRedirectState") || "None";
+            console.log("PopupRedirect状态:", savedPopupState);
+            if (savedMPopupState === "Displayed") {
+                return true; // 已经显示过弹窗
+            }
+            return false;
+        }
+
+        function savePopup() {
+            localStorage.setItem("PopupRedirectState", "Displayed");
+        }
+
+        function processDomain(redirect = false) {
+            // 获取当前域名
+            const currentDomain = window.location.hostname;
+
+            let newDomain = '';
+
+            if (currentDomain.includes('netlify.app')) {
+                newDomain = 'xxx.' + currentDomain;
+                if (!redirect) {
+                    return 1;
+                }
+            } else if (currentDomain.includes('075038.xyz')) {
+                newDomain = 'xxx.' + currentDomain;
+                if (!redirect) {
+                    return 2;
+                }
+            } else if (currentDomain.includes('github.io')) {
+                newDomain = 'xxx.' + currentDomain;
+                if (!redirect) {
+                    if (!decidePopup()) {
+                        showRedirectPopup(); // 显示跳转确认弹窗
+                    }
+                    return 3;
+                }
+            } else {
+                if (!redirect) {
+                    document.getElementById('domainRedirectPopupText').innerText = '建议访问主网站: 075038.xyz，是否跳转？';
+                    showRedirectPopup(); // 显示跳转确认弹窗
+
+                    return -1; // 未匹配到任何域名
+                }
+                console.error('未匹配到任何域名');
+                return;
+            }
+
+            // 跳转到新的域名
+            window.location.href = 'https://' + newDomain;
+        }
+
+        // 显示跳转确认弹窗
+        function showRedirectPopup() {
+            newDomain = '075038.xyz'; // 设置新的域名
+            console.log("显示跳转确认弹窗，新的域名为：" + newDomain);
+            const popup = document.getElementById('domainRedirectPopup');
+            popup.style.display = 'flex';
+
+            // 处理用户点击“是”按钮
+            document.getElementById('redirectYesButton').onclick = function() {
+                window.location.href = 'https://' + newDomain;
+            };
+
+            // 处理用户点击“否”按钮
+            document.getElementById('redirectNoButton').onclick = function() {
+                const popup = document.getElementById('domainRedirectPopup');
+                popup.style.display = 'none';
+            };
+        }
 
         function toggleTheme() {
             const html = document.documentElement;
