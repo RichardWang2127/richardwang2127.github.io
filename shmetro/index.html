@@ -170,7 +170,7 @@
 <script>
     function registerSW() {
         if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js')
+        navigator.serviceWorker.register('/shmetro/assets/script/sw.js')
             .then(reg => {
             document.getElementById("cacheStatus").textContent = '状态：已启用离线缓存 ✅';
             console.log('Service Worker 注册成功：', reg.scope);
