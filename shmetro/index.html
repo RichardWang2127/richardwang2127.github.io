@@ -81,6 +81,12 @@
 <body>
     <div class="container">
         <h1>列车查询</h1>
+        <div id="script_load">
+            <h3>为了本网页的正常使用, 需要加载JavaScript, 请点击按钮确认加载。</h3>
+            <button onclick="loadScript();">加载JavaScript</button>
+            <button id="retry1" onclick="loadScript(1);" style="display: none;">重试第三方网站通道1(适合中国大陆)</button>
+            <button id="retry2" onclick="loadScript(2);" style="display: none;">重试第三方网站通道2</button>
+        </div>
         <select id="line">
             <option value="select-notice-line" disabled selected>选择线路: </option>
             <option value="line-01">1号线(-*-)</option>
@@ -149,6 +155,10 @@
     <p class="footer" align="center" style="font-size: 13px;">Update: 2025.5.21 16:54; Version: <a
             href="https://github.com/RichardWang2127/richardwang2127.github.io" ; id="version">Beta</a> </p>
     <div class="container">
+        <button onclick="registerSW();" id="cacheButton">📦 启用离线缓存</button>
+        <div id="cacheStatus" class="output" style="margin-top: 10px;">状态：未缓存</div>
+    </div>
+    <div class="container">
         <div class="output" id="developBox" style="display:true;">开发信息：无。<br>开发者模式：<span id="devMode">关闭</span><br>
         </div>
     </div>
@@ -157,7 +167,72 @@
                 onclick="location.href=('/')">作者主页</button>
         </div>
     </div>
-    <script src="/shmetro/assets/script/shmetro.js"></script>
+<script>
+    function registerSW() {
+        if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+            .then(reg => {
+            document.getElementById("cacheStatus").textContent = '状态：已启用离线缓存 ✅';
+            console.log('Service Worker 注册成功：', reg.scope);
+            })
+            .catch(err => {
+            document.getElementById("cacheStatus").textContent = '状态：注册失败 ❌';
+            console.error('Service Worker 注册失败：', err);
+            });
+        } else {
+        document.getElementById("cacheStatus").textContent = '状态：浏览器不支持 Service Worker';
+        }
+    }
+        let scriptElement = null;
+
+        function loadScript(way = 0) {
+            const btn = document.querySelector('#script_load button');
+            const info = document.querySelector('#script_load h3');
+            const retry1 = document.getElementById("retry1");
+            const retry2 = document.getElementById("retry2");
+
+            // 修改为加载状态
+            info.textContent = '正在加载 JavaScript...';
+            btn.textContent = '停止加载 JavaScript';
+            btn.onclick = stopLoading;
+
+            // 创建并加载脚本
+            scriptElement = document.createElement('script');
+            if (way == 0) scriptElement.src = '/assets/script/shmetro_query.js';
+            else if (way == 1) scriptElement.src = 'https://075038.xyz/shmetro/assets/script/shmetro.js';
+            else scriptElement.src = 'https://richardwang2127.github.io/shmetro/assets/script/shmetro.js';
+
+            scriptElement.onload = function () {
+                document.getElementById("script_load").style.display = "none";
+                console.log('脚本加载完成！');
+            };
+
+            scriptElement.onerror = function () {
+                info.textContent = '加载失败，请重试';
+                btn.textContent = '重新加载 JavaScript(默认通道)';
+                btn.onclick = loadScript;
+                retry1.style.display = "block";
+                retry2.style.display = "block";
+            };
+
+            document.body.appendChild(scriptElement);
+        }
+
+        function stopLoading() {
+            const btn = document.querySelector('#script_load button');
+            const info = document.querySelector('#script_load h3');
+
+            if (scriptElement) {
+                scriptElement.remove(); // 移除脚本
+                scriptElement = null;
+            }
+
+            info.textContent = '加载已取消。';
+            btn.textContent = '重新加载 JavaScript(默认通道)';
+            btn.onclick = loadScript;
+        }
+        
+    </script>
     <!-- <script src="" -->
 </body>
 
