@@ -167,24 +167,15 @@
                 onclick="location.href=('/')">作者主页</button>
         </div>
     </div>
-<script>
-    function registerSW() {
-        if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/shmetro/assets/script/sw.js')
-            .then(reg => {
-            document.getElementById("cacheStatus").textContent = '状态：已启用离线缓存 ✅';
-            console.log('Service Worker 注册成功：', reg.scope);
-            })
-            .catch(err => {
-            document.getElementById("cacheStatus").textContent = '状态：注册失败 ❌';
-            console.error('Service Worker 注册失败：', err);
-            });
-        } else {
-        document.getElementById("cacheStatus").textContent = '状态：浏览器不支持 Service Worker';
-        }
-    }
+    <script>
         let scriptElement = null;
 
+        let script_data = localStorage.getItem("scriptLoaded");
+        console.log('脚本加载记录:', script_data);
+        if (script_data != null) {
+            // 如果有加载记录，直接加载脚本
+            loadScript(parseInt(script_data));
+        }
         function loadScript(way = 0) {
             const btn = document.querySelector('#script_load button');
             const info = document.querySelector('#script_load h3');
@@ -203,6 +194,7 @@
 
             scriptElement.onload = function () {
                 document.getElementById("script_load").style.display = "none";
+                localStorage.setItem("scriptLoaded", way);
                 console.log('脚本加载完成！');
             };
 
