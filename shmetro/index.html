@@ -89,7 +89,7 @@
             <option value="line-08">8号线(-/-)</option>
             <option value="line-09">9号线(-/-)</option>
             <option value="line-10">10号线(-/-)</option>
-            <option value="line-11" disabled>11号线(...)</option>
+            <option value="line-11">11号线(...)</option>
             <option value="line-02" disabled>2号线(-✕-)</option>
             <option value="line-03" disabled>3号线(-✕-)</option>
             <option value="line-04" disabled>4号线(-✕-)</option>
@@ -111,51 +111,144 @@
             <!-- <option value="line-mag" disabled>磁浮线(-✕-)</option> -->
             <!-- <option value="line-jc" disabled>机场联络线(-✕-)</option> -->
         </select>
+        <select id="line-dev" style="display: none;">
+            <option value="select-notice-line" disabled selected>选择线路: </option>
+            <option value="line-01">1号线(-*-)</option>
+            <option value="line-02">2号线(-✕-)</option>
+            <option value="line-03">3号线(-✕-)</option>
+            <option value="line-04">4号线(-✕-)</option>
+            <option value="line-05">5号线(-✕-)</option>
+            <option value="line-06">6号线(-/-)</option>
+            <option value="line-07">7号线(-/-)</option>
+            <option value="line-08">8号线(-/-)</option>
+            <option value="line-09">9号线(-/-)</option>
+            <option value="line-10">10号线(-/-)</option>
+            <option value="line-11">11号线(...)</option>
+            <option value="line-12">12号线(-✕-)</option>
+            <option value="line-13">13号线(-✕-)</option>
+            <option value="line-14">14号线(-✕-)</option>
+            <option value="line-15">15号线(-✕-)</option>
+            <option value="line-16">16号线(-✕-)</option>
+            <option value="line-17">17号线(-✕-)</option>
+            <option value="line-18">18号线(-✕-)</option>
+            <option value="line-t01" disabled>浦江线(-✕-)</option>
+            <!-- <option value="line-mag" disabled>磁浮线(-✕-)</option> -->
+            <!-- <option value="line-jc" disabled>机场联络线(-✕-)</option> -->
+        </select>
         <input type="number" id="train-id" placeholder="车号" />
         <select id="line-01-type" style="display:none;">
-            <option value="0">01A01/01A03</option>
-            <option value="1" selected>01A02/01A04</option>
+            <option value="0" selected>01A01/01A03</option>
+            <option value="1">01A02/01A04</option>
             <option value="2">01A05~01A07</option>
         </select>
         <input type="number" id="carriage-id" style="display:true;" placeholder="车体号" />
         <input type="number" id="train-carriage-id" style="display:none;" placeholder="车厢号" />
-        <button onclick="return false;" class="forbidden"><!--查询-->输入后信息自动显示</button>
+        <button onclick="checkDev('button');" class="forbidden"><!--查询-->输入后信息自动显示</button>
         <div class="output" id="outputBox">信息：暂无。</div>
     </div>
-    <p class="footer" align="center" style="font-size: 13px;">Update: 2025.5.21 16:54; Version: <a href="https://github.com/RichardWang2127/richardwang2127.github.io"; id="version">Beta</a> </p>
+    <p class="footer" align="center" style="font-size: 13px;">Update: 2025.5.21 16:54; Version: <a
+            href="https://github.com/RichardWang2127/richardwang2127.github.io" ; id="version">Beta</a> </p>
     <div class="container">
-        <div class="output" id="developBox" style="display:true;">开发信息：<br>图例: 测试中-*-, 50% -/-, 开发中..., 未开发✕<br>下一计划: <br>10号线50%✅;<br>6号线100%<br>11号线50%。</div>
-    </div>
-    <div class="container">
-        <div class="output" id="authorBox" style="display:true;">作者信息：<br>作者: RichardWang2127<br><button onclick="location.href=('/')">作者主页</button>
+        <div class="output" id="developBox" style="display:true;">开发信息：无。<br>开发者模式：<span id="devMode">关闭</span><br>
         </div>
     </div>
-    <script>
+    <div class="container">
+        <div class="output" id="authorBox" style="display:true;">作者信息：<br>作者: RichardWang2127<br><button
+                onclick="location.href=('/')">作者主页</button>
+        </div>
+    </div>
+    <!-- <script>
         version = "0.1.7";
         console.log("上海地铁列车查询工具 " + version);
         document.getElementById("version").textContent = version;
-        function get_carriage(line, id, trains, C, D) { // (Y - C) / trains + D = A ...... X; id = A - 1
-            let A = id - 1, train_type;
+        let cl_time = 0;
+        isDev();
+        function isDev() {
+            let dev_time = localStorage.getItem("dev_time");
+            if (dev_time) {
+                let now = new Date();
+                let lastDevTime = new Date(dev_time);
+                let diff = now - lastDevTime;
+                if (diff < 12 * 60 * 60 * 1000) { // 12小时内
+                    cl_time = 19; // 设置为19，触发开发者模式
+                    checkDev();
+                }
+                else {
+                    localStorage.removeItem("dev_time");
+                }
+            }
+            return 0;
+        }
+        function checkDev(from) {
+            cl_time++;
+            if (cl_time == 30) {
+                console.log("开发者模式已关闭");
+                // 关闭开发者模式
+                localStorage.removeItem("dev_time");
+                document.getElementById("line-dev").style.display = "none";
+                document.getElementById("line").style.display = "block";
+                document.querySelector("button").classList.add("forbidden");
+                document.querySelector("button").textContent = "输入后信息自动显示";
+                submitInfo();
+                cl_time = 0; // 重置计时
+                return;
+            }
+            if (cl_time == 20) {
+                console.log("开发者模式已开启");
+                // 开启开发者模式
+                document.getElementById("line-dev").style.display = "block";
+                document.getElementById("line").style.display = "none";
+                document.querySelector("button").classList.remove("forbidden");
+                document.querySelector("button").textContent = "输入后信息自动显示-开发者模式";
+                if (from == 'button') localStorage.setItem("dev_time", Date());
+                submitInfo();
+            }
+        }
+        function get_carriage(line, id, trains, D, C = 0) { // (Y - C) / trains + D = A ...... X; A = id - D
+            let A = id - D, train_type;
+            line = parseInt(line);
             let base = A * trains;
             let cur = base;
             let result = '';
-            for(let X = 1; X <= trains; X++) {
-                cur = base + X;
+            if (line < 10) {
+                line = `0${line}`;
+            }
+            else {
+                line = `${line}`;
+            }
+            for (let X = 1; X <= trains; X++) {
+                cur = base + X + C;
                 if (cur < 10) cur = `00${cur}`;
                 else if (cur < 100) cur = `0${cur}`;
                 else cur = `${cur}`;
                 if (X == 1 || X == trains) train_type = 1;
+                else if (line == 16 && X == 2) train_type = 3;
+                else if (line == 14 && X == 4) train_type = 2;
                 else if (X == 2 || X == trains - 1) train_type = 2;
                 else train_type = 3;
-                if (line < 10) {
-                    line = `0${line}`;
-                }
-                else {
-                    line = `${line}`;
-                }
                 result = result + `${line}${cur}${train_type} `;
             }
             // special rules
+            return result;
+        }
+        function test_func(disabled = false) {
+            if (disabled) {
+                return;
+            }
+            // console.log(get_carriage(16, 47, 6, 24));
+            // console.log(get_carriage(9, 16, 6, 1));
+            // console.log(get_train(16, 139, 6, 24));
+        }
+        const disable_test = 1;
+        test_func(disable_test);
+        function get_train(line, Y, trains, D, C = 0) { // (Y - C) / trains + D = A ...... X;
+            let A = parseInt((Y - C) / trains) + D;
+            let X = (Y - C) % trains;
+            if (X == 0) {
+                X = trains;
+                A--;
+            }
+            return A;
         }
         function line01(id, type) {
             //01A01~01A07 Table
@@ -704,8 +797,9 @@
                     if (id > 99) {
                         p = ''
                     }
-                    output = output + `9号线 09${p}${id}\n09A05 创可贴(09089~09105)\n`;
+                    output = output + `9号线 09${p}${id}\n09A05 创可贴二世(09089~09105)\n`;
                 }
+                /*
                 let cars = 6, id_ = id - 1, train_type;
                 let base = id_ * cars;
                 let cur = base;
@@ -722,11 +816,215 @@
                 }
                 // output = output + `${arr_9[id][0]} ${arr_9[id][1]} ${arr_9[id][2]} `;
                 // output = output + `${arr_9[id][3]} ${arr_9[id][4]} ${arr_9[id][5]}`;
+                */
+                output += get_carriage(9, id, 6, 1);
             } else if (type == 1) {
+                // console.log(id);
+                carriage_id = id;
+                let flag = false;
+                if (carriage_id.length > 6) {
+                    return "内容未填或有误";
+                }
+                if (!(carriage_id > 0 && carriage_id < 631)) {
+                    flag = true;
+                }
+                carriage_id = carriage_id.slice(0, 5);
+                console.log(carriage_id);
+                if (flag) {
+                    if (id.slice(0, 2) == "09") {
+                        id = parseInt(id.slice(2, 5));
+                        if (carriage_id > 0 && carriage_id < 631) {
+                            flag = false;
+                        }
+                    }
+                }
+                if (flag) {
+                    return "此车厢不存在, 9号线允许车体号: 1~630";
+                }
+                id = get_train(9, id, 6, 1);
+                if (id > 0 && id < 11) {
+                    let p = '0';
+                    if (id == 10) {
+                        p = '';
+                    }
+                    output = output + `9号线 09${p}${id}\n09A01 蚕宝宝(0901~0910)\n`;
+                } else if ((id > 10 && id < 42 || id > 45 && id < 52) && id != 48) {
+                    output = output + `9号线 09${id}\n09A02 坂田(0911~0951)\n`;
+                } else if (id > 41 && id < 46 || id == 48) {
+                    output = output + `9号线 09${id}\n09A02 世博坂田(0942~0945, 0948)\n`;
+                } else if (id == 52) {
+                    output = output + `9号线 0952\n09ASY 电气男孩(0952)\n`;
+                } else if (id > 52 && id < 89) {
+                    output = output + `9号线 09${id}\n09A03 创可贴(0953~0988)\n`;
+                } else if (id > 88 && id < 106) {
+                    let p = '0';
+                    if (id > 99) {
+                        p = ''
+                    }
+                    output = output + `9号线 09${p}${id}\n09A05 创可贴二世(09089~09105)\n`;
+                }
 
+                output = output + get_carriage(9, id, 6, 1);
             }
             return output;
         }
+
+        function linedefault(id, type, line) {
+            // (Y - C) / trains + D = A ...... X;
+            //   0      1       2    3  4    5      6         7
+            // Y_min, Y_max, trains, D, C, A_min, A_max, train_types
+            data_lines = [
+                [], [], [], [], [], [], [], [], [], [],
+                // start from line 10
+                [1, 402, 6, 1, 0, 1, 67, 2],
+                [1, 492, 6, 1, 0, 1, 82, 3],
+                [1, 450, 6, 1, 0, 1, 75, 3],
+                [1, 552, 6, 1, 0, 1, 92, 3],
+                [1, 392, 8, 1, 0, 1, 49, 1],
+                [1, 324, 6, 1, 0, 1, 54, 1],
+                [1, 228, -1, -1, -1, 1, 61, 2], // 因为包含16A01&02, 所以后面特殊处理
+                [1, 228, 6, 1, 0, 1, 38, 2],
+                [1, 336, 6, 1, 0, 1, 56, 2],
+                [1, 44, 4, 1, 0, 1, 11, 1] // T01 PJ Line
+            ]
+            // No, Nickname, A_min, A_max, digits(after line num)
+            diff_trains = [
+                // line 0~9
+                [], [], [], [], [], [], [], [], [], [],
+                //line 10~T01 (No JC)
+                [
+                    ["10A01", "热带鱼", 1, 41, 3],
+                    ["10A02", "热带鱼二世", 42, 67, 3]
+                ],
+                [
+                    ["11A01", "奶咖", 1, 66, 2],
+                    ["11A02", "伪咖", 67, 72, 2],
+                    ["11A03", "奶咖二世", 73, 82, 2],
+                ],
+                [
+                    ["12A01", "雪碧", 1, 41, 2],
+                    ["12A02", "雪碧二世", 42, 56, 2],
+                    ["12A03", "雪碧三世", 57, 75, 3]
+                ],
+                [
+                    ["13A01", "奶粉", 1, 24, 2],
+                    ["13A02", "奶粉二世", 25, 62, 2],
+                    ["13A03", "奶粉三世", 63, 92, 3]
+                ],
+                [
+                    ["14A01", "高达", 1, 49, 3]
+                ],
+                [
+                    ["15A01", "长鼻猴", 1, 54, 3]
+                ],
+                [
+                    ["16A01", "抹茶", 1, 46, 2],
+                    ["16A02", "抹茶二世", 47, 61, 3]
+                ],
+                [
+                    ["17A01", "西柚", 1, 28, 2],
+                    ["17A02", "西柚二世", 29, 38, 3]
+                ],
+                [
+                    ["18A01", "闪电侠", 1, 50, 3],
+                    ["18A02", "闪电侠二世", 51, 56, 3]
+                ],
+                [
+                    ["APM300", "小灰灰", 1, 11, 2]
+                ]
+            ]
+            let output = ``;
+            if (type == 0) {
+                // console.log(line);
+                // console.log(line, data_lines[line]);
+                // console.log(data_lines[line][5]);
+                if (!(id >= data_lines[line][5] && id <= data_lines[line][6])) {
+                    return `此列车不存在, ${line}号线允许车号: ${data_lines[line][5]}~${data_lines[line][6]}`;
+                }
+                // 找车型
+                for (let t = 0; t < data_lines[line][7]; t++) {
+                    if (id >= diff_trains[line][t][2] && id <= diff_trains[line][t][3]) {
+                        const digits = diff_trains[line][t][4];
+                        let A_min = diff_trains[line][t][2];
+                        let A_max = diff_trains[line][t][3];
+                        if (digits == 2) {
+                            if (id < 10) id = `0${id}`;
+                            else id = `${id}`;
+                            if (A_min < 10) A_min = `${line}0${A_min}`;
+                            else A_min = `${line}${A_min}`;
+                            if (A_max < 10) A_max = `${line}0${A_max}`;
+                            else A_max = `${line}${A_max}`;
+
+                        } else {
+                            // 3 digits
+                            if (id < 10) id = `00${id}`;
+                            else if (id < 100) id = `0${id}`;
+                            else id = `${id}`;
+                            if (A_min < 10) A_min = `${line}00${A_min}`;
+                            else if (A_min < 100) A_min = `${line}0${A_min}`;
+                            else A_min = `${line}${A_min}`;
+                            if (A_max < 10) A_max = `${line}00${A_max}`;
+                            else if (A_max < 100) A_max = `${line}0${A_max}`;
+                            else A_max = `${line}${A_max}`;
+                        }
+                        // x号线 xxyy xxAzz/xxCzz Nickname (A1~A2) trains
+                        output = output + `${line}号线 ${line}${id}\n${diff_trains[line][t][0]} ${diff_trains[line][t][1]}(${A_min}~${A_max})\n`;
+                        break;
+                    }
+                }
+                output += get_carriage(line, id, data_lines[line][2], data_lines[line][3], data_lines[line][4]);
+            } else if (type == 1) {
+                // console.log(id);
+                return "未支持";
+                carriage_id = id;
+                let flag = false;
+                if (carriage_id.length > 6) {
+                    return "内容未填或有误";
+                }
+                if (!(carriage_id >= data_lines[line][0] && carriage_id <= data_lines[line][1])) {
+                    flag = true;
+                }
+                carriage_id = carriage_id.slice(0, 5);
+                console.log(carriage_id);
+                if (flag) {
+                    if (id.slice(0, 2) == "09") {
+                        id = parseInt(id.slice(2, 5));
+                        if (carriage_id > 0 && carriage_id < 631) {
+                            flag = false;
+                        }
+                    }
+                }
+                if (flag) {
+                    return "此车厢不存在, 9号线允许车体号: 1~630";
+                }
+                id = get_train(9, id, 6, 1);
+                if (id > 0 && id < 11) {
+                    let p = '0';
+                    if (id == 10) {
+                        p = '';
+                    }
+                    output = output + `9号线 09${p}${id}\n09A01 蚕宝宝(0901~0910)\n`;
+                } else if ((id > 10 && id < 42 || id > 45 && id < 52) && id != 48) {
+                    output = output + `9号线 09${id}\n09A02 坂田(0911~0951)\n`;
+                } else if (id > 41 && id < 46 || id == 48) {
+                    output = output + `9号线 09${id}\n09A02 世博坂田(0942~0945, 0948)\n`;
+                } else if (id == 52) {
+                    output = output + `9号线 0952\n09ASY 电气男孩(0952)\n`;
+                } else if (id > 52 && id < 89) {
+                    output = output + `9号线 09${id}\n09A03 创可贴(0953~0988)\n`;
+                } else if (id > 88 && id < 106) {
+                    let p = '0';
+                    if (id > 99) {
+                        p = ''
+                    }
+                    output = output + `9号线 09${p}${id}\n09A05 创可贴二世(09089~09105)\n`;
+                }
+
+                output = output + get_carriage(9, id, 6, 1);
+            }
+            return output;
+        }
+
         function line10(id, type) {
             // 10A Table X deleted
             // 6A Tc Mp M M Mp Tc 
@@ -796,84 +1094,15 @@
             }
             return output;
         }
-        function line11(id, type) {
-            // 11A Table X
-            // 6A Tc Mp M M Mp Tc 
-            // 1~66 ~72 ~82
-            let output = ``;
-            if (type == 0) {
-                if (!(id > 0 && id < 83)) {
-                    return "此列车不存在, 10号线允许车号: 1~67";
-                }
-                if (id > 0 && id <= 66) {
-                    let p = '0';
-                    if (id >= 10) {
-                        p = '';
-                    }
-                    output = output + `10号线 11${p}${id}\n11A01 奶咖(10001~10066)\n`;
-                } else if (id > 66 && id < 73) {
-                    output = output + `10号线 11${id}\n11A02 伪咖(10066~10072)\n`;
-                } else {
-                    output = output + `10号线 11${id}\n11A03 奶咖二世(10073~10082)\n`;
-                }
-                let cars = 6, id_ = id - 1, train_type;
-                let base = id_ * cars;
-                let cur = base;
-                for (let X = 1; X <= cars; X++) {
-                    cur = base + X;
-                    if (cur < 10) cur = `0${cur}`;
-                    if (X == 1 || X == cars) train_type = 1;
-                    else if (X == 2 || X == cars - 1) train_type = 2;
-                    else train_type = 3;
-                    // console.log(X, cur, train_type);
-                    output = output + `11${cur}${train_type} `;
-                    // if (X == 4) output = output + '\n';
-                }
-                // output = output + `${arr_9[id][0]} ${arr_9[id][1]} ${arr_9[id][2]} `;
-                // output = output + `${arr_9[id][3]} ${arr_9[id][4]} ${arr_9[id][5]}`;
-            } else if (type == 1) {
-                if (!(1 <= id && id <= 402)) {
-                    return "此车厢不存在, 11号线允许车体号: 1~492";
-                }
-                let A = parseInt(id / 6) + 1, X = id % 6;
-                if (X == 0) {
-                    X = 6;
-                    A--;
-                }
-                if (A > 0 && A <= 66) {
-                    let p = '0';
-                    if (A >= 10) {
-                        p = '';
-                    }
-                    output = output + `10号线 100${p}${A}\n10A01 热带鱼(10001~10041)\n`;
-                } else {
-                    output = output + `10号线 100${A}\n10A02 热带鱼二世(10042~10067)\n`;
-                }
-                let cars = 6, id_ = A - 1, train_type;
-                let base = id_ * cars;
-                let cur = base;
-                for (let X = 1; X <= cars; X++) {
-                    cur = base + X;
-                    if (cur < 10) cur = `00${cur}`;
-                    else if (cur < 100) cur = `0${cur}`;
-                    if (X == 1 || X == cars) train_type = 1;
-                    else if (X == 2 || X == cars - 1) train_type = 2;
-                    else train_type = 3;
-                    // console.log(X, cur, train_type);
-                    output = output + `10${cur}${train_type} `;
-                    // if (X == 4) output = output + '\n';
-                }
-            }
-            return output;
-        }
 
         function submitInfo() {
             const train = document.getElementById("train-id").value.trim();
             const carry = document.getElementById("carriage-id").value.trim();
             const t_car = document.getElementById("train-carriage-id").value.trim();
-            const line = document.getElementById("line").value.trim();
-            console.log(line);
-            console.log(train, carry);
+            if (cl_time >= 10) line = document.getElementById("line-dev").value.trim();
+            else line = document.getElementById("line").value.trim();
+            // console.log(line);
+            // console.log(train, carry);
             let output = "";
             if (line == "select-notice-line") {
                 output = "请选择线路";
@@ -886,97 +1115,78 @@
             else {
                 document.getElementById("line-01-type").style.display = "none";
             }
+            // console.log(train);
+            if (train && carry) {
+                output += "同时输入则仅计算车号转车体号\n";
+            }
             if (train) {
+                // console.log(linedefault(train, 0, parseInt(line.split("-")[1], 10)));
+
                 if (line == "line-01") {
-                    output = line01(parseInt(train), 0);
+                    output += line01(parseInt(train), 0);
                 }
                 else if (line == "line-02") {
-                    output = line02(parseInt(train), 0);
+                    output += line02(parseInt(train), 0);
                 }
                 else if (line == "line-03") {
-                    output = line03(parseInt(train), 0);
+                    output += line03(parseInt(train), 0);
                 }
                 else if (line == "line-04") {
-                    output = line04(parseInt(train), 0);
+                    output += line04(parseInt(train), 0);
                 }
                 else if (line == "line-05") {
-                    output = line05(parseInt(train), 0);
+                    output += line05(parseInt(train), 0);
                 }
                 else if (line == "line-06") {
-                    output = line06(parseInt(train), 0);
+                    output += line06(parseInt(train), 0);
                 }
                 else if (line == "line-07") {
-                    output = line07(parseInt(train), 0);
+                    output += line07(parseInt(train), 0);
                 }
                 else if (line == "line-08") {
-                    output = line08(parseInt(train), 0);
+                    output += line08(parseInt(train), 0);
                 }
                 else if (line == "line-09") {
-                    output = line09(parseInt(train), 0);
+                    output += line09(parseInt(train), 0);
                 }
-                else if (line == "line-10") {
-                    output = line10(parseInt(train), 0);
+                else if (line == "line-jc") {
+                    output += "未支持";
                 }
-                else if (line == "line-11") {
-                    output = line11(parseInt(train), 0);
-                }
-                else if (line == "line-12") {
-                    output = line12(parseInt(train), 0);
-                }
-                else if (line == "line-13") {
-                    output = line13(parseInt(train), 0);
-                }
-                else if (line == "line-14") {
-                    output = line14(parseInt(train), 0);
-                }
-                else if (line == "line-15") {
-                    output = line15(parseInt(train), 0);
+                else {
+                    // line 10~18 & T01
+                    output += linedefault(parseInt(train), 0, parseInt(line.split("-")[1], 10));
                 }
             } else if (carry) {
+                // console.log(linedefault(carry, 1, parseInt(line)));
                 if (line == "line-01") {
-                    output = line01(carry, 1);
+                    output += line01(carry, 1);
                 }
                 else if (line == "line-02") {
-                    output = line02(carry, 1);
+                    output += line02(carry, 1);
                 }
                 else if (line == "line-03") {
-                    output = line03(carry, 1);
+                    output += line03(carry, 1);
                 }
                 else if (line == "line-04") {
-                    output = line04(carry, 1);
+                    output += line04(carry, 1);
                 }
                 else if (line == "line-05") {
-                    output = line05(carry, 1);
+                    output += line05(carry, 1);
                 }
                 else if (line == "line-06") {
-                    output = line06(carry, 1);
+                    output += line06(carry, 1);
                 }
                 else if (line == "line-07") {
-                    output = line07(carry, 1);
+                    output += line07(carry, 1);
                 }
                 else if (line == "line-08") {
-                    output = line08(carry, 1);
+                    output += line08(carry, 1);
                 }
                 else if (line == "line-09") {
-                    output = line09(carry, 1);
+                    output += line09(carry, 1);
                 }
-                else if (line == "line-10") {
-                    output = line10(carry, 1);
-                }
-                else if (line == "line-11") {
-                    output = line11(carry, 1);
-                }
-                else if (line == "line-12") {
-                    output = line12(carry, 1);
-                }
-                else if (line == "line-13") {
-                    output = line13(carry, 1);
-                }
-                else if (line == "line-14") {
-                    output = line14(carry, 1);
-                }
-                else if (line == "line-15") {
-                    output = line15(carry, 1);
+                else {
+                    output += linedefault(carry, 1, parseInt(line.split("-")[1], 10));
                 }
             }
             // else if (t_car) {
@@ -996,7 +1206,15 @@
             select.addEventListener('input', submitInfo);
         });
         submitInfo();
-    </script>
+        function saveTextToFile(filename, textContent) {
+            const blob = new Blob([textContent], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = filename; // 设定下载的文件名
+            link.click();
+            URL.revokeObjectURL(link.href); // 清理内存
+        }
+    </script> -->
 </body>
 
 </html>
