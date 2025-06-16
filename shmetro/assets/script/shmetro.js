@@ -1,6 +1,5 @@
 version = "0.1.7";
 console.log("上海地铁列车查询工具 " + version);
-document.getElementById("version").textContent = version;
 let cl_time = 0;
 isDev();
 function isDev() {
