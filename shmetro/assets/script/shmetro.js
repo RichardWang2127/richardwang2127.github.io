@@ -27,8 +27,9 @@ function checkDev(from) {
         localStorage.removeItem("dev_time");
         document.getElementById("line-dev").style.display = "none";
         document.getElementById("line").style.display = "block";
-        document.querySelector("button").classList.add("forbidden");
-        document.querySelector("button").textContent = "输入后信息自动显示";
+        document.getElementById('submitInfo').classList.add("forbidden");
+        document.getElementById('submitInfo').textContent = "输入后信息自动显示";
+        document.getElementById("devMode").style.display = "none";
         submitInfo();
         cl_time = 0; // 重置计时
         return;
@@ -38,9 +39,10 @@ function checkDev(from) {
         // 开启开发者模式
         document.getElementById("line-dev").style.display = "block";
         document.getElementById("line").style.display = "none";
-        document.querySelector("button").classList.remove("forbidden");
-        document.querySelector("button").textContent = "输入后信息自动显示-开发者模式";
+        document.getElementById('submitInfo').classList.remove("forbidden");
+        document.getElementById('submitInfo').textContent = "输入后信息自动显示-开发者模式";
         if (from == 'button') localStorage.setItem("dev_time", Date());
+        document.getElementById("devMode").style.display = "block";
         submitInfo();
     }
 }

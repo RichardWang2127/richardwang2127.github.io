@@ -87,79 +87,77 @@
             <button id="retry1" onclick="loadScript(1);" style="display: none;">重试第三方网站通道1(适合中国大陆)</button>
             <button id="retry2" onclick="loadScript(2);" style="display: none;">重试第三方网站通道2</button>
         </div>
-        <select id="line">
-            <option value="select-notice-line" disabled selected>选择线路: </option>
-            <option value="line-01">1号线(-*-)</option>
-            <option value="line-06">6号线(-/-)</option>
-            <option value="line-07">7号线(-/-)</option>
-            <option value="line-08">8号线(-/-)</option>
-            <option value="line-09">9号线(-/-)</option>
-            <option value="line-10">10号线(-/-)</option>
-            <option value="line-11">11号线(...)</option>
-            <option value="line-02" disabled>2号线(-✕-)</option>
-            <option value="line-03" disabled>3号线(-✕-)</option>
-            <option value="line-04" disabled>4号线(-✕-)</option>
-            <option value="line-05" disabled>5号线(-✕-)</option>
-            <!--<option value="line-06">6号线</option>-->
-            <!-- <option value="line-07">7号线</option> -->
-            <!--<option value="line-08">8号线</option>-->
-            <!--<option value="line-09">9号线</option>-->
-            <!-- <option value="line-10">10号线</option> -->
-            <!-- <option value="line-11" disabled>11号线</option> -->
-            <option value="line-12" disabled>12号线(-✕-)</option>
-            <option value="line-13" disabled>13号线(-✕-)</option>
-            <option value="line-14" disabled>14号线(-✕-)</option>
-            <option value="line-15" disabled>15号线(-✕-)</option>
-            <option value="line-16" disabled>16号线(-✕-)</option>
-            <option value="line-17" disabled>17号线(-✕-)</option>
-            <option value="line-18" disabled>18号线(-✕-)</option>
-            <option value="line-t01" disabled>浦江线(-✕-)</option>
-            <!-- <option value="line-mag" disabled>磁浮线(-✕-)</option> -->
-            <!-- <option value="line-jc" disabled>机场联络线(-✕-)</option> -->
-        </select>
-        <select id="line-dev" style="display: none;">
-            <option value="select-notice-line" disabled selected>选择线路: </option>
-            <option value="line-01">1号线(-*-)</option>
-            <option value="line-02">2号线(-✕-)</option>
-            <option value="line-03">3号线(-✕-)</option>
-            <option value="line-04">4号线(-✕-)</option>
-            <option value="line-05">5号线(-✕-)</option>
-            <option value="line-06">6号线(-/-)</option>
-            <option value="line-07">7号线(-/-)</option>
-            <option value="line-08">8号线(-/-)</option>
-            <option value="line-09">9号线(-/-)</option>
-            <option value="line-10">10号线(-/-)</option>
-            <option value="line-11">11号线(...)</option>
-            <option value="line-12">12号线(-✕-)</option>
-            <option value="line-13">13号线(-✕-)</option>
-            <option value="line-14">14号线(-✕-)</option>
-            <option value="line-15">15号线(-✕-)</option>
-            <option value="line-16">16号线(-✕-)</option>
-            <option value="line-17">17号线(-✕-)</option>
-            <option value="line-18">18号线(-✕-)</option>
-            <option value="line-t01" disabled>浦江线(-✕-)</option>
-            <!-- <option value="line-mag" disabled>磁浮线(-✕-)</option> -->
-            <!-- <option value="line-jc" disabled>机场联络线(-✕-)</option> -->
-        </select>
-        <input type="number" id="train-id" placeholder="车号" />
-        <select id="line-01-type" style="display:none;">
-            <option value="0" selected>01A01/01A03</option>
-            <option value="1">01A02/01A04</option>
-            <option value="2">01A05~01A07</option>
-        </select>
-        <input type="number" id="carriage-id" style="display:true;" placeholder="车体号" />
-        <input type="number" id="train-carriage-id" style="display:none;" placeholder="车厢号" />
-        <button onclick="checkDev('button');" class="forbidden"><!--查询-->输入后信息自动显示</button>
-        <div class="output" id="outputBox">信息：暂无。</div>
+        <div class="JavaScriptLoadedDisplay" style="display: none;">
+            <select id="line">
+                <option value="select-notice-line" disabled selected>选择线路: </option>
+                <option value="line-01">1号线(-*-)</option>
+                <option value="line-06">6号线(-/-)</option>
+                <option value="line-07">7号线(-/-)</option>
+                <option value="line-08">8号线(-/-)</option>
+                <option value="line-09">9号线(-/-)</option>
+                <option value="line-10">10号线(-/-)</option>
+                <option value="line-11">11号线(...)</option>
+                <option value="line-02" disabled>2号线(-✕-)</option>
+                <option value="line-03" disabled>3号线(-✕-)</option>
+                <option value="line-04" disabled>4号线(-✕-)</option>
+                <option value="line-05" disabled>5号线(-✕-)</option>
+                <!--<option value="line-06">6号线</option>-->
+                <!-- <option value="line-07">7号线</option> -->
+                <!--<option value="line-08">8号线</option>-->
+                <!--<option value="line-09">9号线</option>-->
+                <!-- <option value="line-10">10号线</option> -->
+                <!-- <option value="line-11" disabled>11号线</option> -->
+                <option value="line-12" disabled>12号线(-✕-)</option>
+                <option value="line-13" disabled>13号线(-✕-)</option>
+                <option value="line-14" disabled>14号线(-✕-)</option>
+                <option value="line-15" disabled>15号线(-✕-)</option>
+                <option value="line-16" disabled>16号线(-✕-)</option>
+                <option value="line-17" disabled>17号线(-✕-)</option>
+                <option value="line-18" disabled>18号线(-✕-)</option>
+                <option value="line-t01" disabled>浦江线(-✕-)</option>
+                <!-- <option value="line-mag" disabled>磁浮线(-✕-)</option> -->
+                <!-- <option value="line-jc" disabled>机场联络线(-✕-)</option> -->
+            </select>
+            <select id="line-dev" style="display: none;">
+                <option value="select-notice-line" disabled selected>选择线路: </option>
+                <option value="line-01">1号线(-*-)</option>
+                <option value="line-02">2号线(-✕-)</option>
+                <option value="line-03">3号线(-✕-)</option>
+                <option value="line-04">4号线(-✕-)</option>
+                <option value="line-05">5号线(-✕-)</option>
+                <option value="line-06">6号线(-/-)</option>
+                <option value="line-07">7号线(-/-)</option>
+                <option value="line-08">8号线(-/-)</option>
+                <option value="line-09">9号线(-/-)</option>
+                <option value="line-10">10号线(-/-)</option>
+                <option value="line-11">11号线(...)</option>
+                <option value="line-12">12号线(-✕-)</option>
+                <option value="line-13">13号线(-✕-)</option>
+                <option value="line-14">14号线(-✕-)</option>
+                <option value="line-15">15号线(-✕-)</option>
+                <option value="line-16">16号线(-✕-)</option>
+                <option value="line-17">17号线(-✕-)</option>
+                <option value="line-18">18号线(-✕-)</option>
+                <option value="line-t01" disabled>浦江线(-✕-)</option>
+                <!-- <option value="line-mag" disabled>磁浮线(-✕-)</option> -->
+                <!-- <option value="line-jc" disabled>机场联络线(-✕-)</option> -->
+            </select>
+            <input type="number" id="train-id" placeholder="车号" />
+            <select id="line-01-type" style="display:none;">
+                <option value="0" selected>01A01/01A03</option>
+                <option value="1">01A02/01A04</option>
+                <option value="2">01A05~01A07</option>
+            </select>
+            <input type="number" id="carriage-id" style="display:true;" placeholder="车体号" />
+            <input type="number" id="train-carriage-id" style="display:none;" placeholder="车厢号" />
+            <button onclick="checkDev('button');" class="forbidden" id="submitInfo"><!--查询-->输入后信息自动显示</button>
+            <div class="output" id="outputBox">信息：暂无。</div>
+        </div>
     </div>
     <p class="footer" align="center" style="font-size: 13px;">Update: 2025.5.21 16:54; Version: <a
             href="https://github.com/RichardWang2127/richardwang2127.github.io" ; id="version">Beta</a> </p>
     <div class="container">
-        <button onclick="registerSW();" id="cacheButton">📦 启用离线缓存</button>
-        <div id="cacheStatus" class="output" style="margin-top: 10px;">状态：未缓存</div>
-    </div>
-    <div class="container">
-        <div class="output" id="developBox" style="display:true;">开发信息：无。<br>开发者模式：<span id="devMode">关闭</span><br>
+        <div class="output" id="developBox" style="display:true;">开发信息：无。<br><span id="devMode" style="display: none;">开发者模式：开启</span><br>
         </div>
     </div>
     <div class="container">
@@ -171,12 +169,20 @@
         let scriptElement = null;
 
         let script_data = localStorage.getItem("scriptLoaded");
-        console.log('脚本加载记录:', script_data);
+        let script_time = localStorage.getItem("scriptTime");
+        console.log('加载记录:', script_data, '上次加载:', script_time);
         if (script_data != null) {
-            // 如果有加载记录，直接加载脚本
-            loadScript(parseInt(script_data));
+            let cur_time = new Date();
+            if (cur_time - new Date(script_time) < 1000 * 60 * 60 * 24 * 3) {
+                // 如果脚本加载记录存在且在3天内，则直接加载脚本
+                console.log('正在加载上次记录的脚本...');
+                loadScript(script_data, true);
+            } else {
+                // 否则，显示加载按钮
+                document.querySelector('#script_load').style.display = 'block';
+            }
         }
-        function loadScript(way = 0) {
+        function loadScript(way = 0, fromData = false) {
             const btn = document.querySelector('#script_load button');
             const info = document.querySelector('#script_load h3');
             const retry1 = document.getElementById("retry1");
@@ -184,18 +190,24 @@
 
             // 修改为加载状态
             info.textContent = '正在加载 JavaScript...';
-            btn.textContent = '停止加载 JavaScript';
-            btn.onclick = stopLoading;
+            btn.textContent = '请稍等...';
 
             // 创建并加载脚本
             scriptElement = document.createElement('script');
             if (way == 0 || way == 1) scriptElement.src = 'https://075038.xyz/shmetro/assets/script/shmetro.js';
             else scriptElement.src = 'https://richardwang2127.github.io/shmetro/assets/script/shmetro.js';
+            scriptElement.src = './assets/script/shmetro.js';
 
             scriptElement.onload = function () {
                 document.getElementById("script_load").style.display = "none";
                 localStorage.setItem("scriptLoaded", way);
-                console.log('脚本加载完成！');
+                if (!fromData) {
+                    localStorage.setItem("scriptTime", new Date());
+                    console.log('已保存数据到 localStorage:', way, localStorage.getItem("scriptTime"));
+                }
+                else console.log('已保存数据到 localStorage:', way);
+                document.querySelector('.JavaScriptLoadedDisplay').style.display = 'block';
+                console.log('脚本加载完成, from: ' + scriptElement.src);
             };
 
             scriptElement.onerror = function () {
@@ -208,21 +220,6 @@
 
             document.body.appendChild(scriptElement);
         }
-
-        function stopLoading() {
-            const btn = document.querySelector('#script_load button');
-            const info = document.querySelector('#script_load h3');
-
-            if (scriptElement) {
-                scriptElement.remove(); // 移除脚本
-                scriptElement = null;
-            }
-
-            info.textContent = '加载已取消。';
-            btn.textContent = '重新加载 JavaScript(默认通道)';
-            btn.onclick = loadScript;
-        }
-        
     </script>
     <!-- <script src="" -->
 </body>
