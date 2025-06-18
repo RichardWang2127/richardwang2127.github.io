@@ -1,7 +1,3 @@
-const FONT_VERSION = '250617';
-const FONT_CHI = `assets/fonts/subset${FONT_VERSION}chi.woff2`;
-const FONT_ENG = `assets/fonts/subset${FONT_VERSION}eng.woff2`;
-
 const DB_NAME = 'font-db-v2';
 const STORE_NAME = 'fonts';
 
@@ -11,39 +7,50 @@ const KEYS = {
     version: 'font-version'
 };
 
+// 🔹 获取版本号
+async function getFontVersion() {
+    const res = await fetch('assets/fonts/font-version.txt');
+    const text = await res.text();
+    return text.trim(); // 去除换行符和空格
+}
+
+// 🔹 获取字体 Blob 并设置 MIME
 async function safeFetchFont(url) {
     const response = await fetch(url);
     const buffer = await response.arrayBuffer();
-    const blob = new Blob([new Uint8Array(buffer)], { type: 'font/woff2' }); // 显式设置 MIME
-    return blob;
+    return new Blob([new Uint8Array(buffer)], { type: 'font/woff2' });
 }
 
+// 🔹 主流程
 (async function loadFonts() {
+    const FONT_VERSION = await getFontVersion();
+    const FONT_CHI = `assets/fonts/subset${FONT_VERSION}chi.woff2`;
+    const FONT_ENG = `assets/fonts/subset${FONT_VERSION}eng.woff2`;
+
     const db = await openDB();
 
     const currentVersion = await getFromStore(db, KEYS.version);
     const chiBlob = await getFromStore(db, KEYS.chiFont);
     const engBlob = await getFromStore(db, KEYS.engFont);
 
-    // 是否需要更新字体
     const needsUpdate = currentVersion !== FONT_VERSION || !chiBlob || !engBlob;
 
-    let finalChiBlob = await safeFetchFont(FONT_CHI);
-    let finalEngBlob = await safeFetchFont(FONT_ENG);
+    let finalChiBlob, finalEngBlob;
 
     if (needsUpdate) {
-    console.log("字体更新中...");
-    finalChiBlob = await fetch(FONT_CHI).then(r => r.blob());
-    finalEngBlob = await fetch(FONT_ENG).then(r => r.blob());
+        console.log("字体更新中...");
+        finalChiBlob = await safeFetchFont(FONT_CHI);
+        finalEngBlob = await safeFetchFont(FONT_ENG);
 
-    await putToStore(db, KEYS.chiFont, finalChiBlob);
-    await putToStore(db, KEYS.engFont, finalEngBlob);
-    await putToStore(db, KEYS.version, FONT_VERSION);
+        await putToStore(db, KEYS.chiFont, finalChiBlob);
+        await putToStore(db, KEYS.engFont, finalEngBlob);
+        await putToStore(db, KEYS.version, FONT_VERSION);
     } else {
-    console.log("使用缓存字体");
+        console.log("使用缓存字体");
+        finalChiBlob = chiBlob;
+        finalEngBlob = engBlob;
     }
 
-    // 应用字体
     const chiUrl = URL.createObjectURL(finalChiBlob);
     const engUrl = URL.createObjectURL(finalEngBlob);
 
@@ -56,9 +63,9 @@ async function safeFetchFont(url) {
     document.fonts.add(chiFont);
     document.fonts.add(engFont);
 
-    // 中文字体放前面，英文字体做 fallback
     document.querySelector('body').style.fontFamily = `'MyChineseFont', 'MyEnglishFont', sans-serif`;
 })();
+
 
 // 打开数据库
 function openDB() {
