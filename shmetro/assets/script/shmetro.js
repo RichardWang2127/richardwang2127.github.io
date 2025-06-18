@@ -29,7 +29,7 @@ function checkDev(from) {
         document.getElementById('submitInfo').classList.add("forbidden");
         document.getElementById('submitInfo').textContent = "输入后信息自动显示";
         document.getElementById("devMode").style.display = "none";
-        submitInfo();
+        setInterval(submitInfo(), 50);
         cl_time = 0; // 重置计时
         return;
     }
@@ -43,6 +43,7 @@ function checkDev(from) {
         if (from == 'button') localStorage.setItem("dev_time", Date());
         document.getElementById("devMode").style.display = "block";
         submitInfo();
+        return;
     }
 }
 function get_carriage(line, id, trains, D, C = 0) { // (Y - C) / trains + D = A ...... X; A = id - D
@@ -67,7 +68,8 @@ function get_carriage(line, id, trains, D, C = 0) { // (Y - C) / trains + D = A 
         else if (line == 14 && X == 4) train_type = 2;
         else if (X == 2 || X == trains - 1) train_type = 2;
         else train_type = 3;
-        result = result + `${line}${cur}${train_type} `;
+        if (line == 19) result = result + `T01${cur}${train_type} `;
+        else result = result + `${line}${cur}${train_type} `;
     }
     // special rules
     return result;
@@ -780,6 +782,7 @@ function linedefault(id, type, line) {
         // console.log(line, data_lines[line]);
         // console.log(data_lines[line][5]);
         if (!(id >= data_lines[line][5] && id <= data_lines[line][6])) {
+            if (line == 19) return `此列车不存在, 浦江线允许车号: ${data_lines[line][5]}~${data_lines[line][6]}`;
             return `此列车不存在, ${line}号线允许车号: ${data_lines[line][5]}~${data_lines[line][6]}`;
         }
         // 找车型
@@ -809,7 +812,8 @@ function linedefault(id, type, line) {
                     else A_max = `${line}${A_max}`;
                 }
                 // x号线 xxyy xxAzz/xxCzz Nickname (A1~A2) trains
-                output = output + `${line}号线 ${line}${id}\n${diff_trains[line][t][0]} ${diff_trains[line][t][1]}(${A_min}~${A_max})\n`;
+                if (line == 19) output = output + `浦江线 T01${id}\n${diff_trains[line][t][0]} ${diff_trains[line][t][1]}(${A_min}~${A_max})\n`;
+                else output = output + `${line}号线 ${line}${id}\n${diff_trains[line][t][0]} ${diff_trains[line][t][1]}(${A_min}~${A_max})\n`;
                 break;
             }
         }
@@ -939,7 +943,7 @@ function line10(id, type) {
 function submitInfo() {
     const train = document.getElementById("train-id").value.trim();
     const carry = document.getElementById("carriage-id").value.trim();
-    const t_car = document.getElementById("train-carriage-id").value.trim();
+    // const t_car = document.getElementById("train-carriage-id").value.trim();
     if (cl_time >= 10) line = document.getElementById("line-dev").value.trim();
     else line = document.getElementById("line").value.trim();
     // console.log(line);
@@ -957,6 +961,7 @@ function submitInfo() {
         document.getElementById("line-01-type").style.display = "none";
     }
     // console.log(train);
+    console.log(parseInt(train));
     if (train && carry) {
         output += "同时输入则仅计算车号转车体号\n";
     }
@@ -993,8 +998,12 @@ function submitInfo() {
         else if (line == "line-jc") {
             output += "未支持";
         }
+        else if (line == 'line-t01') {
+            // line T01
+            output += linedefault(parseInt(train), 0, 19, 10);
+        }
         else {
-            // line 10~18 & T01
+            // line 10~18
             output += linedefault(parseInt(train), 0, parseInt(line.split("-")[1], 10));
         }
     } else if (carry) {

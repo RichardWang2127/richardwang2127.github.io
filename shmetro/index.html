@@ -4,17 +4,17 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
     <!-- <link rel="shortcut icon" href="/favicon.ico" /> -->
     <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="上海地铁列车" />
-    <link rel="manifest" href="/site.webmanifest" />
+    <!-- <link rel="manifest" href="/assets/site.webmanifest" /> -->
     <title>上海地铁列车</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
+            font-family: sans-serif;
             margin: 0;
             padding: 0;
             background-color: #f7f7f7;
@@ -74,6 +74,41 @@
 
         .forbidden {
             cursor: not-allowed;
+        }
+        /* 隐藏 Chrome / Safari / Edge 的 number 输入框默认加减按钮 */
+        input[type=number]::-webkit-inner-spin-button,
+        input[type=number]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* 隐藏 Firefox 的 number 输入框加减按钮 */
+        input[type=number] {
+            -moz-appearance: textfield;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-wrapper input {
+            padding-right: 36px; /* 给右侧按钮预留空间 */
+        }
+
+        .clear-btn {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 18px;
+            color: #aaa;
+            display: none;
+            user-select: none;
+        }
+
+        .clear-btn:hover {
+            color: #000;
         }
     </style>
 </head>
@@ -138,18 +173,23 @@
                 <option value="line-16">16号线(-✕-)</option>
                 <option value="line-17">17号线(-✕-)</option>
                 <option value="line-18">18号线(-✕-)</option>
-                <option value="line-t01" disabled>浦江线(-✕-)</option>
+                <option value="line-t01">浦江线(-✕-)</option>
                 <!-- <option value="line-mag" disabled>磁浮线(-✕-)</option> -->
                 <!-- <option value="line-jc" disabled>机场联络线(-✕-)</option> -->
             </select>
-            <input type="number" id="train-id" placeholder="车号" />
+            <div class="input-wrapper">
+                <input type="number" id="train-id" placeholder="车号" />
+                <span class="clear-btn" onclick="document.getElementById('train-id').value=''; this.style.display='none';">✕</span>
+            </div>
             <select id="line-01-type" style="display:none;">
                 <option value="0" selected>01A01/01A03</option>
                 <option value="1">01A02/01A04</option>
                 <option value="2">01A05~01A07</option>
             </select>
-            <input type="number" id="carriage-id" style="display:true;" placeholder="车体号" />
-            <input type="number" id="train-carriage-id" style="display:none;" placeholder="车厢号" />
+            <div class="input-wrapper">
+                <input type="number" id="carriage-id" style="display:true;" placeholder="车体号" />
+                <span class="clear-btn" onclick="document.getElementById('carriage-id').value=''; this.style.display='none';">✕</span>
+            </div>
             <button onclick="checkDev('button');" class="forbidden" id="submitInfo"><!--查询-->输入后信息自动显示</button>
             <div class="output" id="outputBox">信息：暂无。</div>
         </div>
@@ -166,6 +206,12 @@
         </div>
     </div>
     <script>
+        document.querySelectorAll('.input-wrapper input').forEach(input => {
+            const clearBtn = input.nextElementSibling;
+            input.addEventListener('input', () => {
+            clearBtn.style.display = input.value ? 'block' : 'none';
+            });
+        });
         let scriptElement = null;
 
         let script_data = localStorage.getItem("scriptLoaded");
@@ -220,7 +266,57 @@
 
             document.body.appendChild(scriptElement);
         }
+        // 将字体保存到 IndexedDB
+        async function saveFontToIndexedDB() {
+        const response = await fetch('./fonts/myfont.woff2'); // 获取字体
+        const fontBlob = await response.blob();
+
+        const request = indexedDB.open('font-db', 1);
+
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            db.createObjectStore('fonts'); // 创建对象仓库
+        };
+
+        request.onsuccess = () => {
+            const db = request.result;
+            const tx = db.transaction('fonts', 'readwrite');
+            const store = tx.objectStore('fonts');
+            store.put(fontBlob, 'myfont'); // 以 key='myfont' 保存
+            alert('字体已缓存到 IndexedDB！');
+        };
+        }
+
+        // 从 IndexedDB 加载字体并使用
+        async function loadFontFromIndexedDB() {
+        const request = indexedDB.open('font-db', 1);
+
+        request.onsuccess = () => {
+            const db = request.result;
+            const tx = db.transaction('fonts', 'readonly');
+            const store = tx.objectStore('fonts');
+            const getReq = store.get('myfont');
+
+            getReq.onsuccess = async () => {
+            const blob = getReq.result;
+            if (!blob) {
+                alert('未找到字体，请先缓存！');
+                return;
+            }
+
+            const fontUrl = URL.createObjectURL(blob);
+            const font = new FontFace('MyFont', `url(${fontUrl})`);
+            await font.load();
+            document.fonts.add(font);
+
+            document.querySelector('.preview').style.fontFamily = 'MyFont, sans-serif';
+            alert('字体加载完成！');
+            };
+        };
+        }
+
     </script>
+    <script src="./assets/script/fonts.js"></script>
     <!-- <script src="" -->
 </body>
 
