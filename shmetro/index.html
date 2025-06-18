@@ -4,13 +4,13 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
-    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+    <link rel="icon" type="image/png" href="/shmetro/assets/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/shmetro/assets/favicon.svg" />
     <!-- <link rel="shortcut icon" href="/favicon.ico" /> -->
-    <link rel="icon" href="/assets/favicon.ico" type="image/x-icon">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+    <link rel="icon" href="/shmetro/assets/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon" sizes="180x180" href="/shmetro/assets/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="上海地铁列车" />
-    <!-- <link rel="manifest" href="/assets/site.webmanifest" /> -->
+    <!-- <link rel="manifest" href="/shmetro/assets/site.webmanifest" /> -->
     <title>上海地铁列车</title>
     <style>
         body {
@@ -242,7 +242,7 @@
             scriptElement = document.createElement('script');
             if (way == 0 || way == 1) scriptElement.src = 'https://075038.xyz/shmetro/assets/script/shmetro.js';
             else scriptElement.src = 'https://richardwang2127.github.io/shmetro/assets/script/shmetro.js';
-            scriptElement.src = './assets/script/shmetro.js';
+            // scriptElement.src = './assets/script/shmetro.js';
 
             scriptElement.onload = function () {
                 document.getElementById("script_load").style.display = "none";
