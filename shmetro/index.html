@@ -10,7 +10,7 @@
     <link rel="icon" href="/shmetro/assets/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="/shmetro/assets/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="上海地铁列车" />
-    <script src="./assets/script/fonts.js" charset="UTF-8"></script>
+    <script src="./assets/script/fonts.js?v=202506212203" charset="UTF-8"></script>
     <link rel="manifest" href="/shmetro/assets/site.webmanifest" />
     <title>上海地铁列车</title>
     <style>
@@ -246,7 +246,7 @@
             else scriptElement.src = 'https://richardwang2127.github.io/shmetro/assets/script/shmetro.js';
             let host = window.location.hostname;
             if (host === 'localhost' || window === '127.0.0.1' || host === '::1') scriptElement.src = './assets/script/shmetro.js';
-
+            scriptElement.src += '?v=202506212203'; // 添加时间戳以避免缓存
             scriptElement.onload = function () {
                 document.getElementById("script_load").style.display = "none";
                 localStorage.setItem("scriptLoaded", way);
