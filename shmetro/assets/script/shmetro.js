@@ -1044,7 +1044,6 @@ function submitInfo() {
     // console.log(train);
     // console.log(parseInt(train));
     // console.log("line", line, "train", train, "carry", carry);
-    output += '1';
     if (train && carry) {
         output += "同时输入则仅计算车号转车体号\n";
     }
