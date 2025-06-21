@@ -10,7 +10,7 @@
     <link rel="icon" href="/shmetro/assets/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="/shmetro/assets/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="上海地铁列车" />
-    <script src="./assets/script/fonts.js"></script>
+    <script src="./assets/script/fonts.js" charset="UTF-8"></script>
     <link rel="manifest" href="/shmetro/assets/site.webmanifest" />
     <title>上海地铁列车</title>
     <style>
@@ -180,7 +180,7 @@
             </select>
             <div class="input-wrapper">
                 <input type="number" id="train-id" placeholder="车号" />
-                <span class="clear-btn" onclick="document.getElementById('train-id').value=''; this.style.display='none';">✕</span>
+                <span class="clear-btn" onclick="document.getElementById('train-id').value=''; this.style.display='none'; submitInfo()">✕</span>
             </div>
             <select id="line-01-type" style="display:none;">
                 <option value="0" selected>01A01/01A03</option>
@@ -189,14 +189,14 @@
             </select>
             <div class="input-wrapper">
                 <input type="number" id="carriage-id" style="display:true;" placeholder="车体号" />
-                <span class="clear-btn" onclick="document.getElementById('carriage-id').value=''; this.style.display='none';">✕</span>
+                <span class="clear-btn" onclick="document.getElementById('carriage-id').value=''; this.style.display='none'; submitInfo()">✕</span>
             </div>
             <button onclick="checkDev('button');" class="forbidden" id="submitInfo"><!--查询-->输入后信息自动显示</button>
             <div class="output" id="outputBox">信息：暂无。</div>
         </div>
     </div>
-    <p class="footer" align="center" style="font-size: 13px;">Update: 2025.6.19 22:32; Version: <a
-            href="https://github.com/RichardWang2127/richardwang2127.github.io" ; id="version">0.5.2</a> </p>
+    <p class="footer" align="center" style="font-size: 13px;">Update: 2025.6.21 21:53; Version: <a
+            href="https://github.com/RichardWang2127/richardwang2127.github.io" ; id="version">0.5.3</a> </p>
     <div class="container">
         <div class="output" id="developBox" style="display:true;">开发信息：无。<br><span id="devMode" style="display: none;">开发者模式：开启</span><br>
         </div>
@@ -241,9 +241,11 @@
 
             // 创建并加载脚本
             scriptElement = document.createElement('script');
-            if (way == 0 || way == 1) scriptElement.src = 'https://075038.xyz/shmetro/assets/script/shmetro.js';
+            scriptElement.charset = 'UTF-8';
+            if (way === 0 || way === 1) scriptElement.src = 'https://075038.xyz/shmetro/assets/script/shmetro.js';
             else scriptElement.src = 'https://richardwang2127.github.io/shmetro/assets/script/shmetro.js';
-            // scriptElement.src = './assets/script/shmetro.js';
+            let host = window.location.hostname;
+            if (host === 'localhost' || window === '127.0.0.1' || host === '::1') scriptElement.src = './assets/script/shmetro.js';
 
             scriptElement.onload = function () {
                 document.getElementById("script_load").style.display = "none";
