@@ -77,8 +77,8 @@ function test_func(disabled = false) {
         return;
     }
     let test_output = ``;
-    for (let i = 1; i <= 100; i++) {
-        test_output += linedefault(i, 0, 16) + '\n';
+    for (let i = 1; i <= 150; i++) {
+        test_output += linespecial(i, 0, 2) + `\n`;
     }
     // console.log(test_output);
     saveTextToFile("test_output.txt", test_output);
@@ -718,22 +718,119 @@ function line09(id, type) {
 }
 
 function special_carriage(line, id, trains, D, C = 0, train_code, is_special) { // (Y - C) / trains + D = A ...... X; A = id - D
-    let A = id - D, train_type;
-    line = parseInt(line);
-    let base = A * trains;
-    let cur = base;
     let result = '';
+    line = parseInt(line);
     if (line < 10) {
         line = `0${line}`;
     }
     else {
         line = `${line}`;
     }
-    if (train_code.slice(0, 3) == "02A") {
+    if (line == "02") {
+        console.log(train_code);
         if (train_code == "02A01") {
-            return "未支持";
+            let B, A, train_type, base, cur;
+            let train_ids = [];
+            // 201~212
+            if (id >= 1 && id <= 12) {
+                B = "00";
+                A = id;
+                base = A * 6;
+                // train 1~3, 6~8
+                for (let X = 1; X <= 6; X++) {
+                    cur = base + X;
+                    if (cur < 10) cur = `0${cur}`;
+                    else cur = `${cur}`;
+                    if (X == 1 || X == 6) train_type = 1;
+                    else if (X == 2 || X == 4) train_type = 2;
+                    else train_type = 3;
+                    train_ids[(X >= 4) ? X + 2 : X] = `${B}${cur}${train_type} `;
+                }
+            }
+            // 213~216
+            if (id >= 13 && id <= 16) {
+                B = "01";
+                A = id - 13;
+                base = A * 6;
+                // train 1~3, 6~8
+                for (let X = 1; X <= 6; X++) {
+                    cur = base + X;
+                    if (cur < 10) cur = `0${cur}`;
+                    else cur = `${cur}`;
+                    if (X == 1 || X == 6) train_type = 1;
+                    else if (X == 2 || X == 4) train_type = 2;
+                    else train_type = 3;
+                    train_ids[(X >= 4) ? X + 2 : X] = `${B}${cur}${train_type} `;
+                }
+            }
+            // all
+            B = "01";
+            if (id == 3 || id == 4) id++;
+            else if (id == 6) id += 2;
+            else if (id == 8) id += 3;
+            else if (id == 9 || id == 10) id += 4;
+            else if (id == 5 || id == 11 || id == 12) id += 5;
+            else if (id == 13 || id == 14) id += 6;
+            else if (id == 15 || id == 16) id += 7;
+            A = id + 12;
+            base = A * 2;
+            for (let X = 0; X <= 1; X++) {
+                cur = base + X;
+                if (cur < 10) cur = `0${cur}`;
+                else cur = `${cur}`;
+                if (X == 0) train_type = 2;
+                else train_type = 3;
+                train_ids[X + 4] = `${B}${cur}${train_type} `;
+            }
+            // result
+            for (let X = 1; X <= 8; X++) {
+                result = result + train_ids[X];
+                if (X == 4) {
+                    result = result + '\n';
+                }
+            }
+            // return "未支持";
         }
-        else{
+        else if (train_code == "02A04") {
+            let train_ids = [];
+            D = -36;
+            let A = id - D, train_type, base = A * 4, cur;
+            // train 1~3, 8
+            for (let X = 1; X <= 4; X++) {
+                cur = base + X + C;
+                // console.log(X, cur);
+                if (cur < 10) cur = `00${cur}`;
+                else if (cur < 100) cur = `0${cur}`;
+                else cur = `${cur}`;
+                if (X == 1 || X == 4) train_type = 1;
+                else if (X == 2 || X == 3) train_type = 2;
+                train_ids[(X == 4) ? 8 : X] = `${line}${cur}${train_type} `;
+            }
+            // train 4~7
+            D = -52;
+            A = id - D;
+            base = A * 4;
+            for (let X = 1; X <= 4; X++) {
+                cur = base + X + C;
+                if (cur < 10) cur = `00${cur}`;
+                else if (cur < 100) cur = `0${cur}`;
+                else cur = `${cur}`;
+                if (X == 2 || X == 4) train_type = 2;
+                else train_type = 3;
+                train_ids[X + 3] = `${line}${cur}${train_type} `;
+            }
+            for (let X = 1; X <= 8; X++) {
+                result = result + train_ids[X];
+                if (X == 4) {
+                    result = result + '\n';
+                }
+            }
+            return result;
+        }
+        else if (!is_special) {
+            let A = id - D, train_type;
+            let base = A * trains;
+            let cur = base;
             for (let X = 1; X <= trains; X++) {
                 cur = base + X + C;
                 if (cur < 10) cur = `00${cur}`;
@@ -741,12 +838,64 @@ function special_carriage(line, id, trains, D, C = 0, train_code, is_special) { 
                 else cur = `${cur}`;
                 if (X == 1 || X == 8) train_type = 1;
                 else if ((train_code == "02A02" || train_code == "02A05") && (X == 2 || X == 4 || X == 7)) train_type = 2;
-                else if ((train_code == "02A03" || train_code == "02A04") && (X == 2 || X == 4 || X == 6 || X == 7)) train_type = 2;
+                else if ((train_code == "02A03") && (X == 2 || X == 3 || X == 5 || X == 7)) train_type = 2;
                 else train_type = 3;
                 result = result + `${line}${cur}${train_type} `;
                 if (trains == 8 && X == 4) {
                     result = result + '\n';
                 }
+            }
+        }
+    }
+    else if (line == "03") {
+        if (train_code == "03A01") {
+            let B, A, train_type, base, cur, D;
+            let train_ids = [];
+            if (id >= 1 && id <= 5) {
+                B = "02";
+                D = 1;
+            }
+            else if (id >= 6 && id <= 21) {
+                B = "03";
+                D = 6;
+            }
+            else {
+                B = "04";
+                D = 22;
+            }
+            A = id - D;
+            base = A * 6;
+            // train 1~6
+            for (let X = 1; X <= 6; X++) {
+                cur = base + X;
+                if (cur < 10) cur = `0${cur}`;
+                else cur = `${cur}`;
+                if (X == 1 || X == 6) train_type = 1;
+                else if (X == 2 || X == 5) train_type = 2
+                else train_type = 3;
+                train_ids[X] = `${B}${cur}${train_type} `;
+            }
+            for (let X = 1; X <= 6; X++) {
+                result = result + train_ids[X];
+            }
+        }
+        else if (train_code == "03A02" || train_code == "04A02") {
+            let train_ids = [];
+            D = 1;
+            let A = id - D, train_type, base = A * 6, cur;
+            // train 1~6
+            for (let X = 1; X <= 6; X++) {
+                cur = base + X;
+                if (cur < 10) cur = `00${cur}`;
+                else if (cur < 100) cur = `0${cur}`;
+                else cur = `${cur}`;
+                if (X == 1 || X == 6) train_type = 1;
+                else if (X == 2 || X == 5) train_type = 2;
+                else train_type = 3;
+                train_ids[X] = `${line}${cur}${train_type} `;
+            }
+            for (let X = 1; X <= 6; X++) {
+                result = result + train_ids[X];
             }
         }
     }
@@ -815,7 +964,7 @@ function linespecial(id, type, line) {
             if (id < 10) train_id += `0${id}`;
             else train_id += `${id}`;
             if (train_type[3] < 10) A_min += `0${train_type[3]}`;
-            else  A_min += `${train_type[3]}`;
+            else A_min += `${train_type[3]}`;
             if (train_type[4] < 10) A_max += `0${train_type[4]}`;
             else A_max += `${train_type[4]}`;
         }
@@ -824,7 +973,7 @@ function linespecial(id, type, line) {
             if (id < 10) train_id += `0${id}`;
             else train_id += `${id}`;
             if (train_type[3] < 10) A_min += `0${train_type[3]}`;
-            else  A_min += `${train_type[3]}`;
+            else A_min += `${train_type[3]}`;
             if (train_type[4] < 10) A_max += `0${train_type[4]}`;
             else A_max += `${train_type[4]}`;
         }
@@ -835,7 +984,7 @@ function linespecial(id, type, line) {
             else train_id += `${id}`;
             if (train_type[3] < 10) A_min += `00${train_type[3]}`;
             else if (train_type[3] < 100) A_min += `0${train_type[3]}`;
-            else  A_min += `${train_type[3]}`;
+            else A_min += `${train_type[3]}`;
             if (train_type[4] < 10) A_max += `00${train_type[4]}`;
             else if (train_type[4] < 100) A_max += `0${train_type[4]}`;
             else A_max += `${train_type[4]}`;
