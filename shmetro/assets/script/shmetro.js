@@ -77,8 +77,8 @@ function test_func(disabled = false) {
         return;
     }
     let test_output = ``;
-    for (let i = 29; i <= 55; i++) {
-        test_output += linespecial(i, 0, 4) + `\n`;
+    for (let i = 1; i <= 51; i++) {
+        test_output += linespecial(i, 0, 5) + `\n`;
     }
     // console.log(test_output);
     saveTextToFile("test_output.txt", test_output);
@@ -942,6 +942,58 @@ function special_carriage(line, id, trains, D, C = 0, train_code, is_special) { 
             }
         }
     }
+    else if (line == "05") {
+        if (train_code == "05C01") {
+            let A, B, train_type, base, cur;
+            let train_ids = [];
+            if (id == 1) {
+                B = "02";
+                D = 1;
+            }
+            else if (id >= 2 && id <= 11) {
+                B = "03";
+                D = 2;
+            }
+            else {
+                B = "04";
+                D = 12;
+            }
+            if (id == 18) id = 14;
+            A = id - D;
+            base = A * 4;
+            // train 1~4
+            for (let X = 1; X <= 4; X++) {
+                cur = base + X;
+                if (cur < 10) cur = `0${cur}`;
+                else cur = `${cur}`;
+                if (X == 1 || X == 4) train_type = 1;
+                else train_type = 2;
+                train_ids[X] = `${B}${cur}${train_type} `;
+            }
+            for (let X = 1; X <= 4; X++) {
+                result = result + train_ids[X];
+            }
+        }
+        else if (train_code == "05C02") {
+            let train_ids = [];
+            D = 8;
+            let A = id - D, train_type, C = 2, base = A * 6 + 2, cur;
+            // train 1~6
+            for (let X = 1; X <= 6; X++) {
+                cur = base + X;
+                if (cur < 10) cur = `00${cur}`;
+                else if (cur < 100) cur = `0${cur}`;
+                else cur = `${cur}`;
+                if (X == 1 || X == 6) train_type = 1;
+                else if (X == 2 || X == 5) train_type = 2;
+                else train_type = 3;
+                train_ids[X] = `${line}${cur}${train_type} `;
+            }
+            for (let X = 1; X <= 6; X++) {
+                result = result + train_ids[X];
+            }
+        }
+    }
     // special rules
     return result;
 }
@@ -984,7 +1036,7 @@ function linespecial(id, type, line) {
             [2, "04A02", "包公", 50, 55, 6, 295, 330, 1, 0, 2]
         ]],
         // line 5
-        [2, 1, 51, [
+        [3, 1, 51, [
             [12, "05C01", "番茄炒蛋", 1, 13, 4, -1, -1, -1, -1, 3],
             [12, "05C01", "番茄炒蛋", 15, 18, 4, -1, -1, -1, -1, 3],
             [0, "05C02", "紫罗兰", 19, 51, 6, 69, 266, 8, 2, 2]
@@ -999,6 +1051,7 @@ function linespecial(id, type, line) {
                 break;
             }
         }
+        console.log(train_type);
         if (train_type == -1) {
             return `此列车不存在, ${line}号线允许车号: ${trains_allowed[line]}`;
         }
@@ -1222,8 +1275,19 @@ function submitInfo() {
     const train = document.getElementById("train-id").value.trim();
     const carry = document.getElementById("carriage-id").value.trim();
     // const t_car = document.getElementById("train-carriage-id").value.trim();
-    if (cl_time >= 10) line = document.getElementById("line-dev").value.trim();
+    if (cl_time >= 20) line = document.getElementById("line-dev").value.trim();
     else line = document.getElementById("line").value.trim();
+    if (line == "self") {
+        document.getElementById('line-custom').style.display = "block";
+        let data = document.getElementById("line-custom").value.trim().toLowerCase();
+        if (!((1 <= parseInt(data) && parseInt(data) <= 18) || data == "t01")) {
+            return "信息未填或有误";
+        }
+        line = "line-" + document.getElementById("line-custom").value.trim().toLowerCase();
+    }
+    else {
+        document.getElementById('line-custom').style.display = "none";
+    }
     // console.log(line);
     // console.log(train, carry);
     let output = "";

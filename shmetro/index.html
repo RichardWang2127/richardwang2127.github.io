@@ -112,6 +112,32 @@
         .clear-btn:hover {
             color: #000;
         }
+
+        .line-input-group {
+            display: flex;
+            gap: 8px;
+            align-items: center; /* 让基线对齐 */
+            margin-bottom: 12px;
+        }
+
+        .line-input-group select,
+        .line-input-group input {
+            height: 42px;
+            padding: 8px 10px;
+            font-size: 16px;
+            line-height: 1.2;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            appearance: none;          /* 移除默认样式（部分浏览器需要） */
+        }
+
+        .line-input-group select {
+            flex: 1; /* 让 select 元素占据剩余空间 */
+        }
+        .line-input-group input {
+            flex: 2; /* 让输入框占据更多空间 */
+        }
     </style>
 </head>
 
@@ -125,8 +151,10 @@
             <button id="retry2" onclick="loadScript(2);" style="display: none;">重试第三方网站通道2</button>
         </div>
         <div class="JavaScriptLoadedDisplay" style="display: none;">
+            <div class="line-input-group">
             <select id="line">
                 <option value="select-notice-line" disabled selected>选择线路: </option>
+                <option value="self" disabled>自己输入</option>
                 <option value="line-01">1号线(-*-)</option>
                 <option value="line-06">6号线(-/-)</option>
                 <option value="line-07">7号线(-/-)</option>
@@ -165,6 +193,7 @@
             </select>
             <select id="line-dev" style="display: none;">
                 <option value="select-notice-line" disabled selected>选择线路: </option>
+                <option value="self">自己输入</option>
                 <option value="line-01">1号线(-*-)</option>
                 <option value="line-02">2号线(-✕-)</option>
                 <option value="line-03">3号线(-✕-)</option>
@@ -187,6 +216,8 @@
                 <!-- <option value="line-mag" disabled>磁浮线(-✕-)</option> -->
                 <!-- <option value="line-jc" disabled>机场联络线(-✕-)</option> -->
             </select>
+            <input type="text" id="line-custom" placeholder="(浦江线: T01, 其余仅输入数字)" />
+            </div>
             <div class="input-wrapper">
                 <input type="number" id="train-id" placeholder="车号" />
                 <span class="clear-btn" onclick="document.getElementById('train-id').value=''; this.style.display='none'; submitInfo()">✕</span>
@@ -262,8 +293,12 @@
             if (way === 0 || way === 1) scriptElement.src = 'https://075038.xyz/shmetro/assets/script/shmetro.js';
             else scriptElement.src = 'https://richardwang2127.github.io/shmetro/assets/script/shmetro.js';
             let host = window.location.hostname;
-            if (host === 'localhost' || window === '127.0.0.1' || host === '::1') scriptElement.src = './assets/script/shmetro.js';
+            if (host === 'localhost' || window === '127.0.0.1' || host === '::1' || host.includes('192.168.') != -1) {
+                let port = window.location.port;
+                scriptElement.src = 'http://' + host + ':' + port + '/shmetro/assets/script/shmetro.js';
+            }
             scriptElement.src += '?v=202506231149'; // 添加时间戳以避免缓存
+            // console.log(scriptElement.src);
             scriptElement.onload = function () {
                 document.getElementById("script_load").style.display = "none";
                 localStorage.setItem("scriptLoaded", way);
