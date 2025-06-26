@@ -719,6 +719,27 @@ function line09(id, type) {
 
 function special_carriage(line, id, trains, D, C = 0, train_code, is_special) { // (Y - C) / trains + D = A ...... X; A = id - D
     let result = '';
+    after_rep_l5 = [
+        [],
+        ["02011", "02022", "02032", "02041"],
+        ["053011", "053022", "053032", "053041"],
+        ["053051", "053062", "053072", "053081"],
+        ["053091", "053102", "053112", "053121"],
+        ["053131", "053142", "053152", "053161"],
+        ["053171", "053182", "053192", "053201"],
+        ["053211", "053222", "053232", "053241"],
+        ["053251", "053262", "053272", "053281"],
+        ["050331", "050342", "050352", "050361"],
+        ["03331", "03342", "03352", "03361"],
+        ["053371", "053382", "053392", "053401"],
+        ["050451", "050462", "050472", "050481"],
+        ["050491", "050502", "050512", "050521"],
+        [],
+        ["054131", "054142", "054152", "054161"],
+        ["04171", "04182", "04192", "04201"],
+        ["050611", "050622", "050632", "050641"],
+        ["04091", "04102", "04112", "04121"],
+    ];
     line = parseInt(line);
     if (line < 10) {
         line = `0${line}`;
@@ -973,6 +994,15 @@ function special_carriage(line, id, trains, D, C = 0, train_code, is_special) { 
             for (let X = 1; X <= 4; X++) {
                 result = result + train_ids[X];
             }
+            if (id == 14 || id == 16 || id == 10 || id == 1) {
+                result += "\n未大修";
+            }
+            else {
+                result += "\n大修后: \n";
+                for (let X = 1; X <= 4; X++) {
+                    result = result + `${after_rep_l5[id == 14 ? 18 : id][X - 1]} `;
+                }
+            }
         }
         else if (train_code == "05C02") {
             let train_ids = [];
@@ -997,6 +1027,246 @@ function special_carriage(line, id, trains, D, C = 0, train_code, is_special) { 
     // special rules
     return result;
 }
+
+function special_train(line, id) {
+    let A, X;
+    after_rep_l5 = [
+        [],
+        ["02011", "02022", "02032", "02041"],
+        ["053011", "053022", "053032", "053041"],
+        ["053051", "053062", "053072", "053081"],
+        ["053091", "053102", "053112", "053121"],
+        ["053131", "053142", "053152", "053161"],
+        ["053171", "053182", "053192", "053201"],
+        ["053211", "053222", "053232", "053241"],
+        ["053251", "053262", "053272", "053281"],
+        ["050331", "050342", "050352", "050361"],
+        ["03331", "03342", "03352", "03361"],
+        ["053371", "053382", "053392", "053401"],
+        ["050451", "050462", "050472", "050481"],
+        ["050491", "050502", "050512", "050521"],
+        [],
+        ["054131", "054142", "054152", "054161"],
+        ["04171", "04182", "04192", "04201"],
+        ["050611", "050622", "050632", "050641"],
+        ["04091", "04102", "04112", "04121"],
+    ];
+    line = parseInt(line);
+    if (line < 10) {
+        line = `0${line}`;
+    }
+    else {
+        line = `${line}`;
+    }
+    if (line == "02") {
+        let B = id.slice(0, 2);
+        if (B == "00") {
+            let carriage = parseInt(id.slice(2, 4));
+            // console.log(carriage);
+            if (7 <= carriage && carriage <= 18) {
+                A = parseInt(carriage / 6);
+                X = carriage % 6;
+                if (X == 0) {
+                    X = 8;
+                    A--;
+                }
+                if (X == 4 || X == 5) {
+                    X += 2;
+                }
+            }
+            else {
+                return "此车体号不存在";
+            }
+        }
+        else if (B == "01") {
+            let carriage = parseInt(id.slice(2, 4));
+            if (1 <= carriage && carriage <= 24) {
+                A = parseInt(carriage / 6) + 13;
+                X = carriage % 6;
+                if (X == 0) {
+                    X = 8;
+                    A--;
+                }
+                if (X == 4 || X == 5) {
+                    X += 2;
+                }
+            }
+            else if (26 <= carriage && carriage <= 71) {
+                A = parseInt(carriage / 2) - 12;
+                X = carriage % 2 + 4;
+                switch (A) {
+                    case 4: A -= 1; break;
+                    case 5: A -= 1; break;
+                    case 8: A -= 2; break;
+                    case 11: A -= 3; break;
+                    case 13: A -= 4; break;
+                    case 14: A -= 4; break;
+                    case 10: A -= 5; break;
+                    case 16: A -= 5; break;
+                    case 17: A -= 5; break;
+                    case 19: A -= 6; break;
+                    case 20: A -= 6; break;
+                    case 22: A -= 7; break;
+                    case 23: A -= 7; break;
+                }
+            }
+            else {
+                return "此车体号不存在";
+            }
+        }
+        else {
+            let carriage = parseInt(id.slice(2, 5));
+            if (carriage >= 129 && carriage <= 424 || carriage >= 553 && carriage <= 800) {
+                A = parseInt(carriage / 8) + 17;
+                X = carriage % 8;
+                if (X == 0) {
+                    X = 8;
+                    A--;
+                }
+            }
+            else if (carriage >= 425 && carriage <= 488) {
+                A = parseInt(carriage / 4) - 36;
+                X = carriage % 4;
+                if (X == 0) {
+                    X = 8;
+                    A--;
+                }
+            }
+            else if (carriage >= 489 && carriage <= 552) {
+                A = parseInt(carriage / 4) - 52;
+                X = carriage % 4 + 3;
+                if (X == 3) {
+                    X = 7;
+                    A--;
+                }
+            }
+            else {
+                return "此车体号不存在";
+            }
+        }
+    }
+    else if (line == "03") {
+        let B = id.slice(0, 2);
+        if (B == "02") {
+            let carriage = parseInt(id.slice(2, 4));
+            if (1 <= carriage && carriage <= 30) {
+                A = parseInt(carriage / 6) + 1;
+                X = carriage % 6;
+                if (X == 0) {
+                    X = 6;
+                    A--;
+                }
+            }
+            else {
+                return "此车体号不存在";
+            }
+        }
+        else if (B == "03") {
+            let carriage = parseInt(id.slice(2, 4));
+            if (1 <= carriage && carriage <= 96) {
+                A = parseInt(carriage / 6) + 6;
+                X = carriage % 6;
+                if (X == 0) {
+                    X = 6;
+                    A--;
+                }
+            }
+            else {
+                return "此车体号不存在";
+            }
+        }
+        else if (B == "04") {
+            let carriage = parseInt(id.slice(2, 4));
+            if (1 <= carriage && carriage <= 42) {
+                A = parseInt(carriage / 6) + 22;
+                X = carriage % 6;
+                if (X == 0) {
+                    X = 6;
+                    A--;
+                }
+            }
+            else {
+                return "此车体号不存在";
+            }
+        }
+        else {
+            return;
+        }
+    }
+    else if (line == "04") {
+        return "未支持";
+    }
+    else if (line == "05") {
+        let B = id.slice(0, 2);
+        if (B == "02") {
+            let carriage = parseInt(id.slice(2, 4));
+            if (1 <= carriage && carriage <= 4) {
+                A = 1;
+                X = carriage;
+            }
+            else {
+                return "此车体号不存在";
+            }
+        }
+        else if (B == "03") {
+            let carriage = parseInt(id.slice(2, 4));
+            // console.log(carriage);
+            if (1 <= carriage && carriage <= 40) {
+                A = parseInt(carriage / 4) + 2;
+                X = carriage % 4;
+                if (X == 0) {
+                    X = 4;
+                    A--;
+                }
+            }
+            else {
+                return "此车体号不存在";
+            }
+        }
+        else if (B == "04") {
+            let carriage = parseInt(id.slice(2, 4));
+            if (1 <= carriage && carriage <= 24) {
+                A = parseInt(carriage / 4) + 12;
+                X = carriage % 4;
+                if (X == 0) {
+                    X = 4;
+                    A--;
+                }
+                if (A == 14) A = 18;
+            }
+            else {
+                return "此车体号不存在";
+            }
+        }
+        else {
+            for (let A = 1; A <= 18; A++) {
+                for (let X = 0; X <= 3; X++) {
+                    // console.log(A, X);
+                    if (after_rep_l5[A][X] == undefined) continue;
+                    // console.log(after_rep_l5[A][X].slice(0, 5), id.slice(0, 5), after_rep_l5[A][X].slice(0, 6), id.slice(0, 6));
+                    if (after_rep_l5[A][X].slice(0, 5).includes(id.slice(0, 5)) || after_rep_l5[A][X].slice(0, 6).includes(id.slice(0, 6))) {
+                        X = after_rep_l5[A].indexOf(id) + 1;
+                        return A;
+                    }
+                }
+            }
+            let carriage = parseInt(id.slice(2, 5));
+            if (carriage >= 69 && carriage <= 266) {
+                A = parseInt((carriage - 2) / 6) + 8;
+                X = (carriage - 2) % 6;
+                if (X == 0) {
+                    X = 6;
+                    A--;
+                }
+                return A;
+            }
+            return "此车体号不存在";
+        }
+    }
+    return A;
+}
+
+
 
 function linespecial(id, type, line) {
     let output = ``;
@@ -1042,7 +1312,7 @@ function linespecial(id, type, line) {
             [0, "05C02", "紫罗兰", 19, 51, 6, 69, 266, 8, 2, 2]
         ]]
     ]
-    trains_allowed = ["", "", "1~16, 33~116", "1~49", "1~55", "1~51"];
+    trains_allowed = ["", "", "1~16, 33~116", "1~49", "1~55", "1~13, 15~51"];
     if (type == 0) {
         let train_type = -1;
         for (let t = 0; t < data_special[line][0]; t++) {
@@ -1051,7 +1321,7 @@ function linespecial(id, type, line) {
                 break;
             }
         }
-        console.log(train_type);
+        // console.log(train_type);
         if (train_type == -1) {
             return `此列车不存在, ${line}号线允许车号: ${trains_allowed[line]}`;
         }
@@ -1091,10 +1361,63 @@ function linespecial(id, type, line) {
             A_max = "03" + A_max.slice(2, 4);
         }
         output = output + `${line}号线 ${train_id}\n`;
-        output = output + `${train_type[1]} ${train_type[2]} (${A_min}~${A_max})\n`;
+        if (train_type[2] == "番茄炒蛋") output = output + `${train_type[1]} ${train_type[2]} (05001~05013, 05015~05018)\n`;
+        else output = output + `${train_type[1]} ${train_type[2]} (${A_min}~${A_max})\n`;
         output = output + special_carriage(line, id, train_type[5], train_type[8], train_type[9], train_type[1], train_type[0]);
     } else if (type == 1) {
-        output = "未支持";
+        id = special_train(line, id);
+        if (id == "此车体号不存在") return id;
+        let train_type = -1;
+        for (let t = 0; t < data_special[line][0]; t++) {
+            if (id >= data_special[line][3][t][3] && id <= data_special[line][3][t][4]) {
+                train_type = data_special[line][3][t];
+                break;
+            }
+        }
+        // console.log(train_type);
+        if (train_type == -1) {
+            return `内容未填或有误`;
+        }
+        let train_id = `${line}`, A_min = `${line}`, A_max = `${line}`;
+        if (train_type[10] == -1) {
+            if (id < 10) train_id += `0${id}`;
+            else train_id += `${id}`;
+            if (train_type[3] < 10) A_min += `0${train_type[3]}`;
+            else A_min += `${train_type[3]}`;
+            if (train_type[4] < 10) A_max += `0${train_type[4]}`;
+            else A_max += `${train_type[4]}`;
+        }
+        else if (train_type[10] == 2) {
+            train_id = `0${line}`, A_min = `0${line}`, A_max = `0${line}`;
+            if (id < 10) train_id += `0${id}`;
+            else train_id += `${id}`;
+            if (train_type[3] < 10) A_min += `0${train_type[3]}`;
+            else A_min += `${train_type[3]}`;
+            if (train_type[4] < 10) A_max += `0${train_type[4]}`;
+            else A_max += `${train_type[4]}`;
+        }
+        else if (train_type[10] == 3) {
+            train_id = `0${line}`, A_min = `0${line}`, A_max = `0${line}`;
+            if (id < 10) train_id += `00${id}`;
+            else if (id < 100) train_id += `0${id}`;
+            else train_id += `${id}`;
+            if (train_type[3] < 10) A_min += `00${train_type[3]}`;
+            else if (train_type[3] < 100) A_min += `0${train_type[3]}`;
+            else A_min += `${train_type[3]}`;
+            if (train_type[4] < 10) A_max += `00${train_type[4]}`;
+            else if (train_type[4] < 100) A_max += `0${train_type[4]}`;
+            else A_max += `${train_type[4]}`;
+        }
+        if (train_type[2] == "叛徒包公") {
+            train_id = "03" + train_id.slice(2, 4);
+            A_min = "03" + A_min.slice(2, 4);
+            A_max = "03" + A_max.slice(2, 4);
+        }
+        output = output + `${line}号线 ${train_id}\n`;
+        if (train_type[2] == "番茄炒蛋") output = output + `${train_type[1]} ${train_type[2]} (05001~05013, 05015~05018)\n`;
+        else output = output + `${train_type[1]} ${train_type[2]} (${A_min}~${A_max})\n`;
+        output = output + special_carriage(line, id, train_type[5], train_type[8], train_type[9], train_type[1], train_type[0]);
+        // output += `${line}号线 ${train}\n`;
     }
     return output;
 }
@@ -1356,18 +1679,10 @@ function submitInfo() {
         if (line == "line-01") {
             output += line01(carry, 1);
         }
-        else if (line == "line-02") {
-            output += line02(carry, 1);
+        else if (line == "line-02" || line == "line-03" || line == "line-04" || line == "line-05") {
+            output += linespecial(carry, 1, parseInt(line.split("-")[1], 10));
         }
-        else if (line == "line-03") {
-            output += line03(carry, 1);
-        }
-        else if (line == "line-04") {
-            output += line04(carry, 1);
-        }
-        else if (line == "line-05") {
-            output += line05(carry, 1);
-        }
+
         else if (line == "line-06") {
             output += line06(carry, 1);
         }
