@@ -10,7 +10,7 @@
     <link rel="icon" href="/shmetro/assets/favicon.ico" type="image/x-icon">
     <link rel="apple-touch-icon" sizes="180x180" href="/shmetro/assets/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="上海地铁列车" />
-    <script src="./assets/script/fonts.js?v=202506231149" charset="UTF-8"></script>
+    <script src="./assets/script/fonts.js?v=202506262222" charset="UTF-8"></script>
     <link rel="manifest" href="/shmetro/assets/site.webmanifest" />
     <title>上海地铁列车</title>
     <style>
@@ -156,6 +156,10 @@
                 <option value="select-notice-line" disabled selected>选择线路: </option>
                 <option value="self" disabled>自己输入</option>
                 <option value="line-01">1号线</option>
+                <option value="line-02">2号线</option>
+                <option value="line-03">3号线</option>
+                <option value="line-04">4号线</option>
+                <option value="line-05">5号线</option>
                 <option value="line-06">6号线</option>
                 <option value="line-07">7号线</option>
                 <option value="line-08">8号线</option>
@@ -170,10 +174,6 @@
                 <option value="line-17">17号线</option>
                 <option value="line-18">18号线</option>
                 <option value="line-t01">浦江线</option>
-                <option value="line-02" disabled>2号线</option>
-                <option value="line-03" disabled>3号线</option>
-                <option value="line-04" disabled>4号线</option>
-                <option value="line-05" disabled>5号线</option>
                 <!--<option value="line-06">6号线</option>-->
                 <!-- <option value="line-07">7号线</option> -->
                 <!--<option value="line-08">8号线</option>-->
@@ -235,16 +235,16 @@
             <div class="output" id="outputBox">信息：暂无。</div>
         </div>
     </div>
-    <p class="footer" align="center" style="font-size: 13px;">Update: 2025.6.26 21:57; Version: <a
-            href="https://github.com/RichardWang2127/richardwang2127.github.io" ; id="version">0.5.7</a> </p>
+    <p class="footer" align="center" style="font-size: 13px;">Update: 2025.6.26 22:22; Version: <a
+            href="https://github.com/RichardWang2127/richardwang2127.github.io" ; id="version">0.6.1</a> </p>
     <div class="container">
         <div class="output" id="developBox" style="display:true;">开发信息：<span id="devMode" style="display: none;">开发者模式：开启</span>
 已支持:
-  1,9号线。
-  6~18号线、浦江线车号转车体号。
+  1~3,5,7,9~18号线。
+  6,8号线、浦江线车号转车体号。
 开发中:
-  2~5号线车号转车体号。
-  6~18号线和浦江线车体号转车号。
+  4号线车体号转车号。
+  6,8号线、浦江线车体号转车号。
 暂不开发:
   机场联络线。
         </div>
@@ -298,7 +298,7 @@
                 scriptElement.src = 'http://' + host + ':' + port + '/shmetro/assets/script/shmetro.js';
             }
             console.log(scriptElement.src);
-            scriptElement.src += '?v=202506231149'; // 添加时间戳以避免缓存
+            scriptElement.src += '?v=202506262222'; // 添加时间戳以避免缓存
             // console.log(scriptElement.src);
             scriptElement.onload = function () {
                 document.getElementById("script_load").style.display = "none";

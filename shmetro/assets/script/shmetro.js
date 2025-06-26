@@ -28,6 +28,7 @@ function checkDev(from) {
         document.getElementById('submitInfo').textContent = "输入后信息自动显示";
         document.getElementById("devMode").style.display = "none";
         setInterval(submitInfo(), 50);
+        location.reload(); // 刷新页面
         cl_time = 0; // 重置计时
         return;
     }
@@ -1427,7 +1428,10 @@ function linedefault(id, type, line) {
     // Y_min, Y_max, trains, D, C, A_min, A_max, train_types
     data_lines = [
         [], [], [],
-        [], [], [], [], [], [], [],
+        [], [], [], [],
+        [1, 474, 6, 1, 0, 1, 79, 3], // line 7
+        [1, 602, -1, -1, 0, 1, 90, 3], // line 8
+        [],
         // start from line 10
         [1, 402, 6, 1, 0, 1, 67, 2],
         [1, 492, 6, 1, 0, 1, 82, 3],
@@ -1443,7 +1447,19 @@ function linedefault(id, type, line) {
     // No, Nickname, A_min, A_max, digits(after line num)
     diff_trains = [
         // line 0~9
-        [], [], [], [], [], [], [], [], [], [],
+        [], [], [], [], [], [], [],
+        [
+            ["07A01", "芬达", 1, 42, 2],
+            ["07A02", "邦迪", 43, 72, 2],
+            ["07A03", "邦迪二世", 73, 79, 3],
+        ],
+        [
+            ["08C01", "蓝精灵", 1, 28, 3],
+            ["08C02", "泥鳅", 29, 46, 3],
+            ["08C03", "泥鳅二世", 47, 66, 3],
+            ["08C04", "泥鳅三世", 67, 90, 3]
+        ],
+        [],
         //line 10~T01 (No JC)
         [
             ["10A01", "热带鱼", 1, 41, 3],
@@ -1502,6 +1518,7 @@ function linedefault(id, type, line) {
                 const digits = diff_trains[line][t][4];
                 let A_min = diff_trains[line][t][2];
                 let A_max = diff_trains[line][t][3];
+                if (line < 10) line = `0${line}`;
                 if (digits == 2) {
                     if (id < 10) id = `0${id}`;
                     else id = `${id}`;
@@ -1543,53 +1560,67 @@ function linedefault(id, type, line) {
             output += get_carriage(line, id, data_lines[line][2], data_lines[line][3], data_lines[line][4]);
         }
     } else if (type == 1) {
-        // console.log(id);
-        return "未支持";
-        carriage_id = id;
-        let flag = false;
-        if (carriage_id.length > 6) {
-            return "内容未填或有误";
+        console.log(id.length);
+        if ((id.slice(0, 2) == `${line}` || id.slice(0, 2) == `0${line}`) && id.length >= 5) {
+            id = parseInt(id.slice(2, 5));
         }
-        if (!(carriage_id >= data_lines[line][0] && carriage_id <= data_lines[line][1])) {
-            flag = true;
-        }
-        carriage_id = carriage_id.slice(0, 5);
-        console.log(carriage_id);
-        if (flag) {
-            if (id.slice(0, 2) == "09") {
-                id = parseInt(id.slice(2, 5));
-                if (carriage_id > 0 && carriage_id < 631) {
-                    flag = false;
+        id = get_train(line, id, data_lines[line][2], data_lines[line][3], data_lines[line][4]);
+        console.log(id);
+        let line16 = -1;
+        // 找车型
+        for (let t = 0; t < data_lines[line][7]; t++) {
+            if (id >= diff_trains[line][t][2] && id <= diff_trains[line][t][3]) {
+                const digits = diff_trains[line][t][4];
+                let A_min = diff_trains[line][t][2];
+                let A_max = diff_trains[line][t][3];
+                if (line < 10) line = `0${line}`;
+                if (digits == 2) {
+                    if (id < 10) id = `0${id}`;
+                    else id = `${id}`;
+                    if (A_min < 10) A_min = `${line}0${A_min}`;
+                    else A_min = `${line}${A_min}`;
+                    if (A_max < 10) A_max = `${line}0${A_max}`;
+                    else A_max = `${line}${A_max}`;
+
+                } else {
+                    // 3 digits
+                    if (id < 10) id = `00${id}`;
+                    else if (id < 100) id = `0${id}`;
+                    else id = `${id}`;
+                    if (A_min < 10) A_min = `${line}00${A_min}`;
+                    else if (A_min < 100) A_min = `${line}0${A_min}`;
+                    else A_min = `${line}${A_min}`;
+                    if (A_max < 10) A_max = `${line}00${A_max}`;
+                    else if (A_max < 100) A_max = `${line}0${A_max}`;
+                    else A_max = `${line}${A_max}`;
                 }
+                line = parseInt(line);
+                // x号线 xxyy xxAzz/xxCzz Nickname (A1~A2) trains
+                if (line == 19) {
+                    output = output + `浦江线 T01${id}\n${diff_trains[line][t][0]} ${diff_trains[line][t][1]}(${A_min}~${A_max})\n`;
+                }
+                else {
+                    output = output + `${line}号线 ${line < 10 ? `0${line}`: line}${id}\n${diff_trains[line][t][0]} ${diff_trains[line][t][1]}(${A_min}~${A_max})\n`;
+                }
+                if (line == 16) line16 = t;
+                break;
             }
         }
-        if (flag) {
-            return "此车厢不存在, 9号线允许车体号: 1~630";
+        // (Y - C) / trains + D = A ...... X;
+        //   0      1       2    3  4    5      6         7
+        // Y_min, Y_max, trains, D, C, A_min, A_max, train_types
+        // console.log(line16);
+        if (line16 == 0) {
+            output += get_carriage(line, id, 3, 1, 0);
         }
-        id = get_train(9, id, 6, 1);
-        if (id > 0 && id < 11) {
-            let p = '0';
-            if (id == 10) {
-                p = '';
-            }
-            output = output + `9号线 09${p}${id}\n09A01 蚕宝宝(0901~0910)\n`;
-        } else if ((id > 10 && id < 42 || id > 45 && id < 52) && id != 48) {
-            output = output + `9号线 09${id}\n09A02 坂田(0911~0951)\n`;
-        } else if (id > 41 && id < 46 || id == 48) {
-            output = output + `9号线 09${id}\n09A02 世博坂田(0942~0945, 0948)\n`;
-        } else if (id == 52) {
-            output = output + `9号线 0952\n09ASY 电气男孩(0952)\n`;
-        } else if (id > 52 && id < 89) {
-            output = output + `9号线 09${id}\n09A03 创可贴(0953~0988)\n`;
-        } else if (id > 88 && id < 106) {
-            let p = '0';
-            if (id > 99) {
-                p = ''
-            }
-            output = output + `9号线 09${p}${id}\n09A05 创可贴二世(09089~09105)\n`;
+        else if (line16 == 1) {
+            output += get_carriage(line, id, 6, 24, 0);
+        }
+        else {
+            output += get_carriage(line, id, data_lines[line][2], data_lines[line][3], data_lines[line][4]);
         }
 
-        output = output + get_carriage(9, id, 6, 1);
+        // return "未支持";
     }
     return output;
 }
@@ -1685,9 +1716,6 @@ function submitInfo() {
 
         else if (line == "line-06") {
             output += line06(carry, 1);
-        }
-        else if (line == "line-07") {
-            output += line07(carry, 1);
         }
         else if (line == "line-08") {
             output += line08(carry, 1);
