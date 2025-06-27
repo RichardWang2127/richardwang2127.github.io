@@ -595,7 +595,7 @@ function line08(id, type) {
         }
         if (id > 0 && id <= 28) {
             let p = '0';
-            if (id == 10) {
+            if (id >= 10) {
                 p = '';
             }
             output = output + `8号线 080${p}${id}\n08C01 蓝精灵(08001~08028)\n`;
@@ -640,8 +640,28 @@ function line08(id, type) {
             // output = output + `${arr_8[id][0]} ${arr_8[id][1]} ${arr_8[id][2]} ${arr_8[id][3]} `;
             // output = output + `${arr_8[id][4]} ${arr_8[id][5]} ${arr_8[id][6]}`;
         }
-    } else if (type == 1) {
-
+    }
+    else if (type == 1) {
+        if (id.slice(0, 2) == "08") {
+            id = id.slice(2, 5);
+        }
+        let D, trains = 7;
+        if (1 <= id && id <= 168) {
+            D = 1;
+            trains = 6;
+        }
+        else if (85 <= id && id <= 602) {
+            D = 5;
+        }
+        else {
+            return "此车体号不存在";
+        }
+        let train = get_train(6, id, trains, D);
+        console.log(isNaN(train));
+        if (isNaN(train)) {
+            return "此车体号不存在";
+        }
+        output = output + line08(train, 0);
     }
     return output;
 }
