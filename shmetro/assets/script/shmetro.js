@@ -79,7 +79,7 @@ function test_func(disabled = false) {
     }
     let test_output = ``;
     for (let i = 1; i <= 51; i++) {
-        test_output += linespecial(i, 0, 5) + `\n`;
+        test_output = test_output + '\n';
     }
     // console.log(test_output);
     saveTextToFile("test_output.txt", test_output);
@@ -404,6 +404,7 @@ function line01(id, type) {
 // function line02
 function line06(id, type) {
     //06C Table
+    // console.log(id, type);
     const arr_6 = [
         [],
         ["060011", "060022", "060032", "060041"],
@@ -509,10 +510,36 @@ function line06(id, type) {
         }
         output = output + `${arr_6[id][0]} ${arr_6[id][1]} `;
         output = output + `${arr_6[id][2]} ${arr_6[id][3]}`;
-    } else if (type == 1) {
-        for (let i = 11; i <= 13; i++) {
-
+    }
+    else if (type == 1) {
+        if (id.slice(0, 2) == "06") {
+            id = id.slice(2, 5);
         }
+        let D;
+        if (1 <= id && id <= 84) {
+            D = 1;
+        }
+        else if (85 <= id && id <= 128) {
+            D = 4;
+        }
+        else if (129 <= id && id <= 200) {
+            D = 5;
+        }
+        else if (201 <= id && id <= 304) {
+            D = 7;
+        }
+        let train = get_train(6, id, 4, D);
+        console.log(isNaN(train));
+        if (isNaN(train)) {
+            return "此车体号不存在";
+        }
+        if (4 <= train && train <= 12 || train == 34 || train == 35 || 44 <= train && train <= 52) {
+            train += 1;
+        }
+        else if (13 <= train && train <= 21 || train == 53 || train == 54) {
+            train += 2;
+        }
+        output = output + line06(train, 0);
     }
     return output;
 }
@@ -554,8 +581,6 @@ function line07(id, type) {
         // console.log(output);
         // output = output + `${arr_8[id][0]} ${arr_8[id][1]} ${arr_8[id][2]} ${arr_8[id][3]} `;
         // output = output + `${arr_8[id][4]} ${arr_8[id][5]} ${arr_8[id][6]}`;
-    } else if (type == 1) {
-
     }
     return output;
 }
@@ -1284,7 +1309,7 @@ function special_train(line, id) {
                     // console.log(A, X);
                     if (after_rep_l5[A][X] == undefined) continue;
                     // console.log(after_rep_l5[A][X].slice(0, 5), id.slice(0, 5), after_rep_l5[A][X].slice(0, 6), id.slice(0, 6));
-                    if (after_rep_l5[A][X].slice(0, 5).includes(id.slice(0, 5)) || after_rep_l5[A][X].slice(0, 6).includes(id.slice(0, 6))) {
+                    if (after_rep_l5[A][X].slice(0, 5) == (id.slice(0, 5)) || after_rep_l5[A][X].slice(0, 6) == (id.slice(0, 6))) {
                         X = after_rep_l5[A].indexOf(id) + 1;
                         return A;
                     }
@@ -1486,7 +1511,13 @@ function linedefault(id, type, line) {
     // No, Nickname, A_min, A_max, digits(after line num)
     diff_trains = [
         // line 0~9
-        [], [], [], [], [], [], [],
+        [], [], [], [], [], [],
+        [
+            ["06C01", "Kitty", 1, 23, 3],
+            ["06C02", "花木兰"],
+            ["06C03", "花木兰二世"],
+            ["06C04", "花木兰三世"],
+        ],
         [
             ["07A01", "芬达", 1, 42, 2],
             ["07A02", "邦迪", 43, 72, 2],
