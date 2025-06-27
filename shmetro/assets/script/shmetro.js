@@ -914,7 +914,7 @@ function special_carriage(line, id, trains, D, C = 0, train_code, is_special) { 
                 if (X == 1 || X == 6) train_type = 1;
                 else if (X == 2 || X == 5) train_type = 2;
                 else train_type = 3;
-                train_ids[X] = `${line}${cur}${train_type} `;
+                train_ids[X] = `${train_code == "03A02" ? line : '04'}${cur}${train_type} `;
             }
             for (let X = 1; X <= 6; X++) {
                 result = result + train_ids[X];
@@ -1164,38 +1164,77 @@ function special_train(line, id) {
         }
         else if (B == "03") {
             let carriage = parseInt(id.slice(2, 4));
-            if (1 <= carriage && carriage <= 96) {
+            let found = false;
+            if (id.length <= 5 && 1 <= carriage && carriage <= 96) {
                 A = parseInt(carriage / 6) + 6;
                 X = carriage % 6;
                 if (X == 0) {
                     X = 6;
                     A--;
                 }
+                found = true;
             }
-            else {
+            if (!found) {
+                let carriage = parseInt(id.slice(2, 5));
+                if (carriage >= 169 && carriage <= 216) {
+                    A = parseInt(carriage / 6) + 1;
+                    X = carriage % 6;
+                    if (X == 0) {
+                        X = 6;
+                        A--;
+                    }
+                    found = true;
+                }
+            }
+            if (!found) {
                 return "此车体号不存在";
             }
         }
         else if (B == "04") {
             let carriage = parseInt(id.slice(2, 4));
-            if (1 <= carriage && carriage <= 42) {
+            let found = false;
+            if (id.length <= 5 && 1 <= carriage && carriage <= 42) {
                 A = parseInt(carriage / 6) + 22;
                 X = carriage % 6;
                 if (X == 0) {
                     X = 6;
                     A--;
                 }
+                found = true;
             }
-            else {
+            if (!found) {
+                let carriage = parseInt(id.slice(2, 5));
+                if (carriage >= 217 && carriage <= 294) {
+                    A = parseInt(carriage / 6) + 1;
+                    X = carriage % 6;
+                    if (X == 0) {
+                        X = 6;
+                        A--;
+                    }
+                    found = true;
+                }
+            }
+            if (!found) {
                 return "此车体号不存在";
             }
         }
         else {
-            return;
+            return "此车体号不存在";
         }
     }
     else if (line == "04") {
-        return "未支持";
+        let carriage = parseInt(id.slice(2, 5));
+        if (1 <= carriage && carriage <= 330) {
+            A = parseInt(carriage / 6) + 1;
+            X = carriage % 6;
+            if (X == 0) {
+                X = 6;
+                A--;
+            }
+        }
+        else {
+            return "此车体号不存在";
+        }
     }
     else if (line == "05") {
         let B = id.slice(0, 2);
@@ -1600,7 +1639,7 @@ function linedefault(id, type, line) {
                     output = output + `浦江线 T01${id}\n${diff_trains[line][t][0]} ${diff_trains[line][t][1]}(${A_min}~${A_max})\n`;
                 }
                 else {
-                    output = output + `${line}号线 ${line < 10 ? `0${line}`: line}${id}\n${diff_trains[line][t][0]} ${diff_trains[line][t][1]}(${A_min}~${A_max})\n`;
+                    output = output + `${line}号线 ${line < 10 ? `0${line}` : line}${id}\n${diff_trains[line][t][0]} ${diff_trains[line][t][1]}(${A_min}~${A_max})\n`;
                 }
                 if (line == 16) line16 = t;
                 break;
