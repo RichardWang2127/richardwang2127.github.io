@@ -125,6 +125,7 @@
         </label>
         <div class="button-group">
             <button onclick="search()">查询</button>
+            <button onclick="searchTop()">年级TOP5</button>
             <button onclick="location.href='/'">作者主页</button>
         </div>
         <button>本页数据使用自动化python程序进行分析，可能存在错误</button>
@@ -158,13 +159,35 @@
             "Silver": "银奖",
             "Gold": "金奖",
             "Platinum": "白金奖",
-            "Excellence": "HD卓越奖"
+            "Excellence": "HD卓越奖",
+            "Outstanding Member of the Student Union": "学生会优秀干事"
         };
 
         function getChineseAwardName(enName) {
             return awardNameMap[enName] || enName;
         }
 
+        function searchTop() {
+            const result = document.getElementById("result");
+
+            if (!awardsData.length) {
+                result.textContent = "数据尚未加载，请稍后再试。";
+                return;
+            }
+
+            const top5 = awardsData.slice(0, 5);
+
+            let output = "前五名学生：\n\n";
+            top5.forEach((student, index) => {
+                output += `${index + 1}. ${student.chi_name} ${student.eng_name} (班级: ${student.class})\n`;
+                output += `   总奖项: ${student.total} (学术奖: ${student.academic_count}, 杰出努力奖: ${student.outstanding_count}, 德育奖: ${student.daily_count})\n`;
+                output += `   学术奖: ${student.academic.join(', ') || '无'}\n`;
+                output += `   杰出努力奖: ${student.outstanding.join(', ') || '无'}\n`;
+                output += `   德育奖: ${student.daily.join(', ') || '无'}\n\n`;
+            });
+
+            result.textContent = output.trim();
+        }
         function search() {
             const engName = document.getElementById("engName").value.trim();
             const surname = document.getElementById("surname").value.trim();

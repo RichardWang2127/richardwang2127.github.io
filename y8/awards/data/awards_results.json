@@ -5,10 +5,10 @@
     "eng_name": "Mia",
     "surname": "Xu",
     "class": "Y804",
-    "total": 10,
+    "total": 11,
     "academic_count": 5,
     "outstanding_count": 2,
-    "daily_count": 3,
+    "daily_count": 4,
     "academic": [
       "Chinese",
       "Drama",
@@ -23,6 +23,7 @@
     "daily": [
       "Excellence",
       "Model Student",
+      "Outstanding Member of the Student Union",
       "Platinum"
     ]
   },
@@ -32,10 +33,10 @@
     "eng_name": "Richard",
     "surname": "Wang",
     "class": "Y801",
-    "total": 8,
+    "total": 9,
     "academic_count": 4,
     "outstanding_count": 2,
-    "daily_count": 2,
+    "daily_count": 3,
     "academic": [
       "ICT",
       "Math",
@@ -48,6 +49,7 @@
     ],
     "daily": [
       "Model Student",
+      "Outstanding Member of the Student Union",
       "Platinum"
     ]
   },
@@ -1424,6 +1426,22 @@
     "outstanding": [],
     "daily": [
       "Bronze"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "芦雨歆",
+    "eng_name": "Carina",
+    "surname": "Lu",
+    "class": "Y802",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Outstanding Member of the Student Union"
     ]
   },
   {
