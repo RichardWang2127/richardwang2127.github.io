@@ -127,8 +127,9 @@
             <button onclick="search()">查询</button>
             <button onclick="searchTop()">年级TOP5</button>
             <button onclick="location.href='/'">作者主页</button>
+            <button onclick="sortWay()">排序方法</button>
         </div>
-        <button>本页数据使用自动化python程序进行分析，可能存在错误</button>
+        <!-- <button>本页数据使用自动化python程序进行分析，可能存在错误</button> -->
 
         <pre id="result">请在上方输入英文名和姓氏进行查询</pre>
     </div>
@@ -163,6 +164,9 @@
             "Outstanding Member of the Student Union": "学生会优秀干事"
         };
 
+        function sortWay() {
+            result.textContent = "先根据学术奖数量排序，若相同则按照杰出努力奖排序，若仍然相同则按照德育奖排序。"
+        }
         function getChineseAwardName(enName) {
             return awardNameMap[enName] || enName;
         }
@@ -210,7 +214,7 @@
 
             result.textContent = `
 ${student.chi_name} ${student.eng_name} (班级: ${student.class})
-  全年级排名: ${student.rank}
+  奖项数量全年级排名: ${student.rank}
   总奖项: ${student.total} (学术奖: ${student.academic_count}, 杰出努力奖: ${student.outstanding_count}, 德育奖: ${student.daily_count})
   学术奖:
     ${student.academic.map(getChineseAwardName).join(', ') || '无'}
