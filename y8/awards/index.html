@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8">
+    <title>学生奖项查询</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f5f6fa;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+        }
+
+        .container {
+            background: #fff;
+            margin-top: 50px;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+            width: 100%;
+            max-width: 600px;
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #2f3640;
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #353b48;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px 12px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+        }
+
+        pre {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: Consolas, monospace;
+            font-size: 14px;
+            margin-top: 20px;
+            color: #2d3436;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 20px;
+                margin-top: 30px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h2>学生奖项查询</h2>
+        <label>
+            英文名:
+            <input id="engName" placeholder="例如: Mia" />
+        </label>
+        <label>
+            英文姓氏:
+            <input id="surname" placeholder="例如: Miller" />
+        </label>
+        <button onclick="search()">查询</button>
+        <button onclick="location.href='/'">作者主页</button>
+        <button>本页数据使用自动化python程序进行分析，可能存在错误</button>
+
+        <pre id="result">请在上方输入英文名和姓氏进行查询</pre>
+    </div>
+
+    <script>
+        let awardsData = []
+        fetch("./data/awards_results.json")
+            .then(res => res.json())
+            .then(data => awardsData = data)
+            .catch(err => {
+                console.error("加载 JSON 失败:", err);
+                document.getElementById("result").textContent = "无法加载数据文件。";
+            });
+        const awardNameMap = {
+            "Chinese": "语文",
+            "Math": "数学",
+            "English": "英语",
+            "Science": "科学",
+            "Humanities": "人文",
+            "Music": "音乐",
+            "Drama": "戏剧",
+            "Dance": "舞蹈",
+            "Art & Design": "艺术与设计",
+            "ICT": "信息科技",
+            "PE": "体育",
+            "Model Student": "模范学生奖",
+            "Bronze": "铜奖",
+            "Silver": "银奖",
+            "Gold": "金奖",
+            "Platinum": "白金奖",
+            "Excellence": "HD卓越奖"
+        };
+
+        function getChineseAwardName(enName) {
+            return awardNameMap[enName] || enName;
+        }
+
+        function search() {
+            const engName = document.getElementById("engName").value.trim();
+            const surname = document.getElementById("surname").value.trim();
+            const result = document.getElementById("result");
+
+            if (!engName || !surname) {
+                result.textContent = "请输入英文名和姓氏。";
+                return;
+            }
+
+            const student = awardsData.find(s =>
+                s.eng_name.toLowerCase() === engName.toLowerCase() &&
+                s.surname.toLowerCase() === surname.toLowerCase()
+            );
+
+            if (!student) {
+                result.textContent = "未找到数据。请检查输入是否正确。";
+                return;
+            }
+
+            result.textContent = `
+${student.chi_name} ${student.eng_name} (班级: ${student.class})
+  总奖项: ${student.total} (学术奖: ${student.academic_count}, 杰出努力奖: ${student.outstanding_count}, 德育奖: ${student.daily_count})
+  学术奖:
+    ${student.academic.map(getChineseAwardName).join(', ') || '无'}
+  杰出努力奖:
+    ${student.outstanding.map(getChineseAwardName).join(', ') || '无'}
+  德育奖:
+    ${student.daily.map(getChineseAwardName).join(', ') || '无'}
+`.trim();
+        }
+
+    </script>
+</body>
+
+</html>

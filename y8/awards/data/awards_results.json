@@ -1,0 +1,1555 @@
+[
+  {
+    "rank": 1,
+    "chi_name": "徐若楠",
+    "eng_name": "Mia",
+    "surname": "Xu",
+    "class": "Y804",
+    "total": 10,
+    "academic_count": 5,
+    "outstanding_count": 2,
+    "daily_count": 3,
+    "academic": [
+      "Chinese",
+      "Drama",
+      "English",
+      "Humanities",
+      "Science"
+    ],
+    "outstanding": [
+      "Art & Design",
+      "Math"
+    ],
+    "daily": [
+      "Excellence",
+      "Model Student",
+      "Platinum"
+    ]
+  },
+  {
+    "rank": 2,
+    "chi_name": "王瑞圻",
+    "eng_name": "Richard",
+    "surname": "Wang",
+    "class": "Y801",
+    "total": 8,
+    "academic_count": 4,
+    "outstanding_count": 2,
+    "daily_count": 2,
+    "academic": [
+      "ICT",
+      "Math",
+      "Music",
+      "Science"
+    ],
+    "outstanding": [
+      "Chinese",
+      "Humanities"
+    ],
+    "daily": [
+      "Model Student",
+      "Platinum"
+    ]
+  },
+  {
+    "rank": 3,
+    "chi_name": "姜心月",
+    "eng_name": "Judy",
+    "surname": "Jiang",
+    "class": "Y802",
+    "total": 7,
+    "academic_count": 3,
+    "outstanding_count": 2,
+    "daily_count": 2,
+    "academic": [
+      "Math",
+      "PE",
+      "Science"
+    ],
+    "outstanding": [
+      "Art & Design",
+      "Chinese"
+    ],
+    "daily": [
+      "Bronze",
+      "Model Student"
+    ]
+  },
+  {
+    "rank": 4,
+    "chi_name": "徐铭璐",
+    "eng_name": "Lucy",
+    "surname": "Xu",
+    "class": "Y801",
+    "total": 8,
+    "academic_count": 2,
+    "outstanding_count": 4,
+    "daily_count": 2,
+    "academic": [
+      "Chinese",
+      "Humanities"
+    ],
+    "outstanding": [
+      "Art & Design",
+      "English",
+      "Math",
+      "Music"
+    ],
+    "daily": [
+      "Model Student",
+      "Silver"
+    ]
+  },
+  {
+    "rank": 5,
+    "chi_name": "张盛博",
+    "eng_name": "Henry",
+    "surname": "Zhang",
+    "class": "Y805",
+    "total": 7,
+    "academic_count": 2,
+    "outstanding_count": 3,
+    "daily_count": 2,
+    "academic": [
+      "Humanities",
+      "Science"
+    ],
+    "outstanding": [
+      "Chinese",
+      "English",
+      "Math"
+    ],
+    "daily": [
+      "Model Student",
+      "Silver"
+    ]
+  },
+  {
+    "rank": 6,
+    "chi_name": "方湘宁",
+    "eng_name": "Cici",
+    "surname": "Feng",
+    "class": "Y805",
+    "total": 4,
+    "academic_count": 2,
+    "outstanding_count": 2,
+    "daily_count": 0,
+    "academic": [
+      "Art & Design",
+      "Math"
+    ],
+    "outstanding": [
+      "Drama",
+      "Science"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 7,
+    "chi_name": "段惠馨",
+    "eng_name": "Amy",
+    "surname": "Duan",
+    "class": "Y804",
+    "total": 5,
+    "academic_count": 2,
+    "outstanding_count": 1,
+    "daily_count": 2,
+    "academic": [
+      "Music",
+      "PE"
+    ],
+    "outstanding": [
+      "Dance"
+    ],
+    "daily": [
+      "Model Student",
+      "Silver"
+    ]
+  },
+  {
+    "rank": 8,
+    "chi_name": "张童宇",
+    "eng_name": "Tony",
+    "surname": "Zhang",
+    "class": "Y801",
+    "total": 4,
+    "academic_count": 2,
+    "outstanding_count": 1,
+    "daily_count": 1,
+    "academic": [
+      "English",
+      "ICT"
+    ],
+    "outstanding": [
+      "Chinese"
+    ],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 9,
+    "chi_name": "艾卓恩",
+    "eng_name": "Ellen",
+    "surname": "Ai",
+    "class": "Y805",
+    "total": 2,
+    "academic_count": 2,
+    "outstanding_count": 0,
+    "daily_count": 0,
+    "academic": [
+      "Dance",
+      "Drama"
+    ],
+    "outstanding": [],
+    "daily": []
+  },
+  {
+    "rank": 10,
+    "chi_name": "张子涵",
+    "eng_name": "Isabella",
+    "surname": "Zhang",
+    "class": "Y804",
+    "total": 8,
+    "academic_count": 1,
+    "outstanding_count": 5,
+    "daily_count": 2,
+    "academic": [
+      "English"
+    ],
+    "outstanding": [
+      "Chinese",
+      "Humanities",
+      "Math",
+      "Music",
+      "PE"
+    ],
+    "daily": [
+      "Gold",
+      "Model Student"
+    ]
+  },
+  {
+    "rank": 11,
+    "chi_name": "冯浩轩",
+    "eng_name": "Kevin",
+    "surname": "Feng",
+    "class": "Y803",
+    "total": 6,
+    "academic_count": 1,
+    "outstanding_count": 3,
+    "daily_count": 2,
+    "academic": [
+      "Chinese"
+    ],
+    "outstanding": [
+      "Humanities",
+      "Math",
+      "Science"
+    ],
+    "daily": [
+      "Model Student",
+      "Platinum"
+    ]
+  },
+  {
+    "rank": 12,
+    "chi_name": "沈柏豫",
+    "eng_name": "Boris",
+    "surname": "Shen",
+    "class": "Y805",
+    "total": 5,
+    "academic_count": 1,
+    "outstanding_count": 3,
+    "daily_count": 1,
+    "academic": [
+      "English"
+    ],
+    "outstanding": [
+      "Chinese",
+      "Humanities",
+      "ICT"
+    ],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 13,
+    "chi_name": "刘星宇",
+    "eng_name": "Mango",
+    "surname": "Liu",
+    "class": "Y802",
+    "total": 4,
+    "academic_count": 1,
+    "outstanding_count": 2,
+    "daily_count": 1,
+    "academic": [
+      "Science"
+    ],
+    "outstanding": [
+      "Humanities",
+      "PE"
+    ],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 13,
+    "chi_name": "朱芝莹",
+    "eng_name": "Lexie",
+    "surname": "Zhu",
+    "class": "Y805",
+    "total": 4,
+    "academic_count": 1,
+    "outstanding_count": 2,
+    "daily_count": 1,
+    "academic": [
+      "Chinese"
+    ],
+    "outstanding": [
+      "Art & Design",
+      "PE"
+    ],
+    "daily": [
+      "Silver"
+    ]
+  },
+  {
+    "rank": 13,
+    "chi_name": "李隽基",
+    "eng_name": "Victor",
+    "surname": "Li",
+    "class": "Y803",
+    "total": 4,
+    "academic_count": 1,
+    "outstanding_count": 2,
+    "daily_count": 1,
+    "academic": [
+      "Math"
+    ],
+    "outstanding": [
+      "Chinese",
+      "Science"
+    ],
+    "daily": [
+      "Platinum"
+    ]
+  },
+  {
+    "rank": 13,
+    "chi_name": "邵意涵",
+    "eng_name": "Hank",
+    "surname": "Shao",
+    "class": "Y803",
+    "total": 4,
+    "academic_count": 1,
+    "outstanding_count": 2,
+    "daily_count": 1,
+    "academic": [
+      "Humanities"
+    ],
+    "outstanding": [
+      "Math",
+      "Science"
+    ],
+    "daily": [
+      "Platinum"
+    ]
+  },
+  {
+    "rank": 13,
+    "chi_name": "陈品达",
+    "eng_name": "Danniel",
+    "surname": "Chen",
+    "class": "Y804",
+    "total": 4,
+    "academic_count": 1,
+    "outstanding_count": 2,
+    "daily_count": 1,
+    "academic": [
+      "ICT"
+    ],
+    "outstanding": [
+      "Drama",
+      "Humanities"
+    ],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 18,
+    "chi_name": "史可翌",
+    "eng_name": "Sky",
+    "surname": "Shi",
+    "class": "Y805",
+    "total": 3,
+    "academic_count": 1,
+    "outstanding_count": 2,
+    "daily_count": 0,
+    "academic": [
+      "PE"
+    ],
+    "outstanding": [
+      "Math",
+      "Science"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 18,
+    "chi_name": "李奕欣",
+    "eng_name": "Left",
+    "surname": "Li",
+    "class": "Y801",
+    "total": 3,
+    "academic_count": 1,
+    "outstanding_count": 2,
+    "daily_count": 0,
+    "academic": [
+      "ICT"
+    ],
+    "outstanding": [
+      "English",
+      "Music"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 20,
+    "chi_name": "徐可欣",
+    "eng_name": "Kelsey",
+    "surname": "Xu",
+    "class": "Y801",
+    "total": 4,
+    "academic_count": 1,
+    "outstanding_count": 1,
+    "daily_count": 2,
+    "academic": [
+      "Dance"
+    ],
+    "outstanding": [
+      "Humanities"
+    ],
+    "daily": [
+      "Bronze",
+      "Model Student"
+    ]
+  },
+  {
+    "rank": 20,
+    "chi_name": "殷悦",
+    "eng_name": "Joy",
+    "surname": "Yin",
+    "class": "Y802",
+    "total": 4,
+    "academic_count": 1,
+    "outstanding_count": 1,
+    "daily_count": 2,
+    "academic": [
+      "Humanities"
+    ],
+    "outstanding": [
+      "Chinese"
+    ],
+    "daily": [
+      "Bronze",
+      "Model Student"
+    ]
+  },
+  {
+    "rank": 22,
+    "chi_name": "方颖",
+    "eng_name": "Fenny",
+    "surname": "Fang",
+    "class": "Y805",
+    "total": 3,
+    "academic_count": 1,
+    "outstanding_count": 1,
+    "daily_count": 1,
+    "academic": [
+      "Dance"
+    ],
+    "outstanding": [
+      "Humanities"
+    ],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 22,
+    "chi_name": "王彦颖",
+    "eng_name": "Yvette",
+    "surname": "Wang",
+    "class": "Y802",
+    "total": 3,
+    "academic_count": 1,
+    "outstanding_count": 1,
+    "daily_count": 1,
+    "academic": [
+      "Art & Design"
+    ],
+    "outstanding": [
+      "Humanities"
+    ],
+    "daily": [
+      "Silver"
+    ]
+  },
+  {
+    "rank": 22,
+    "chi_name": "胡郡倪",
+    "eng_name": "Nicole",
+    "surname": "Hu",
+    "class": "Y801",
+    "total": 3,
+    "academic_count": 1,
+    "outstanding_count": 1,
+    "daily_count": 1,
+    "academic": [
+      "Drama"
+    ],
+    "outstanding": [
+      "ICT"
+    ],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 22,
+    "chi_name": "薛绿筠",
+    "eng_name": "Grace",
+    "surname": "Xue",
+    "class": "Y802",
+    "total": 3,
+    "academic_count": 1,
+    "outstanding_count": 1,
+    "daily_count": 1,
+    "academic": [
+      "Chinese"
+    ],
+    "outstanding": [
+      "Art & Design"
+    ],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 22,
+    "chi_name": "阮湛清",
+    "eng_name": "Chloe",
+    "surname": "Ruan",
+    "class": "Y802",
+    "total": 3,
+    "academic_count": 1,
+    "outstanding_count": 1,
+    "daily_count": 1,
+    "academic": [
+      "Art & Design"
+    ],
+    "outstanding": [
+      "Dance"
+    ],
+    "daily": [
+      "Model Student"
+    ]
+  },
+  {
+    "rank": 22,
+    "chi_name": "顾麦媞",
+    "eng_name": "Maggie",
+    "surname": "Gu",
+    "class": "Y805",
+    "total": 3,
+    "academic_count": 1,
+    "outstanding_count": 1,
+    "daily_count": 1,
+    "academic": [
+      "Art & Design"
+    ],
+    "outstanding": [
+      "ICT"
+    ],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 28,
+    "chi_name": "朱子天",
+    "eng_name": "Martin",
+    "surname": "Zhu",
+    "class": "Y805",
+    "total": 2,
+    "academic_count": 1,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [
+      "Math"
+    ],
+    "outstanding": [
+      "Science"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 28,
+    "chi_name": "李子一",
+    "eng_name": "Eleven",
+    "surname": "Li",
+    "class": "Y803",
+    "total": 2,
+    "academic_count": 1,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [
+      "Music"
+    ],
+    "outstanding": [
+      "Art & Design"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 28,
+    "chi_name": "林初夏",
+    "eng_name": "Chamie",
+    "surname": "Lin",
+    "class": "Y802",
+    "total": 2,
+    "academic_count": 1,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [
+      "Art & Design"
+    ],
+    "outstanding": [
+      "English"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 28,
+    "chi_name": "竺振轩",
+    "eng_name": "Sean",
+    "surname": "Zhu",
+    "class": "Y801",
+    "total": 2,
+    "academic_count": 1,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [
+      "ICT"
+    ],
+    "outstanding": [
+      "PE"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 32,
+    "chi_name": "曾子言",
+    "eng_name": "Patrick",
+    "surname": "Percy",
+    "class": "Y802",
+    "total": 1,
+    "academic_count": 1,
+    "outstanding_count": 0,
+    "daily_count": 0,
+    "academic": [
+      "PE"
+    ],
+    "outstanding": [],
+    "daily": []
+  },
+  {
+    "rank": 32,
+    "chi_name": "钱一诺",
+    "eng_name": "Melissa",
+    "surname": "Qian",
+    "class": "Y804",
+    "total": 1,
+    "academic_count": 1,
+    "outstanding_count": 0,
+    "daily_count": 0,
+    "academic": [
+      "English"
+    ],
+    "outstanding": [],
+    "daily": []
+  },
+  {
+    "rank": 32,
+    "chi_name": "陈润泽",
+    "eng_name": "Bruce",
+    "surname": "Chen",
+    "class": "Y805",
+    "total": 1,
+    "academic_count": 1,
+    "outstanding_count": 0,
+    "daily_count": 0,
+    "academic": [
+      "Music"
+    ],
+    "outstanding": [],
+    "daily": []
+  },
+  {
+    "rank": 35,
+    "chi_name": "李沁霖",
+    "eng_name": "Julie",
+    "surname": "Li",
+    "class": "Y803",
+    "total": 5,
+    "academic_count": 0,
+    "outstanding_count": 3,
+    "daily_count": 2,
+    "academic": [],
+    "outstanding": [
+      "Art & Design",
+      "English",
+      "Humanities"
+    ],
+    "daily": [
+      "Gold",
+      "Model Student"
+    ]
+  },
+  {
+    "rank": 36,
+    "chi_name": "李泰阁",
+    "eng_name": "Tiger",
+    "surname": "Li",
+    "class": "Y803",
+    "total": 4,
+    "academic_count": 0,
+    "outstanding_count": 3,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [
+      "ICT",
+      "Math",
+      "Music"
+    ],
+    "daily": [
+      "Platinum"
+    ]
+  },
+  {
+    "rank": 37,
+    "chi_name": "杜嘉怡",
+    "eng_name": "Annie",
+    "surname": "Du",
+    "class": "Y801",
+    "total": 4,
+    "academic_count": 0,
+    "outstanding_count": 2,
+    "daily_count": 2,
+    "academic": [],
+    "outstanding": [
+      "Dance",
+      "Science"
+    ],
+    "daily": [
+      "Model Student",
+      "Silver"
+    ]
+  },
+  {
+    "rank": 37,
+    "chi_name": "胡沛锦",
+    "eng_name": "Jenny",
+    "surname": "Hu",
+    "class": "Y804",
+    "total": 4,
+    "academic_count": 0,
+    "outstanding_count": 2,
+    "daily_count": 2,
+    "academic": [],
+    "outstanding": [
+      "Art & Design",
+      "Chinese"
+    ],
+    "daily": [
+      "Model Student",
+      "Silver"
+    ]
+  },
+  {
+    "rank": 39,
+    "chi_name": "何一彤",
+    "eng_name": "Luna",
+    "surname": "He",
+    "class": "Y805",
+    "total": 2,
+    "academic_count": 0,
+    "outstanding_count": 2,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "Drama",
+      "English"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 39,
+    "chi_name": "徐晟豪",
+    "eng_name": "Jimmy",
+    "surname": "Xu",
+    "class": "Y802",
+    "total": 2,
+    "academic_count": 0,
+    "outstanding_count": 2,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "English",
+      "PE"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 39,
+    "chi_name": "方豪越",
+    "eng_name": "Kevin",
+    "surname": "Fang",
+    "class": "Y801",
+    "total": 2,
+    "academic_count": 0,
+    "outstanding_count": 2,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "Math",
+      "Science"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 39,
+    "chi_name": "邹潋译",
+    "eng_name": "Larry",
+    "surname": "Zou",
+    "class": "Y801",
+    "total": 2,
+    "academic_count": 0,
+    "outstanding_count": 2,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "English",
+      "ICT"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 43,
+    "chi_name": "钱胡琼",
+    "eng_name": "Romy",
+    "surname": "Qian",
+    "class": "Y803",
+    "total": 3,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 2,
+    "academic": [],
+    "outstanding": [
+      "English"
+    ],
+    "daily": [
+      "Model Student",
+      "Platinum"
+    ]
+  },
+  {
+    "rank": 44,
+    "chi_name": "吴家妤",
+    "eng_name": "Elina",
+    "surname": "Wu",
+    "class": "Y802",
+    "total": 2,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [
+      "ICT"
+    ],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 44,
+    "chi_name": "唐欣怡",
+    "eng_name": "Sicily",
+    "surname": "Tang",
+    "class": "Y801",
+    "total": 2,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [
+      "Drama"
+    ],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 44,
+    "chi_name": "李润熙",
+    "eng_name": "Leo",
+    "surname": "Li",
+    "class": "Y803",
+    "total": 2,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [
+      "Chinese"
+    ],
+    "daily": [
+      "Platinum"
+    ]
+  },
+  {
+    "rank": 44,
+    "chi_name": "林羽恒",
+    "eng_name": "Yulisa",
+    "surname": "Lin",
+    "class": "Y802",
+    "total": 2,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [
+      "ICT"
+    ],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 44,
+    "chi_name": "柴俊希",
+    "eng_name": "David",
+    "surname": "Chai",
+    "class": "Y804",
+    "total": 2,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [
+      "ICT"
+    ],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 44,
+    "chi_name": "段怡欣",
+    "eng_name": "Alicia",
+    "surname": "Duan",
+    "class": "Y803",
+    "total": 2,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [
+      "Science"
+    ],
+    "daily": [
+      "Silver"
+    ]
+  },
+  {
+    "rank": 50,
+    "chi_name": "刘宇峰",
+    "eng_name": "Robert",
+    "surname": "Liu",
+    "class": "Y801",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "PE"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 50,
+    "chi_name": "张津萌",
+    "eng_name": "Melissa",
+    "surname": "Zhang",
+    "class": "Y801",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "Dance"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 50,
+    "chi_name": "李婧仪",
+    "eng_name": "CiCi",
+    "surname": "Li",
+    "class": "Y804",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "Music"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 50,
+    "chi_name": "李婧仪",
+    "eng_name": "Cici",
+    "surname": "Li",
+    "class": "Y804",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "Art & Design"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 50,
+    "chi_name": "李安南",
+    "eng_name": "Andrew",
+    "surname": "Li",
+    "class": "Y805",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "ICT"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 50,
+    "chi_name": "李泽元",
+    "eng_name": "Jayden",
+    "surname": "Li",
+    "class": "Y804",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "Science"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 50,
+    "chi_name": "江南",
+    "eng_name": "Albert",
+    "surname": "Jiang",
+    "class": "Y805",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "Art & Design"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 50,
+    "chi_name": "王醴",
+    "eng_name": "Lisa",
+    "surname": "Wang",
+    "class": "Y804",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "Music"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 50,
+    "chi_name": "郑萌",
+    "eng_name": "Xiaoxiao",
+    "surname": "Zheng",
+    "class": "Y803",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "English"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 50,
+    "chi_name": "钱一诺",
+    "eng_name": "Mellisa",
+    "surname": "Qian",
+    "class": "Y804",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "Music"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 50,
+    "chi_name": "陈佳耳",
+    "eng_name": "Flower",
+    "surname": "Chen",
+    "class": "Y801",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "PE"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 50,
+    "chi_name": "陈昊楠",
+    "eng_name": "Scott",
+    "surname": "",
+    "class": "Y803",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "Math"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 50,
+    "chi_name": "陈熤楠",
+    "eng_name": "Scott",
+    "surname": "Chen",
+    "class": "Y803",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "PE"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 50,
+    "chi_name": "颜子淞",
+    "eng_name": "Jason",
+    "surname": "Yan",
+    "class": "Y801",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 0,
+    "academic": [],
+    "outstanding": [
+      "ICT"
+    ],
+    "daily": []
+  },
+  {
+    "rank": 64,
+    "chi_name": "吕超清",
+    "eng_name": "Alice",
+    "surname": "Lv",
+    "class": "Y804",
+    "total": 2,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 2,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Model Student",
+      "Silver"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "何浩铭",
+    "eng_name": "Tiger",
+    "surname": "He",
+    "class": "Y804",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "周贾雯",
+    "eng_name": "Janice",
+    "surname": "Zhou",
+    "class": "Y802",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "张绍哲",
+    "eng_name": "Peter",
+    "surname": "Zhang",
+    "class": "Y802",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "徐子淇",
+    "eng_name": "Maggie",
+    "surname": "Xu",
+    "class": "Y803",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "徐明远",
+    "eng_name": "Eric",
+    "surname": "Xu",
+    "class": "Y803",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Silver"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "徐若栋",
+    "eng_name": "Leo",
+    "surname": "Xu",
+    "class": "Y803",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "李姝瑶",
+    "eng_name": "Elsa",
+    "surname": "Li",
+    "class": "Y802",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Model Student"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "李子一",
+    "eng_name": "EIeven",
+    "surname": "Li",
+    "class": "Y803",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Silver"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "李思涵",
+    "eng_name": "Stylie",
+    "surname": "Li",
+    "class": "Y803",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "沈潘蕊",
+    "eng_name": "Penny",
+    "surname": "Shen",
+    "class": "Y803",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "纪柯伊",
+    "eng_name": "Angela",
+    "surname": "Ji",
+    "class": "Y801",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Model Student"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "胡志诚",
+    "eng_name": "Tony",
+    "surname": "Hu",
+    "class": "Y804",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Model Student"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "胡洛滋",
+    "eng_name": "Zoey",
+    "surname": "Hu",
+    "class": "Y805",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "莫家畅",
+    "eng_name": "Melinda",
+    "surname": "Mo",
+    "class": "Y803",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Silver"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "谢宇轩",
+    "eng_name": "Miker",
+    "surname": "Xie",
+    "class": "Y803",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "邬昂翰",
+    "eng_name": "Han",
+    "surname": "Wu",
+    "class": "Y802",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "郑萌",
+    "eng_name": "Mandy",
+    "surname": "Zheng",
+    "class": "Y803",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Silver"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "阮妙尹妍",
+    "eng_name": "Celine",
+    "surname": "Ruan",
+    "class": "Y801",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "陈佳耳",
+    "eng_name": "Heidi",
+    "surname": "Chen",
+    "class": "Y801",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Model Student"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "黄牧言",
+    "eng_name": "Renee",
+    "surname": "Huang",
+    "class": "Y801",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Bronze"
+    ]
+  },
+  {
+    "rank": 65,
+    "chi_name": "黄雨涵",
+    "eng_name": "Angela",
+    "surname": "Huang",
+    "class": "Y803",
+    "total": 1,
+    "academic_count": 0,
+    "outstanding_count": 0,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [],
+    "daily": [
+      "Gold"
+    ]
+  }
+]
