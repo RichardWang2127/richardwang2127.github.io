@@ -181,9 +181,9 @@
             top5.forEach((student, index) => {
                 output += `${index + 1}. ${student.chi_name} ${student.eng_name} (班级: ${student.class})\n`;
                 output += `   总奖项: ${student.total} (学术奖: ${student.academic_count}, 杰出努力奖: ${student.outstanding_count}, 德育奖: ${student.daily_count})\n`;
-                output += `   学术奖: ${student.academic.join(', ') || '无'}\n`;
-                output += `   杰出努力奖: ${student.outstanding.join(', ') || '无'}\n`;
-                output += `   德育奖: ${student.daily.join(', ') || '无'}\n\n`;
+                output += `   学术奖: ${student.academic.map(getChineseAwardName).join(', ') || '无'}\n`;
+                output += `   杰出努力奖: ${student.outstanding.map(getChineseAwardName).join(', ') || '无'}\n`;
+                output += `   德育奖: ${student.daily.map(getChineseAwardName).join(', ') || '无'}\n\n`;
             });
 
             result.textContent = output.trim();
