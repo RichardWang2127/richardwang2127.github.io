@@ -48,6 +48,7 @@
             border-radius: 6px;
             font-size: 14px;
             transition: border-color 0.2s;
+            box-sizing: border-box;
         }
 
         input:focus {
@@ -55,7 +56,18 @@
             outline: none;
         }
 
+        /* 按钮区域使用弹性布局 */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+
         button {
+            flex: 1 1 140px;
+            /* 最小140px，弹性宽度 */
             padding: 10px 20px;
             background-color: #3498db;
             color: white;
@@ -63,7 +75,6 @@
             border-radius: 6px;
             font-size: 14px;
             cursor: pointer;
-            margin-right: 10px;
             transition: background-color 0.3s;
         }
 
@@ -81,12 +92,20 @@
             font-size: 14px;
             margin-top: 20px;
             color: #2d3436;
+            max-height: 400px;
+            overflow-y: auto;
         }
 
+        /* 小屏幕适配 */
         @media (max-width: 600px) {
             .container {
                 padding: 20px;
                 margin-top: 30px;
+            }
+
+            button {
+                font-size: 16px;
+                flex-basis: 100%;
             }
         }
     </style>
@@ -103,8 +122,10 @@
             英文姓氏:
             <input id="surname" placeholder="例如: Miller" />
         </label>
-        <button onclick="search()">查询</button>
-        <button onclick="location.href='/'">作者主页</button>
+        <div class="button-group">
+            <button onclick="search()">查询</button>
+            <button onclick="location.href='/'">作者主页</button>
+        </div>
         <button>本页数据使用自动化python程序进行分析，可能存在错误</button>
 
         <pre id="result">请在上方输入英文名和姓氏进行查询</pre>
