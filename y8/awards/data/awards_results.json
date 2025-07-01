@@ -976,7 +976,25 @@
     ]
   },
   {
-    "rank": 50,
+    "rank": 44,
+    "chi_name": "陈佳耳",
+    "eng_name": "Heidi",
+    "surname": "Chen",
+    "class": "Y801",
+    "total": 2,
+    "academic_count": 0,
+    "outstanding_count": 1,
+    "daily_count": 1,
+    "academic": [],
+    "outstanding": [
+      "PE"
+    ],
+    "daily": [
+      "Model Student"
+    ]
+  },
+  {
+    "rank": 51,
     "chi_name": "刘宇峰",
     "eng_name": "Robert",
     "surname": "Liu",
@@ -992,7 +1010,7 @@
     "daily": []
   },
   {
-    "rank": 50,
+    "rank": 51,
     "chi_name": "张津萌",
     "eng_name": "Melissa",
     "surname": "Zhang",
@@ -1008,7 +1026,7 @@
     "daily": []
   },
   {
-    "rank": 50,
+    "rank": 51,
     "chi_name": "李婧仪",
     "eng_name": "CiCi",
     "surname": "Li",
@@ -1024,7 +1042,7 @@
     "daily": []
   },
   {
-    "rank": 50,
+    "rank": 51,
     "chi_name": "李婧仪",
     "eng_name": "Cici",
     "surname": "Li",
@@ -1040,7 +1058,7 @@
     "daily": []
   },
   {
-    "rank": 50,
+    "rank": 51,
     "chi_name": "李安南",
     "eng_name": "Andrew",
     "surname": "Li",
@@ -1056,7 +1074,7 @@
     "daily": []
   },
   {
-    "rank": 50,
+    "rank": 51,
     "chi_name": "李泽元",
     "eng_name": "Jayden",
     "surname": "Li",
@@ -1072,7 +1090,7 @@
     "daily": []
   },
   {
-    "rank": 50,
+    "rank": 51,
     "chi_name": "江南",
     "eng_name": "Albert",
     "surname": "Jiang",
@@ -1088,7 +1106,7 @@
     "daily": []
   },
   {
-    "rank": 50,
+    "rank": 51,
     "chi_name": "王醴",
     "eng_name": "Lisa",
     "surname": "Wang",
@@ -1104,7 +1122,7 @@
     "daily": []
   },
   {
-    "rank": 50,
+    "rank": 51,
     "chi_name": "郑萌",
     "eng_name": "Xiaoxiao",
     "surname": "Zheng",
@@ -1120,7 +1138,7 @@
     "daily": []
   },
   {
-    "rank": 50,
+    "rank": 51,
     "chi_name": "钱一诺",
     "eng_name": "Mellisa",
     "surname": "Qian",
@@ -1136,23 +1154,7 @@
     "daily": []
   },
   {
-    "rank": 50,
-    "chi_name": "陈佳耳",
-    "eng_name": "Flower",
-    "surname": "Chen",
-    "class": "Y801",
-    "total": 1,
-    "academic_count": 0,
-    "outstanding_count": 1,
-    "daily_count": 0,
-    "academic": [],
-    "outstanding": [
-      "PE"
-    ],
-    "daily": []
-  },
-  {
-    "rank": 50,
+    "rank": 51,
     "chi_name": "陈昊楠",
     "eng_name": "Scott",
     "surname": "",
@@ -1168,7 +1170,7 @@
     "daily": []
   },
   {
-    "rank": 50,
+    "rank": 51,
     "chi_name": "陈熤楠",
     "eng_name": "Scott",
     "surname": "Chen",
@@ -1184,7 +1186,7 @@
     "daily": []
   },
   {
-    "rank": 50,
+    "rank": 51,
     "chi_name": "颜子淞",
     "eng_name": "Jason",
     "surname": "Yan",
@@ -1502,22 +1504,6 @@
     "outstanding": [],
     "daily": [
       "Bronze"
-    ]
-  },
-  {
-    "rank": 65,
-    "chi_name": "陈佳耳",
-    "eng_name": "Heidi",
-    "surname": "Chen",
-    "class": "Y801",
-    "total": 1,
-    "academic_count": 0,
-    "outstanding_count": 0,
-    "daily_count": 1,
-    "academic": [],
-    "outstanding": [],
-    "daily": [
-      "Model Student"
     ]
   },
   {

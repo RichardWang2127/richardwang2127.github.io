@@ -187,6 +187,7 @@
 
             result.textContent = `
 ${student.chi_name} ${student.eng_name} (班级: ${student.class})
+  全年级排名: ${student.rank}
   总奖项: ${student.total} (学术奖: ${student.academic_count}, 杰出努力奖: ${student.outstanding_count}, 德育奖: ${student.daily_count})
   学术奖:
     ${student.academic.map(getChineseAwardName).join(', ') || '无'}
