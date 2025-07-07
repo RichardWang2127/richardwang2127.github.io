@@ -447,11 +447,15 @@
                     <table>
                         <tr>
                             <td><button onclick="window.location.href=('/shmetro/')">🚇 上海地铁列车查询工具</button></td>
-                            <td>0.1.7 网页</td>
+                            <td>0.6.9 网页</td>
                         </tr>
                         <tr>
                             <td><button onclick="location.href=('/nbmetro_line1/')">🛤️ 宁波轨道交通1号线闪灯图模拟</button></td>
                             <td>0.1 Python</td>
+                        </tr>
+                        <tr>
+                            <td><button onclick="window.location.href=('/y8/awards')">🏆 Y8第二学期奖项查询(宁波赫德新Y9学生)</button></td>
+                            <td>1.0 网页</td>
                         </tr>
                     </table>
                 </div>
@@ -459,8 +463,9 @@
                 <!-- 项目进度 -->
                 <div class="output" id="progressBoard">
                     <strong class="subheading">🧱 项目开发进度：</strong><br>
-                    上海地铁工具：<progress value="30" max="100"></progress> 30%<br>
-                    宁波闪灯模拟：<progress value="90" max="100"></progress> 90%
+                    上海地铁工具：<progress value="93" max="100"></progress> 93%<br>
+                    宁波闪灯模拟：<progress value="98" max="100"></progress> 调试更改中<br>
+                    Y8奖项查询：<progress value="100" max="100"></progress> ✅
                 </div>
 
                 <div class="output" id="outputBox">信息：<br>年龄: <span id="age">好几</span>岁。<br>城市: 浙江宁波。</div>
@@ -692,7 +697,13 @@
             if (!entered) {
                 return;
             }
-            const savedMusicState = localStorage.getItem("musicState") || "paused";
+            try {
+                const savedMusicState = localStorage.getItem("musicState") || "paused";
+            }
+            catch (e){
+                console.log("加载savedMusicState出错: ", e);
+            }
+            const savedMusicState = "paused";
             console.log("恢复音乐状态:", savedMusicState);
             if (savedMusicState === "playing") {
                 document.getElementById("backgroundMusic").play();
