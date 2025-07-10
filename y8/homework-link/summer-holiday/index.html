@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>东铁线SP1900</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f7f7f7;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        input,
+        button,
+        textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .output {
+            background-color: white;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-top: 20px;
+            min-height: 60px;
+            white-space: normal; /* 或根据需求设为 pre-wrap */
+            }
+        .output div {
+            margin: 0;
+            padding: 0;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+        }
+
+        .forbidden {
+            cursor: not-allowed;
+        }
+          /* 遮罩层 */
+        .popup {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        /* 弹窗内容框 */
+        .popup-content {
+            background-color: #fff;
+            border-radius: 12px;
+            padding: 24px 30px;
+            max-width: 640px;   /* 加宽了 */
+            width: 90%;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+            text-align: center;
+            font-family: Arial, sans-serif;
+            color: #333;
+            word-break: break-all; /* 避免超长网址撑破框 */
+        }
+
+
+        /* 按钮容器 */
+        .popup-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        /* 按钮样式 */
+        .popup-buttons button {
+            flex: 1;
+            padding: 10px 0;
+            font-size: 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        /* “是”按钮 */
+        #redirectYesButton {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        #redirectYesButton:hover {
+            background-color: #0056b3;
+        }
+
+        /* “否”按钮 */
+        #redirectNoButton {
+            background-color: #ccc;
+            color: #333;
+        }
+
+        #redirectNoButton:hover {
+            background-color: #999;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="domainRedirectPopup" class="popup" style="display:none;">
+        <div class="popup-content">
+            <p id="domainRedirectPopupText">是否跳转到目标链接？</p>
+            <div class="popup-buttons">
+            <button id="redirectYesButton">是</button>
+            <button id="redirectNoButton">否</button>
+            <button id="redirectInfoButton">查看参考资料</button>
+            </div>
+        </div>
+    </div>
+
+
+    <div>
+    <div class="container">
+        <h1>宁波赫德新Y9<br>暑假作业链接整理</h1>
+        <div class="output" id="linkBox">
+            <div>整理了作业册中的一些链接，避免手敲出错。</div>
+            <div>Physics: </div>
+            <div><button onclick="checkOpen('https://quizlet.com/cn/386521099/igcse%E7%89%A9%E7%90%86%E8%AF%8D%E6%B1%87-flash-cards');">Quizlet单词链接</button></div>
+            <div>Chemistry: </div>
+            <div><button onclick="checkOpen('https://www.bilibili.com/video/BV1mf4y1u7Ub')">IGCSE 0620 Chemistry 课程内容预习(全英文无中文字幕)</button></div>
+            <div><button onclick="checkOpen('https://www.bilibili.com/video/BV18a4y1g7nQ')">IGCSE 0620 Chemistry 课程内容预习(中文为主讲解)</button></div>
+            <div><button onclick="checkOpen('https://www.bilibili.com/bangumi/play/ep126229')">化学史纪录片(全英文带中文字幕)</button></div>
+            <div><button onclick="checkOpen('https://www.bilibili.com/video/BV1KE411872v')">美丽化学纪录片</button></div>
+            <div><button onclick="checkOpen('https://www.bilibili.com/video/BV1B741137fh')">超精简化学学科概述</button></div>
+            <div><button onclick="checkOpen('https://search.bilibili.com/bangumi?keyword=Dr+Stone')">《石纪元 Dr. Stone》[Bilibili-需要大会员(除第3、4季第一集)]</button></div>
+            <div>Biology: ("简介"太长，展示网址)</div>
+            <div><button onclick="checkOpen('https://nigms.nih.gov')">https://nigms.nih.gov</button></div>
+            <div><button onclick="checkOpen('https://cellsalive.com')">https://cellsalive.com</button></div>
+            <div><button onclick="checkOpen('https://biology.arizona.edu/default.html')">https://biology.arizona.edu/default.html</button></div>
+            <div>Computer Science: </div>
+            <div><button onclick="checkOpen('http://computer.howstuffworks.com/computer-buses-channel.htm')">部分计算机知识(第1项的参考网站)</button></div>
+            <div><button onclick="checkOpen('https://en.khanacademy.org/computing/intro-to-python-fundamentals')">Python基本语句(Unit 1~3)</button></div>
+            <div><button onclick="checkOpen('https://www.codecademy.com/catalog/language/python')">Python基本语句(Learn Python 3)</button></div>
+            <div>
+                如果有网页打不开的情况: <br>
+                1. 尝试刷新打不开的网页<br>
+                2. 检查连接的网络环境<br>
+                3. 尝试连接或断开VPN、加速器<br>
+                4. 仍无法解决：不要骂人，发送邮件到<a href="mailto:feedback@075038.xyz">feedback@075038.xyz</a><br>描述：<br>问题、如何触发、有没有使用VPN/加速器等信息<br>署上你的班级(801~805)姓名(教师请署职位和姓名)。<br>如有骂人或未署名情况，问题将不会解决，自己去敲网址吧哈哈哈。
+            </div>
+            <br>
+            <div>还是理解不了为什么要把网址印在书上，学我做个网站不行吗？还是说老师没有域名……？</div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="output" id="authorBox" style="display:true, inline;">作者: RichardWang2127<br><button onclick="location.href=('/')">作者主页</button></div>
+    </div>
+    </div>
+    <script>
+    </script>
+</body>
+<script>
+    (function(){
+        const popup = document.getElementById('domainRedirectPopup');
+        const popupText = document.getElementById('domainRedirectPopupText');
+        const yesBtn = document.getElementById('redirectYesButton');
+        const noBtn = document.getElementById('redirectNoButton');
+        const InfoBtn = document.getElementById('redirectInfoButton');
+
+        let targetUrl = '';
+
+        // 弹窗显示函数，传入要跳转的URL
+        window.checkOpen = function(url){
+            targetUrl = url;
+            if (targetUrl == 'https://www.zhihu.com/question/305767580') {
+                popupText.innerHTML = `是否跳转到以下链接？<br>${url}`;
+            }
+            else popupText.innerHTML = `是否跳转到以下链接？<br>${url}<br>该网址有细微改动，但结果相同，可以查看资料了解原理。`;
+            popup.style.display = 'flex';
+        }
+
+        // 点击“是”，新窗口打开
+        yesBtn.onclick = function(){
+            window.open(targetUrl, '_blank');
+            popup.style.display = 'none'; // 打开后关闭弹窗
+        }
+
+        // 点击“否”，关闭弹窗
+        noBtn.onclick = function(){
+            popup.style.display = 'none';
+        }
+
+        InfoBtn.onclick = function(){
+            popup.style.display = 'none';
+            checkOpen('https://www.zhihu.com/question/305767580');
+        }
+    })();
+</script>
+
+
+</html>
