@@ -7,17 +7,30 @@
     <title>东铁线SP1900</title>
     <style>
         :root {
+            /* 港铁线路主题色 */
+            --mtr-east-rail: #53b7e8;
+            --mtr-kwun-tong: #1a9431;
+            --mtr-tsuen-wan: #ff0000;
+            --mtr-island: #0860a8;
+            --mtr-tung-chung: #fe7f1d;
+            --mtr-tko: #6b208b;
+            --mtr-tnl: #9a3b26;
+            --mtr-disney: #f550a6;
+            --mtr-south-island: #b5bd00;
+            --mtr-airport: #1c7670;
+
+            /* 样式配色 */
             --bg-color-light: #f7f7f7;
             --text-color-light: #333;
             --bg-color-dark: #1a1a1a;
             --text-color-dark: #e0e0e0;
             --card-color-light: #ffffff;
             --card-color-dark: #2a2a2a;
-            --btn-bg-light: #007BFF;
-            --btn-bg-dark: #0056b3;
-            --btn-hover-light: #0056b3;
-            --btn-hover-dark: #3399ff;
-            --progress-color: #007BFF;
+            --btn-bg-light: var(--mtr-east-rail);
+            --btn-bg-dark: #005b88;
+            --btn-hover-light: #3ca3d8;
+            --btn-hover-dark: #4ec2f3;
+            --progress-color: var(--mtr-east-rail);
             --icon-size: 20px;
         }
 
@@ -27,6 +40,7 @@
             --card-color: var(--card-color-light);
             --btn-bg: var(--btn-bg-light);
             --btn-hover: var(--btn-hover-light);
+            --h1-color: var(--mtr-east-rail);
         }
 
         [data-theme="dark"] {
@@ -35,6 +49,7 @@
             --card-color: var(--card-color-dark);
             --btn-bg: var(--btn-bg-dark);
             --btn-hover: var(--btn-hover-dark);
+            --h1-color: var(--mtr-tung-chung);
         }
 
         body {
@@ -44,11 +59,210 @@
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: background 0.3s ease, color 0.3s ease;
-            background-image: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.05), transparent 40%),
-                            radial-gradient(circle at 80% 30%, rgba(255,255,255,0.05), transparent 40%);
+            background-image: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.05), transparent 40%),
+                radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.05), transparent 40%);
             background-size: cover;
             position: relative;
             overflow: hidden;
+        }
+
+        input,
+        button,
+        textarea {
+            padding: 8px;
+            margin: 4px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: transform 0.2s ease, background-color 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 8px 16px;
+            /* 默认按钮背景色改为东铁线 */
+            background-color: var(--mtr-east-rail);
+        }
+
+        button:hover {
+            transform: scale(1.06);
+        }
+
+        /* 为不同按钮增加特定类以使用不同颜色 */
+        button.shmetro {
+            background-color: var(--mtr-tsuen-wan);
+            /* 荃湾线红 */
+        }
+
+        button.shmetro:hover {
+            background-color: var(--mtr-tsuen-wan);
+        }
+
+        button.nbmetro {
+            background-color: var(--mtr-island);
+            /* 观塘线绿 */
+        }
+
+        button.nbmetro:hover {
+            background-color: var(--mtr-island);
+        }
+
+        button.awards {
+            background-color: var(--mtr-airport);
+            /* 机场快线青绿色 */
+        }
+
+        button.awards:hover {
+            background-color: #155e56;
+        }
+
+        /* 默认进度条颜色为东铁线 */
+        progress[value]::-webkit-progress-value {
+            background-color: var(--mtr-east-rail);
+            border-radius: 8px;
+        }
+
+        progress[value]::-moz-progress-bar {
+            background-color: var(--mtr-east-rail);
+            border-radius: 8px;
+        }
+
+        progress[value] {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        progress::-webkit-progress-bar {
+            border-radius: 8px;
+            background-color: #f0f0f0;
+        }
+
+        /* 强制进度条背景圆角和遮罩效果 */
+        progress {
+            -webkit-appearance: none;
+            appearance: none;
+            border: none;
+            height: 15px;
+            border-radius: 8px;
+            overflow: hidden;
+            background-color: #f0f0f0;
+        }
+
+        /* Chrome 内层轨道 */
+        progress::-webkit-progress-bar {
+            background-color: #f0f0f0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* Chrome 进度值 */
+        progress::-webkit-progress-value {
+            border-radius: 8px;
+        }
+
+        /* Firefox 进度值 */
+        progress::-moz-progress-bar {
+            border-radius: 8px;
+        }
+
+
+        /* 各项目颜色 */
+        .progress-shmetro[value]::-webkit-progress-value {
+            background-color: var(--mtr-tsuen-wan);
+        }
+        .progress-shmetro[value]::-moz-progress-bar {
+            background-color: var(--mtr-tsuen-wan);
+        }
+
+        .progress-nbmetro[value]::-webkit-progress-value {
+            background-color: var(--mtr-island);
+        }
+        .progress-nbmetro[value]::-moz-progress-bar {
+            background-color: var(--mtr-island);
+        }
+
+        .progress-awards[value]::-webkit-progress-value {
+            background-color: var(--mtr-kwun-tong);
+        }
+        .progress-awards[value]::-moz-progress-bar {
+            background-color: var(--mtr-kwun-tong);
+        }
+
+        .output {
+            background-color: var(--card-color);
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 10px;
+            margin-top: 8px;
+            font-size: 16px;
+            white-space: nowrap;
+            line-height: 1.3;
+            overflow: hidden;
+        }
+
+        progress {
+            max-width: 100%;
+            height: 15px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background-color: #f0f0f0;
+        }
+
+        #navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--card-color);
+            z-index: 100;
+            padding: 10px 0;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        #navbar a {
+            padding: 12px;
+            text-decoration: none;
+            color: var(--text-color);
+        }
+
+        #navbar a:hover {
+            background-color: var(--btn-hover);
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+                margin-top: 50px;
+            }
+
+            table {
+                display: block;
+                overflow-x: auto;
+            }
+
+            .output {
+                white-space: normal;
+            }
         }
 
         .container {
@@ -61,9 +275,13 @@
 
         h1 {
             text-align: center;
-            color: var(--text-color);
+            color: var(--h1-color);
             margin-bottom: 12px;
             padding-top: 50px;
+        }
+
+        .number {
+            color: var(--h1-color);
         }
 
         input,
@@ -81,36 +299,6 @@
             border-radius: 8px;
             box-sizing: border-box;
             font-size: 16px;
-        }
-
-        button {
-            background-color: var(--btn-bg);
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: transform 0.2s ease, background-color 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            padding: 8px 16px;
-        }
-
-        button:hover {
-            background-color: var(--btn-hover);
-            transform: scale(1.06);
-        }
-
-        .output {
-            background-color: var(--card-color);
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 10px;
-            margin-top: 8px;
-            font-size: 16px;
-            white-space: nowrap;
-            line-height: 1.3;
-            overflow: hidden;
         }
 
         .forbidden {
@@ -158,83 +346,6 @@
             word-wrap: break-word;
         }
 
-        progress {
-            max-width: 100%;
-            height: 15px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            background-color: #f0f0f0;
-        }
-
-        progress[value] {
-            appearance: none;
-        }
-
-        progress[value]::-webkit-progress-bar {
-            background-color: #f0f0f0;
-            border-radius: 8px;
-        }
-
-        progress[value]::-webkit-progress-value {
-            background-color: var(--progress-color);
-            border-radius: 8px;
-        }
-
-        #navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: var(--card-color);
-            z-index: 100;
-            padding: 10px 0;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        #navbar a {
-            padding: 12px;
-            text-decoration: none;
-            color: var(--text-color);
-        }
-
-        #navbar a:hover {
-            background-color: var(--btn-hover);
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px;
-        }
-
-        .gallery img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-                margin-top: 50px;
-            }
-            
-            table {
-                display: block;
-                overflow-x: auto;
-            }
-            
-            /* #themeToggle {
-                top: 12px;
-                right: 12px;
-            } */
-            
-            .output {
-                white-space: normal;
-            }
-        }
-
         #enterButton {
             position: fixed;
             top: 50%;
@@ -263,13 +374,21 @@
             animation: pulse 2s infinite;
             display: none;
         }
-        
+
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(0, 123, 255, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(0, 123, 255, 0); }
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4);
+            }
+
+            70% {
+                box-shadow: 0 0 0 15px rgba(0, 123, 255, 0);
+            }
+
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+            }
         }
-        
+
         #loader {
             position: fixed;
             top: 0;
@@ -287,27 +406,27 @@
             visibility: hidden;
             transition: opacity 0.5s ease, visibility 0.5s ease;
         }
-        
+
         #loader.show {
             opacity: 1;
             visibility: visible;
         }
-        
+
         #mainContent {
             opacity: 0;
             transform: translateY(20px);
             transition: opacity 0.8s ease, transform 0.8s ease;
         }
-        
+
         #mainContent.show {
             opacity: 1;
             transform: translateY(0);
         }
-        
+
         .initial-hide {
             display: none;
         }
-        
+
         .content {
             padding: 20px;
             /* height: 2000px; 仅为演示 */
@@ -362,13 +481,13 @@
             font-size: 36px;
             font-weight: bold;
             color: #fff;
-            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+            text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             opacity: 0;
             z-index: 800;
             transition: opacity 0.5s ease;
         }
 
-        .subway-doors.opening + #doorText {
+        .subway-doors.opening+#doorText {
             opacity: 1;
         }
 
@@ -380,7 +499,8 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
-            display: none;  /* 默认隐藏 */
+            display: none;
+            /* 默认隐藏 */
             justify-content: center;
             align-items: center;
             z-index: 1001;
@@ -446,15 +566,16 @@
                 <div class="output" id="appBox">
                     <table>
                         <tr>
-                            <td><button onclick="window.location.href=('/shmetro/')">🚇 上海地铁列车查询工具</button></td>
+                            <td><button onclick="window.location.href=('/shmetro/')" class="shmetro">🚇 上海地铁列车查询工具</button></td>
                             <td>0.6.9 网页</td>
                         </tr>
                         <tr>
-                            <td><button onclick="location.href=('/nbmetro_line1/')">🛤️ 宁波轨道交通1号线闪灯图模拟</button></td>
+                            <td><button onclick="location.href=('/nbmetro_line1/')" class="nbmetro">🛤️ 宁波轨道交通1号线闪灯图模拟</button></td>
                             <td>0.1 Python</td>
                         </tr>
                         <tr>
-                            <td><button onclick="window.location.href=('/y8/awards')">🏆 Y8第二学期奖项查询(宁波赫德新Y9学生)</button></td>
+                            <td><button onclick="window.location.href=('/y8/awards')" class="awards">🏆 Y8第二学期奖项查询(宁波赫德新Y9学生)</button>
+                            </td>
                             <td>1.0 网页</td>
                         </tr>
                     </table>
@@ -463,12 +584,12 @@
                 <!-- 项目进度 -->
                 <div class="output" id="progressBoard">
                     <strong class="subheading">🧱 项目开发进度：</strong><br>
-                    上海地铁工具：<progress value="93" max="100"></progress> 93%<br>
-                    宁波闪灯模拟：<progress value="98" max="100"></progress> 调试更改中<br>
-                    Y8奖项查询：<progress value="100" max="100"></progress> ✅
+                    上海地铁工具：<progress value="93" max="100" class="progress-shmetro"></progress> 93%<br>
+                    宁波闪灯模拟：<progress value="98" max="100" class="progress-nbmetro"></progress> 调试更改中<br>
+                    Y8奖项查询：<progress value="100" max="100" class="progress-awards"></progress> ✅
                 </div>
 
-                <div class="output" id="outputBox">信息：<br>年龄: <span id="age">好几</span>岁。<br>城市: 浙江宁波。</div>
+                <div class="output" id="outputBox">信息：<br>年龄: <span id="age" class="number">好几</span>岁。<br>城市: 浙江宁波。</div>
 
                 <!-- 图库 -->
                 <!-- <div id="gallery" class="output">
@@ -482,7 +603,7 @@
 
                 <!-- 倒计时 -->
                 <div class="output">
-                    <strong>📅 离国庆还有：<span id="countdown"></span></strong>
+                    <strong>📅 离国庆还有：<span id="countdown" class="number"></span></strong>
                 </div>
 
                 <!-- 背景音乐播放按钮 -->
@@ -494,31 +615,31 @@
         </div>
     </div>
 
-    
+
 
     <script>
         var entered = false;
-        window.addEventListener('load', function() {
+        window.addEventListener('load', function () {
             // 短暂延迟后添加ready类触发过渡
-            setTimeout(function() {
+            setTimeout(function () {
                 const enterBtn = document.getElementById('enterButton');
                 enterBtn.classList.add('ready');
             }, 300); // 300毫秒延迟让页面完全稳定
         });
         // 显示进入按钮
-        window.addEventListener('DOMContentLoaded', function() {
+        window.addEventListener('DOMContentLoaded', function () {
             document.getElementById('enterButton').classList.remove('initial-hide');
         });
-        
+
         // 进入网站函数
         function enterSite() {
             console.log("按钮被点击"); // 调试用
-            
+
             const enterBtn = document.getElementById('enterButton');
             // const loader = document.getElementById('loader');
             const subwayDoors = document.getElementById('subwayDoors');
             const mainContent = document.getElementById('mainContent');
-            
+
             // 隐藏进入按钮
             enterBtn.style.transition = 'all 0.5s ease';
             enterBtn.style.opacity = '0';
@@ -526,21 +647,21 @@
             enterBtn.classList.remove('ready');
 
             subwayDoors.classList.add('opening');
-            
-            
-            setTimeout(function() {
+
+
+            setTimeout(function () {
                 enterBtn.style.display = 'none';
                 // loader.classList.add('show');
-                
+
                 // 2秒后显示主要内容
-                setTimeout(function() {
+                setTimeout(function () {
                     // loader.classList.remove('show');
                     mainContent.classList.remove('initial-hide');
                     document.getElementById('doorText').style.opacity = '0';
                     entered = true;
                     musicCheck();
-                    
-                    setTimeout(function() {
+
+                    setTimeout(function () {
                         mainContent.classList.add('show');
                         document.body.style.overflow = 'auto';
                     }, 200);
@@ -552,8 +673,8 @@
         processDomain();
         entered = true;
         musicCheck();
-        
-        setTimeout(function() {
+
+        setTimeout(function () {
             mainContent.classList.add('show');
             document.body.style.overflow = 'auto';
         }, 200);
@@ -572,39 +693,39 @@
         function calculateAge() {
             const birthDate = new Date(2011, 4, 11);
             const currentDate = new Date();
-            
+
             // 基础年龄计算
             let age = currentDate.getFullYear() - birthDate.getFullYear();
-            
+
             // 调整未过生日的情况
-            if (currentDate.getMonth() < birthDate.getMonth() || 
+            if (currentDate.getMonth() < birthDate.getMonth() ||
                 (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate())) {
                 age--;
             }
-            
+
             // 计算今年生日日期
             const thisYearsBirthday = new Date(
-                currentDate.getFullYear(), 
-                birthDate.getMonth(), 
+                currentDate.getFullYear(),
+                birthDate.getMonth(),
                 birthDate.getDate()
             );
-            
+
             // 计算下一个生日日期
             const nextBirthday = new Date(
                 currentDate.getFullYear() + (currentDate < thisYearsBirthday ? 0 : 1),
                 birthDate.getMonth(),
                 birthDate.getDate()
             );
-            
+
             // 计算年龄小数部分
-            const lastBirthday = currentDate < thisYearsBirthday 
+            const lastBirthday = currentDate < thisYearsBirthday
                 ? new Date(currentDate.getFullYear() - 1, birthDate.getMonth(), birthDate.getDate())
                 : thisYearsBirthday;
-            
+
             const daysInYear = (nextBirthday - lastBirthday) / (1000 * 60 * 60 * 24);
             const daysSinceBirthday = (currentDate - lastBirthday) / (1000 * 60 * 60 * 24);
             const fractionOfYear = daysSinceBirthday / daysInYear;
-            
+
             const preciseAge = age + fractionOfYear;
             return preciseAge.toFixed(9);
         }
@@ -613,7 +734,7 @@
         }
         setInterval(updateAge, 50);
         updateAge();
-        
+
         function decidePopup() {
             const savedPopupState = localStorage.getItem("PopupRedirectState") || "None";
             console.log("PopupRedirect状态:", savedPopupState);
@@ -674,12 +795,12 @@
             popup.style.display = 'flex';
 
             // 处理用户点击“是”按钮
-            document.getElementById('redirectYesButton').onclick = function() {
+            document.getElementById('redirectYesButton').onclick = function () {
                 window.location.href = 'https://' + newDomain;
             };
 
             // 处理用户点击“否”按钮
-            document.getElementById('redirectNoButton').onclick = function() {
+            document.getElementById('redirectNoButton').onclick = function () {
                 const popup = document.getElementById('domainRedirectPopup');
                 popup.style.display = 'none';
             };
@@ -700,7 +821,7 @@
             try {
                 const savedMusicState = localStorage.getItem("musicState") || "paused";
             }
-            catch (e){
+            catch (e) {
                 console.log("加载savedMusicState出错: ", e);
             }
             const savedMusicState = "paused";
@@ -709,7 +830,7 @@
                 document.getElementById("backgroundMusic").play();
             }
         }
-        try{
+        try {
             musicCheck();
         }
         catch (e) {
@@ -726,7 +847,7 @@
             document.getElementById('countdown').textContent = `${daysLeft} 天`;
         }
 
-        setInterval(updateCountdown, ); // 每天更新
+        setInterval(updateCountdown,); // 每天更新
         updateCountdown();
     </script>
 </body>

@@ -6,6 +6,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>东铁线SP1900</title>
     <style>
+        :root {
+            /* 港铁线路主题色 */
+            --mtr-east-rail: #53b7e8;
+            --mtr-kwun-tong: #1a9431;
+            --mtr-tsuen-wan: #ff0000;
+            --mtr-island: #0860a8;
+            --mtr-tung-chung: #fe7f1d;
+            --mtr-tko: #6b208b;
+            --mtr-tnl: #9a3b26;
+            --mtr-disney: #f550a6;
+            --mtr-south-island: #b5bd00;
+            --mtr-airport: #1c7670;
+
+            /* 样式配色 */
+            --bg-color-light: #f7f7f7;
+            --text-color-light: #333;
+            --bg-color-dark: #1a1a1a;
+            --text-color-dark: #e0e0e0;
+            --card-color-light: #ffffff;
+            --card-color-dark: #2a2a2a;
+            --btn-bg-light: var(--mtr-east-rail);
+            --btn-bg-dark: #005b88;
+            --btn-hover-light: #3ca3d8;
+            --btn-hover-dark: #4ec2f3;
+            --progress-color: var(--mtr-east-rail);
+            --icon-size: 20px;
+            --color-physics: var(--mtr-tko);
+            --color-chemistry: var(--mtr-island);
+            --color-biology: var(--mtr-kwun-tong);
+            --color-computer: var(--mtr-tung-chung);
+            --color-link: var(--mtr-east-rail);
+        }
+
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -23,6 +56,11 @@
             text-align: center;
             color: #333;
             margin-bottom: 20px;
+            color: var(--mtr-east-rail);
+        }
+
+        a {
+            color: var(--color-link);
         }
 
         input,
@@ -157,30 +195,30 @@
     <div class="container">
         <h1>宁波赫德新Y9<br>暑假作业链接整理</h1>
         <div class="output" id="linkBox">
-            <div>整理了作业册中的一些链接，避免手敲出错。</div>
-            <div>Physics: </div>
-            <div><button onclick="checkOpen('https://quizlet.com/cn/386521099/igcse%E7%89%A9%E7%90%86%E8%AF%8D%E6%B1%87-flash-cards');">Quizlet单词链接</button></div>
-            <div>Chemistry: </div>
-            <div><button onclick="checkOpen('https://www.bilibili.com/video/BV1mf4y1u7Ub')">IGCSE 0620 Chemistry 课程内容预习(全英文无中文字幕)</button></div>
-            <div><button onclick="checkOpen('https://www.bilibili.com/video/BV18a4y1g7nQ')">IGCSE 0620 Chemistry 课程内容预习(中文为主讲解)</button></div>
-            <div><button onclick="checkOpen('https://www.bilibili.com/bangumi/play/ep126229')">化学史纪录片(全英文带中文字幕)</button></div>
-            <div><button onclick="checkOpen('https://www.bilibili.com/video/BV1KE411872v')">美丽化学纪录片</button></div>
-            <div><button onclick="checkOpen('https://www.bilibili.com/video/BV1B741137fh')">超精简化学学科概述</button></div>
-            <div><button onclick="checkOpen('https://search.bilibili.com/bangumi?keyword=Dr+Stone')">《石纪元 Dr. Stone》[Bilibili-需要大会员(除第3、4季第一集)]</button></div>
-            <div>Biology: ("简介"太长，展示网址)</div>
-            <div><button onclick="checkOpen('https://nigms.nih.gov')">https://nigms.nih.gov</button></div>
-            <div><button onclick="checkOpen('https://cellsalive.com')">https://cellsalive.com</button></div>
-            <div><button onclick="checkOpen('https://biology.arizona.edu/default.html')">https://biology.arizona.edu/default.html</button></div>
-            <div>Computer Science: </div>
-            <div><button onclick="checkOpen('http://computer.howstuffworks.com/computer-buses-channel.htm')">部分计算机知识(第1项的参考网站)</button></div>
-            <div><button onclick="checkOpen('https://en.khanacademy.org/computing/intro-to-python-fundamentals')">Python基本语句(Unit 1~3)</button></div>
-            <div><button onclick="checkOpen('https://www.codecademy.com/catalog/language/python')">Python基本语句(Learn Python 3)</button></div>
+            <div style="color: var(--mtr-airport)">整理了作业册中的一些链接，避免手敲出错。</div>
+            <div style="color: var(--color-physics);">Physics: </div>
+            <div><button style="background-color: var(--color-physics)" onclick="checkOpen('https://quizlet.com/cn/386521099/igcse%E7%89%A9%E7%90%86%E8%AF%8D%E6%B1%87-flash-cards');">Quizlet单词链接</button></div>
+            <div style="color: var(--color-chemistry)">Chemistry: </div>
+            <div><button style="background-color: var(--color-chemistry)" onclick="checkOpen('https://www.bilibili.com/video/BV1mf4y1u7Ub')">IGCSE 0620 Chemistry 课程内容预习(全英文无中文字幕)</button></div>
+            <div><button style="background-color: var(--color-chemistry)" onclick="checkOpen('https://www.bilibili.com/video/BV18a4y1g7nQ')">IGCSE 0620 Chemistry 课程内容预习(中文为主讲解)</button></div>
+            <div><button style="background-color: var(--color-chemistry)" onclick="checkOpen('https://www.bilibili.com/bangumi/play/ep126229')">化学史纪录片(全英文带中文字幕)</button></div>
+            <div><button style="background-color: var(--color-chemistry)" onclick="checkOpen('https://www.bilibili.com/video/BV1KE411872v')">美丽化学纪录片</button></div>
+            <div><button style="background-color: var(--color-chemistry)" onclick="checkOpen('https://www.bilibili.com/video/BV1B741137fh')">超精简化学学科概述</button></div>
+            <div><button style="background-color: var(--color-chemistry)" onclick="checkOpen('https://search.bilibili.com/bangumi?keyword=Dr+Stone')">《石纪元 Dr. Stone》[Bilibili-需要大会员(除第3、4季第一集)]</button></div>
+            <div style="color: var(--color-biology)">Biology: ("简介"太长，展示网址)</div>
+            <div><button style="background-color: var(--color-biology)" onclick="checkOpen('https://nigms.nih.gov')">https://nigms.nih.gov</button></div>
+            <div><button style="background-color: var(--color-biology)" onclick="checkOpen('https://cellsalive.com')">https://cellsalive.com</button></div>
+            <div><button style="background-color: var(--color-biology)" onclick="checkOpen('https://biology.arizona.edu/default.html')">https://biology.arizona.edu/default.html</button></div>
+            <div style="color: var(--color-computer)">Computer Science: </div>
+            <div><button style="background-color: var(--color-computer)" onclick="checkOpen('http://computer.howstuffworks.com/computer-buses-channel.htm')">部分计算机知识(第1项的参考网站)</button></div>
+            <div><button style="background-color: var(--color-computer)" onclick="checkOpen('https://en.khanacademy.org/computing/intro-to-python-fundamentals')">Python基本语句(Unit 1~3)</button></div>
+            <div><button style="background-color: var(--color-computer)" onclick="checkOpen('https://www.codecademy.com/catalog/language/python')">Python基本语句(Learn Python 3)</button></div>
             <div>
                 如果有网页打不开的情况: <br>
                 1. 尝试刷新打不开的网页<br>
                 2. 检查连接的网络环境<br>
                 3. 尝试连接或断开VPN、加速器<br>
-                4. 仍无法解决：不要骂人，发送邮件到<a href="mailto:feedback@075038.xyz">feedback@075038.xyz</a><br>描述：<br>问题、如何触发、有没有使用VPN/加速器等信息<br>署上你的班级(801~805)姓名(教师请署职位和姓名)。<br>如有骂人或未署名情况，问题将不会解决，自己去敲网址吧哈哈哈。
+                4. 仍无法解决：<span style="color: var(--mtr-tsuen-wan);">不要骂人</span>，发送邮件到<a href="mailto:feedback@075038.xyz">feedback@075038.xyz</a><br>描述：<br>问题、如何触发、有没有使用VPN/加速器等信息<br>署上你的班级(801~805)姓名(教师请署职位和姓名)。<br>如有骂人或未署名情况，问题将不会解决，自己去敲网址吧哈哈哈。
             </div>
             <br>
             <div>还是理解不了为什么要把网址印在书上，学我做个网站不行吗？还是说老师没有域名……？</div>
