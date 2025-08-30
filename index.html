@@ -604,6 +604,10 @@
                 <!-- 倒计时 -->
                 <div class="output">
                     <strong>📅 离国庆还有：<span id="countdown" class="number"></span></strong>
+					<br>
+					<strong>📅 铁路纸质报销凭证还剩：<span id="railway-paper" class="number"></span></strong>
+					<br>
+					<strong>📅 7·23甬温线特别重大铁路交通事故发生已经：<span id="0723-accident" class="number"></span></strong>
                 </div>
 
                 <!-- 背景音乐播放按钮 -->
@@ -846,6 +850,72 @@
             // console.log(timeDifference - (daysLeft * 1000 * 60 * 60 * 24));
             document.getElementById('countdown').textContent = `${daysLeft} 天`;
         }
+		
+		// 计算自定义日期与当前日期之间的差异（包括时、分、秒）
+		function calculateCustom(customDateInput) {
+			const customDate = new Date(customDateInput);
+			const currentDate = new Date();
+
+			// 计算总的时间差（毫秒）
+			const timeDifference = Math.abs(customDate - currentDate);
+
+			// 计算年、月、日、小时、分钟、秒
+			const years = Math.floor(timeDifference / (365.25 * 24 * 60 * 60 * 1000));
+			const months = Math.floor((timeDifference % (365.25 * 24 * 60 * 60 * 1000)) / (30 * 24 * 60 * 60 * 1000));
+			const days = Math.floor((timeDifference % (30 * 24 * 60 * 60 * 1000)) / (24 * 60 * 60 * 1000));
+			const whole_days = Math.floor(timeDifference / (24 * 60 * 60 * 1000));
+
+			const hours = Math.floor((timeDifference % (24 * 60 * 60 * 1000)) / (60 * 60 * 1000));
+			const minutes = Math.floor((timeDifference % (60 * 60 * 1000)) / (60 * 1000));
+			const seconds = Math.floor((timeDifference % (60 * 1000)) / 1000);
+
+			// 返回年、月、日、小时、分钟、秒
+			return {
+				years: years,
+				months: months,
+				days: days,
+				whole_days: whole_days,
+				hours: hours,
+				minutes: minutes,
+				seconds: seconds
+			};
+		}
+
+		// 更新自定义日期的显示
+		function updateRailway(customDateInput, element_id) {
+			// 检查并修正日期格式
+			if (customDateInput.includes("T24:00:00")) {
+				customDateInput = customDateInput.replace("T24:00:00", "T00:00:00");
+				const date = new Date(customDateInput);
+				date.setDate(date.getDate() + 1); // 增加一天
+				customDateInput = date.toISOString(); // 转换为 ISO 格式
+			}
+
+			const ageDetails = calculateCustom(customDateInput);
+
+			// 构建输出字符串，避免冗余显示 0 年或 0 月
+			let output = '';
+			/* if (ageDetails.years > 0) output += `${ageDetails.years} 年 `;
+			if (ageDetails.months > 0) output += `${ageDetails.months} 个月 `;
+			if (ageDetails.days > 0 || (ageDetails.years === 0 && ageDetails.months === 0)) output += `${ageDetails.days} 天 `; // 如果年和月都为 0，显示天
+			*/
+			if (ageDetails.whole_days > 0) output += `${ageDetails.whole_days} 天 `
+			let h = '', m = '', s = '';
+			if (ageDetails.hours < 10) h = '0';
+			if (ageDetails.minutes < 10) m = '0';
+			if (ageDetails.seconds < 10) s = '0';
+			
+			output += `${h}${ageDetails.hours}:${m}${ageDetails.minutes}:${s}${ageDetails.seconds}`; // 始终显示时分秒
+
+			// 显示结果
+			document.getElementById(element_id).innerHTML = output;
+		}
+
+		// 可自定义每隔一定时间进行更新
+		setInterval(function() {
+			updateRailway("2025-10-01T00:00:00+08:00", "railway-paper"); // 传入日期和时间
+			updateRailway("2011-07-23T20:30:05+08:00", "0723-accident"); // 传入日期和时间
+		}, 50); // 每隔1秒更新一次
 
         setInterval(updateCountdown,); // 每天更新
         updateCountdown();
