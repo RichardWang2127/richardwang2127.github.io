@@ -129,6 +129,14 @@
             background-color: #155e56;
         }
 
+        button.attendance {
+            background-color: var(--mtr-east-rail);
+        }
+
+        button.attendance:hover {
+            background-color: var(--mtr-east-rail);
+        }
+
         /* 默认进度条颜色为东铁线 */
         progress[value]::-webkit-progress-value {
             background-color: var(--mtr-east-rail);
@@ -573,16 +581,21 @@
                     <table>
                         <tr>
                             <td><button onclick="window.location.href=('/shmetro/')" class="shmetro">🚇 上海地铁列车查询工具</button></td>
-                            <td>0.6.9 网页</td>
+                            <td>0.6.9 / 网页</td>
                         </tr>
                         <tr>
                             <td><button onclick="location.href=('/nbmetro_line1/')" class="nbmetro">🛤️ 宁波轨道交通1号线闪灯图模拟</button></td>
-                            <td>0.1 Python</td>
+                            <td>0.1 / Python</td>
                         </tr>
                         <tr>
                             <td><button onclick="window.location.href=('/y8/awards')" class="awards">🏆 Y8第二学期奖项查询(宁波赫德新Y9学生)</button>
                             </td>
-                            <td>1.0 网页</td>
+                            <td>1.0 / 网页</td>
+                        </tr>
+                        <tr>
+                            <td><button onclick="window.location.href=('https://attendance.075038.xyz')" class="attendance">📅 宁波鄞州赫德实验学校社团管理系统</button>
+                            </td>
+                            <td>0.8 Beta / 网页</td>
                         </tr>
                     </table>
                 </div>
