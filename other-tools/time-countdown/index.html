@@ -214,6 +214,17 @@
 			timerListElement.innerHTML = '';
 			const now = new Date();
 
+			// 非管理模式下只显示当前时间范围内的倒计时，并进行排序
+			if (!isManaging) {
+				timers = timers.filter(timer => {
+					const startTime = new Date();
+					const endTime = new Date();
+					startTime.setHours(timer.start.split(':')[0], timer.start.split(':')[1], timer.start.split(':')[2], 0);
+					endTime.setHours(timer.end.split(':')[0], timer.end.split(':')[1], timer.end.split(':')[2], 0);
+					return now >= startTime && now < endTime;
+				});
+			}
+
 			// 按照结束时间排序，如果结束时间相同，则按照开始时间排序
 			timers.sort((a, b) => {
 				const endTimeA = new Date(a.end).getTime();
@@ -273,7 +284,6 @@
             `;
 					timerListElement.appendChild(timerItem);
 				}
-				// 如果不在当前时间范围内且不是管理模式，则不显示任何内容
 			});
 		}
 		// 添加倒计时
