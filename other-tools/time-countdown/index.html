@@ -204,11 +204,26 @@
 		// 从localStorage加载倒计时列表
 		let timers = JSON.parse(localStorage.getItem('timers')) || [];
 
+		function saveTimers() {
+			localStorage.setItem('timers', JSON.stringify(timers));
+		}
 		// 保存倒计时到localStorage
 		// 渲染倒计时列表
 		function renderTimers() {
 			timerListElement.innerHTML = '';
 			const now = new Date();
+
+			// 按照结束时间排序，如果结束时间相同，则按照开始时间排序
+			timers.sort((a, b) => {
+				const endTimeA = new Date(a.end).getTime();
+				const endTimeB = new Date(b.end).getTime();
+				if (endTimeA !== endTimeB) {
+					return endTimeA - endTimeB;
+				}
+				const startTimeA = new Date(a.start).getTime();
+				const startTimeB = new Date(b.start).getTime();
+				return startTimeA - startTimeB;
+			});
 
 			timers.forEach((timer, index) => {
 				const startTime = new Date();
@@ -331,7 +346,7 @@
 		renderTimers();
 
 		// 每秒更新倒计时
-		setInterval(renderTimers, 1000);
+		setInterval(renderTimers, 100);
 	</script>
 </body>
 
