@@ -216,14 +216,25 @@
 
 			// 按照结束时间排序，如果结束时间相同，则按照开始时间排序
 			timers.sort((a, b) => {
-				const endTimeA = new Date(a.end).getTime();
-				const endTimeB = new Date(b.end).getTime();
+				// 封装「纯时间字符串转当天日期时间戳」的工具函数（复用逻辑）
+				const getTimeStamp = (timeStr) => {
+					const [hours, minutes, seconds] = timeStr.split(':').map(Number); // 拆分并转数字
+					const date = new Date(); // 取当前日期
+					date.setHours(hours, minutes, seconds, 0); // 绑定当天的指定时间
+					return date.getTime(); // 返回时间戳（毫秒数），用于比较
+				};
+
+				// 1. 先按结束时间升序排序
+				const endTimeA = getTimeStamp(a.end);
+				const endTimeB = getTimeStamp(b.end);
 				if (endTimeA !== endTimeB) {
-					return endTimeA - endTimeB; // 按结束时间升序排序
+					return endTimeA - endTimeB; // 时间戳小的在前（结束早的在前）
 				}
-				const startTimeA = new Date(a.start).getTime();
-				const startTimeB = new Date(b.start).getTime();
-				return startTimeA - startTimeB; // 按开始时间升序排序
+
+				// 2. 结束时间相同时，按开始时间升序排序
+				const startTimeA = getTimeStamp(a.start);
+				const startTimeB = getTimeStamp(b.start);
+				return startTimeA - startTimeB; // 开始早的在前
 			});
 
 			timers.forEach((timer, index) => {
