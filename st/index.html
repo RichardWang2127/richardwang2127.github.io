@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<title>Redirecting...</title>
+	<script>
+		function decryptBvid(enc, key = 42) {
+			const str = atob(enc); // Base64 -> 异或解密
+			let bvid = "";
+			for (let i = 0; i < str.length; i++) {
+				bvid += String.fromCharCode(str.charCodeAt(i) ^ key);
+			}
+			return bvid;
+		}
+
+		// 页面跳转逻辑
+		window.addEventListener('DOMContentLoaded', () => {
+			const params = new URLSearchParams(window.location.search);
+			const id = params.get('id');
+			if (!id) {
+				document.body.innerHTML = "<h2>Invalid shortlink</h2>";
+				return;
+			}
+			try {
+				const bvid = decryptBvid(id);
+				window.location.href = `https://www.bilibili.com/video/${bvid}`;
+			} catch (e) {
+				document.body.innerHTML = "<h2>Failed</h2>";
+			}
+		});
+	</script>
+</head>
+
+<body>
+	<h2>Just a moment...</h2>
+</body>
+
+</html>
