@@ -22,10 +22,10 @@ textarea { width: 100%; height: 60px; margin-top: 10px; font-size: 14px; }
 
 <script>
 // 加密函数
-function encryptBvid(bvid, key = 42) {
+function encryptBvid(bvid) {
     let result = "";
     for (let i = 0; i < bvid.length; i++) {
-        result += String.fromCharCode(bvid.charCodeAt(i) ^ key);
+        result += String.fromCharCode(bvid.charCodeAt(i) ^ 42);
     }
     return btoa(result); // Base64 编码
 }
@@ -36,7 +36,7 @@ document.getElementById("encryptBtn").addEventListener("click", () => {
         alert("请输入 BVID");
         return;
     }
-    const enc = encryptBvid(bvid, key);
+    const enc = encryptBvid(bvid);
     const url = `${window.location.origin}/st?id=${enc}`;
     document.getElementById("result").value = url;
 });
