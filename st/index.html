@@ -5,6 +5,16 @@
 	<meta charset="UTF-8">
 	<title>Redirecting...</title>
 	<script>
+		function encryptBvid(bvid, key = 42) {
+		    let result = "";
+		    for (let i = 0; i < bvid.length; i++) {
+		        result += String.fromCharCode(bvid.charCodeAt(i) ^ key);
+		    }
+		    return btoa(result); // Base64 编码
+		}
+		
+		// 可选：在 console 里方便调用
+		window.encryptBvid = encryptBvid;
 		function decryptBvid(enc, key = 42) {
 			const str = atob(enc); // Base64 -> 异或解密
 			let bvid = "";
