@@ -10,17 +10,14 @@ textarea { width: 100%; height: 60px; margin-top: 10px; font-size: 14px; }
 </style>
 </head>
 <body>
-<h2>Bilibili 视频短链加密器</h2>
+<h2>Bilibili 视频加密器</h2>
 
 <label for="bvid">输入 BVID:</label>
 <input type="text" id="bvid" placeholder="例如 BV1xxxxxx">
 
-<label for="key">加密 key（可选，默认42）:</label>
-<input type="number" id="key" value="42">
-
 <button id="encryptBtn">生成短链</button>
 
-<label for="result">加密后的短链 URL:</label>
+<label for="result">加密后 URL:</label>
 <textarea id="result" readonly></textarea>
 
 <script>
@@ -35,13 +32,12 @@ function encryptBvid(bvid, key = 42) {
 
 document.getElementById("encryptBtn").addEventListener("click", () => {
     const bvid = document.getElementById("bvid").value.trim();
-    const key = parseInt(document.getElementById("key").value) || 42;
     if (!bvid) {
         alert("请输入 BVID");
         return;
     }
     const enc = encryptBvid(bvid, key);
-    const url = `${window.location.origin}/bil?id=${enc}`;
+    const url = `${window.location.origin}/st?id=${enc}`;
     document.getElementById("result").value = url;
 });
 </script>
