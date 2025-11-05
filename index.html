@@ -788,9 +788,9 @@
             } else if (currentDomain.includes('github.io')) {
                 newDomain = 'xxx.' + currentDomain;
                 if (!redirect) {
-                    if (!decidePopup()) {
-                        showRedirectPopup(); // 显示跳转确认弹窗
-                    }
+                    // if (!decidePopup()) {
+                    //     showRedirectPopup(); // 显示跳转确认弹窗
+                    // }
                     return 3;
                 }
             } else {

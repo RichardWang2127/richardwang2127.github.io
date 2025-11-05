@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Vera老师的计时器</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+		}
+
+		body {
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			min-height: 100vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding: 20px;
+		}
+
+		.container {
+			max-width: 900px;
+			width: 100%;
+			background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+			border-radius: 20px;
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+			padding: 40px;
+			backdrop-filter: blur(10px);
+		}
+
+		h1 {
+			color: #2c3e50;
+			text-align: center;
+			margin-bottom: 30px;
+			font-weight: 700;
+			font-size: 2.5rem;
+			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+
+		.birthday-timer {
+			background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+			border-radius: 16px;
+			padding: 20px;
+			margin-bottom: 20px;
+			text-align: center;
+			box-shadow: 0 8px 25px rgba(255, 107, 107, 0.3);
+			border: 2px solid rgba(255, 255, 255, 0.2);
+		}
+
+		.birthday-timer h2 {
+			color: white;
+			margin-bottom: 20px;
+			font-size: 1.8rem;
+			font-weight: 600;
+			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+		}
+
+		.timer-display {
+			display: flex;
+			justify-content: center;
+			gap: 20px;
+			flex-wrap: wrap;
+		}
+
+		.time-unit {
+			background: rgba(255, 255, 255, 0.95);
+			border-radius: 12px;
+			padding: 15px 10px;
+			min-width: 80px;
+			box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+			border: 1px solid rgba(255, 255, 255, 0.3);
+			transition: transform 0.3s ease;
+		}
+
+		.time-unit:hover {
+			transform: translateY(-5px);
+		}
+
+		.time-value {
+			font-size: 1.5rem;
+			font-weight: 700;
+			color: #e74c3c;
+			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+
+		.info-box {
+			background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+			border-radius: 12px;
+			padding: 20px;
+			margin-bottom: 30px;
+			box-shadow: 0 6px 20px rgba(116, 185, 255, 0.3);
+			border: 2px solid rgba(255, 255, 255, 0.2);
+		}
+
+		.info-box p {
+			margin: 8px 0;
+			color: white;
+			font-size: 1.1rem;
+			font-weight: 500;
+		}
+
+		.highlight {
+			color: #53b7e8;
+			font-weight: bold;
+		}
+
+		.number-display {
+			background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+			border: 2px solid #e9ecef;
+			border-radius: 12px;
+			padding: 25px;
+			margin: 25px 0;
+			font-family: 'Courier New', monospace;
+			font-size: 18px;
+			line-height: 1.6;
+			word-break: break-all;
+			max-height: 350px;
+			overflow-y: auto;
+			box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.1);
+		}
+
+		.controls {
+			display: flex;
+			justify-content: center;
+			gap: 20px;
+			margin: 30px 0;
+			flex-wrap: wrap;
+		}
+
+		button {
+			background: linear-gradient(135deg, #00b894 0%, #00a085 100%);
+			color: white;
+			border: none;
+			padding: 12px 30px;
+			border-radius: 50px;
+			cursor: pointer;
+			font-size: 16px;
+			font-weight: 600;
+			transition: all 0.3s ease;
+			box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+		}
+
+		button:hover {
+			background: linear-gradient(135deg, #00a085 0%, #008c75 100%);
+			transform: translateY(-3px);
+			box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
+		}
+
+		.found-text {
+			background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+			padding: 20px;
+			border-radius: 12px;
+			margin-top: 25px;
+			box-shadow: 0 6px 20px rgba(253, 203, 110, 0.3);
+			border: 2px solid rgba(255, 255, 255, 0.2);
+		}
+
+		.found-text p {
+			color: #2d3436;
+			font-size: 1.1rem;
+			font-weight: 500;
+			margin: 0;
+		}
+
+		.highlighted-string {
+			background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+			padding: 4px 8px;
+			border-radius: 6px;
+			font-weight: bold;
+			color: #2d3436;
+			box-shadow: 0 2px 8px rgba(253, 203, 110, 0.3);
+		}
+
+		.highlighted-string-title {
+			background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+			padding: 6px 12px;
+			border-radius: 8px;
+			font-weight: bold;
+			color: #2d3436;
+			box-shadow: 0 3px 10px rgba(253, 203, 110, 0.4);
+			font-size: 1.2rem;
+		}
+
+		.birthday-message {
+			background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+			border-radius: 16px;
+			padding: 30px;
+			margin-bottom: 20px;
+			text-align: center;
+			box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+			border: 2px solid rgba(255, 255, 255, 0.3);
+			animation: pulse 2s infinite;
+		}
+
+		.birthday-message h2 {
+			color: white;
+			font-size: 2.2rem;
+			font-weight: 700;
+			text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+			margin-bottom: 15px;
+		}
+
+		.birthday-message p {
+			color: white;
+			font-size: 1.3rem;
+			font-weight: 500;
+			text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+		}
+
+		.fullscreen-btn {
+			text-align: center;
+			margin-bottom: 20px;
+		}
+
+		.fullscreen-btn button {
+			background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 100%);
+			color: white;
+			border: none;
+			padding: 15px 40px;
+			border-radius: 50px;
+			cursor: pointer;
+			font-size: 1.3rem;
+			font-weight: 600;
+			transition: all 0.3s ease;
+			box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+		}
+
+		.fullscreen-btn button:hover {
+			transform: scale(1.05);
+			box-shadow: 0 8px 25px rgba(255, 107, 107, 0.6);
+		}
+
+		.birthday-fullscreen {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100vw;
+			height: 100vh;
+			background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ffd93d 100%);
+			display: none;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+			z-index: 1000;
+			/* animation: rainbow 3s infinite; */
+		}
+
+		.birthday-content {
+			text-align: center;
+			color: white;
+			text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+		}
+
+		.birthday-content h1 {
+			font-size: 4rem;
+			margin-bottom: 30px;
+			color: white;
+			text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+			animation: bounce 2s infinite;
+		}
+
+		.birthday-content h2 {
+			font-size: 3rem;
+			margin-bottom: 20px;
+			animation: pulse 1.5s infinite;
+		}
+
+		.birthday-content p {
+			font-size: 2rem;
+			margin-bottom: 40px;
+		}
+
+		.birthday-timer-fullscreen {
+			background: rgba(255, 255, 255, 0.2);
+			border-radius: 20px;
+			padding: 30px;
+			margin: 20px 0;
+			backdrop-filter: blur(10px);
+			border: 2px solid rgba(255, 255, 255, 0.3);
+		}
+
+		.birthday-timer-fullscreen .time-unit {
+			background: rgba(255, 255, 255, 0.9);
+			border-radius: 15px;
+			padding: 20px 15px;
+			min-width: 20m0px;
+			margin: 0 10px;
+		}
+
+		.birthday-timer-fullscreen .time-value {
+			font-size: 2rem;
+			color: #e74c3c;
+		}
+
+		.close-fullscreen {
+			position: absolute;
+			top: 30px;
+			right: 30px;
+			background: rgba(255, 255, 255, 0.2);
+			border: none;
+			color: white;
+			font-size: 2rem;
+			width: 60px;
+			height: 60px;
+			border-radius: 50%;
+			cursor: pointer;
+			backdrop-filter: blur(10px);
+			transition: all 0.3s ease;
+		}
+
+		.close-fullscreen:hover {
+			background: rgba(255, 255, 255, 0.3);
+			transform: scale(1.1);
+		}
+
+		@keyframes pulse {
+			0% {
+				transform: scale(1);
+			}
+			50% {
+				transform: scale(1.02);
+			}
+			100% {
+				transform: scale(1);
+			}
+		}
+
+		@keyframes rainbow {
+			0% {
+				background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ffd93d 100%);
+			}
+			25% {
+				background: linear-gradient(135deg, #ffd93d 0%, #ff6b6b 50%, #ff8e8e 100%);
+			}
+			50% {
+				background: linear-gradient(135deg, #ff8e8e 0%, #ffd93d 50%, #ff6b6b 100%);
+			}
+			75% {
+				background: linear-gradient(135deg, #ff6b6b 0%, #ff8e8e 50%, #ffd93d 100%);
+			}
+			100% {
+				background: linear-gradient(135deg, #ffd93d 0%, #ff6b6b 50%, #ff8e8e 100%);
+			}
+		}
+
+		@keyframes bounce {
+			0%, 100% {
+				transform: translateY(0);
+			}
+			50% {
+				transform: translateY(-20px);
+			}
+		}
+
+		@media (max-width: 600px) {
+			.container {
+				padding: 20px 15px;
+				border-radius: 16px;
+			}
+
+			h1 {
+				font-size: 2rem;
+				margin-bottom: 20px;
+			}
+
+			.number-display {
+				font-size: 14px;
+				padding: 15px;
+			}
+
+			button {
+				width: 100%;
+				margin-bottom: 10px;
+			}
+
+			.timer-display {
+				gap: 10px;
+			}
+
+			.time-unit {
+				min-width: 70px;
+				padding: 12px 8px;
+			}
+
+			.time-value {
+				font-size: 1.2rem;
+			}
+
+			.birthday-timer {
+				padding: 15px;
+			}
+
+			.birthday-timer h2 {
+				font-size: 1.4rem;
+			}
+
+			.birthday-content h1 {
+				font-size: 2.5rem;
+			}
+
+			.birthday-content h2 {
+				font-size: 2rem;
+			}
+
+			.birthday-content p {
+				font-size: 1.5rem;
+			}
+
+			.birthday-timer-fullscreen .time-unit {
+				min-width: 80px;
+				padding: 15px 10px;
+				margin: 0 5px;
+			}
+
+			.birthday-timer-fullscreen .time-value {
+				font-size: 1.5rem;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div class="container">
+		<h1>Vera老师的计时器</h1>
+
+		<div class="birthday-timer">
+			<h2>已经<span id="time-string"></span></h2>
+			<div class="timer-display">
+				<div class="time-unit">
+					<div class="time-value" id="displayYears">0</div>
+				</div>
+				<div class="time-unit">
+					<div class="time-value" id="displayDays">0</div>
+				</div>
+				<div class="time-unit">
+					<div class="time-value" id="displayHMS">0</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- 在生日计时器后面添加生日快乐消息 -->
+		<div id="birthdayMessage" class="birthday-message" style="display: none;">
+			<h2>🎉 生日快乐！ 🎂</h2>
+			<p>今天是你的特别日子！愿您健康快乐！</p>
+		</div>
+
+		<!-- 在生日消息后面添加全屏按钮 -->
+		<div id="fullscreenBtn" class="fullscreen-btn" style="display: none;">
+			<button onclick="enterBirthdayMode()">🎂 进入生日模式</button>
+		</div>
+
+		<!-- 添加音频元素 -->
+		<audio id="birthdaySong" loop>
+			<!-- <source src="https://assets.mixkit.co/music/preview/mixkit-happy-birthday-song-208.mp3" type="audio/mpeg"> -->
+			 <!-- <source src="file:///D:/Wang Richard/Desktop/1/Nylon - Eventide.mp3" type="audio/mpeg"> -->
+		</audio>
+
+		<div class="info-box">
+			<p><strong>查找内容：</strong><span class="highlighted-string-title">19951105</span></p>
+		</div>
+
+		<div class="number-display" id="numberDisplay">
+			<!-- 数字内容将通过JavaScript动态生成 -->
+		</div>
+
+		<div class="controls">
+			<button id="toggleDisplay">显示全部内容</button>
+		</div>
+
+		<div class="found-text">
+			<p><strong>查找结果: </strong><span class="highlight">2<sup>19524</sup></span> (位置：<span
+					class="highlight">993</span>)</p>
+		</div>
+	</div>
+
+	<!-- 添加全屏生日模式HTML -->
+	<div id="birthdayFullscreen" class="birthday-fullscreen">
+		<button class="close-fullscreen" onclick="exitBirthdayMode()">×</button>
+		<div class="birthday-content">
+			<h1>🎉 生日快乐！ 🎂</h1>
+			<h2>Vera老师</h2>
+			<p>今天是您的特别日子！</p>
+
+			<div class="birthday-timer-fullscreen">
+				<div class="timer-display">
+					<div class="time-unit" id="fullscreenY">
+						<div class="time-value" id="fullscreenYears">0岁</div>
+					</div>
+					<div class="time-unit" id="fullscreenD">
+						<div class="time-value" id="fullscreenDays">0天</div>
+					</div>
+					<div class="time-unit" id="fullscreenH">
+						<div class="time-value" id="fullscreenHMS">00:00:00</div>
+					</div>
+				</div>
+			</div>
+
+			<p>愿你健康快乐！</p>
+		</div>
+	</div>
+
+	<script>
+		// 长数字字符串
+		const longNumber = "2040024313904499038765789426189468426643996560543923687957244175172692335861940104107409873321123476190999006043654759145255039423734049465466091231772493144495351026965816971210628650652867380422718362624427721767896591315567838691374835865220640622730638044137227216086939738025471788003172071027230168147124987537993972618427825109958382170271909336056326329794579839360288676599321994801795387831011842459673472243351495784982483901881196655882820104315489174247540629851862830849866094934545033270352731375453555613474938229402158934719952461718775345977804355031027834274578584813820809554562167150731149598421190579256303450803882778310726566382792794240251759576924157374752141911697602294364848931713008219708753276370709074592131127772091722943956522124002038536803815403820352776039659847815589670342506563438085471031071212557530245261937661110474488565124743798696859799728411364307412824950201889963055445786490810486321556025789464091954501003229563267085088920696994773494027319951105931818995868475894898729509228121668665524915405052521132296802935832266066243692652672173570031420580895768348862137707201501606204426819637781958392323436108197882854276500584054331060908041833749975780692799724101452860434995394195700560647626402240482922617030999242697390844832804358734655468877149442374112721249806371685927865572597872612906269016513356524140451318705603379906843316195684733703041645935145387273960469289318767683071749857020960847952787307585306859019433724851233911016065762099924925264800834592988396517526046483382026083178264002480459465416656215619078198159417398853750248291080086729261132349225142650571420373059526757587485913383386293822528849883546359600398760566915351225158461738735642620200162048151439004459134163440340142771977053807893316255959875639523991918198992956214742517627348315190716729257801351844361839973541367414422197334269000258468370503374194583235191140269913049259202434798892939933930074859351192121678620209699262080359962936898062812497437204168356387771540211476762206529142222499986761923927918961270613782882735402065471994884086089396025129460135822749121213460395433139968389721783257236256555372956903140384497981182055026815883938749833122994962027172283856550735176579214222873137095881611343731413257477780463176706905537809031526286480521455487183552657208627378798913842150272620120075207451501489896931434944181872265075855376516688228562808719317133366835016648459317733581727593874014550576851373413566102889573326452645752330276182587332025142618022405722805867615904907207546543444244971163069856815967039326560514384923658325956739935816394042545536695435586612752905742251865114362653884253436227657746473553926747532259059554383033056916196182831477077527560942070842304431569680063337983759388094762883489352422455781895479738186658485747980122866136670706030343876179398394986056680653474045212112737383769590931130335367236197329114682195019316653249897480014070528447870669935253948945904930046114112503709500819073188398531533508795326339179589240800000657626373932951158016174691006407691946202043336561070070336373791837735414856651853771579023769252905641041794906549070547580421433375664148457430298002177754764283922326370040818418161947080158865676317582312601376818050091302244743427151961548678849235444421385703117300770497701339808927689592264524390207080439630822571362826133784953955451780657491224493580210707952355821237285104425941578117637618907693206155754460050765552064430806125760618497326937422881487186523841524139555724841783433488538022338414418515841746282501682448953457662915187149362021278111856539408042590022246068781563481880002715042645173128299960956620198445058050618711443718533510268222108239022776642141483389688397881564283158068751846872243970146831215157908152603138307189471971783930816999568982556311827574477074614277516302369897053318636918262236800839453019523138227821831545823619416567438914949893348402988504237630585355766279259604636834371362421654776500769238426082599714044184125862059452983963858943015813875292697904949236354389697708912634434212983567647637412572332253699293185704487725162327338340124755276714355351285331856928373545513435721522277807311214635167039668331228006281169565250315563891510305511881535364912362307350471328302023136710749149746577274710187957464510425253217071388233074925425645867082697199616686949762602881391459220553684966232426084878141868005152810861551961397467623636097338192193967177297089774467471645527199117452913633387928027363242060864579578469724764651321526561011857354071179573095357924045348081943690314448352492128715819071534325375620998527695533600632827954495024401354074336722575385205415999183164781086056345329903346060266664251602726112516876112200594873149050791240200171397428648343638465426216641933063313781944217709468813427719448271402627948446192186899783391531139506494766977087904705899359626997175083432232394912876649168661009159099634253678764295098107891591565331390338407851091335823908870477949328172303027081293592330587840501476746972125088477298643106777867785319836620794866565998207076365832374114715220965171588441104958930697096538165127020494904591726915361510395414610944316202457245020050360244335799602889299687538670977422224710809905789865704574344703116610937467931933839245096021414879849151997403821676974469655030152034517054824850890078937579483135247779069127806892543046519276674627351194559314492740822318769952489037964627344616685224060164262283806340767816285696120624440084116124767440830765601793007913468047451413205618990974201792480494726856892865473152963794186841437411744735529640056738399769912359568014146962122503589424138363842101513996004721148498290156420133064236442760060129956965165336698919019096376608956285676318969366490642383789047924677269621630472552116805429060280772656962284714483210239016427018567866929660297216";
+
+		// 查找结果的位置
+		const foundPosition = 992;
+		const foundLength = 8; // 长度
+
+		// 获取DOM元素
+		const numberDisplay = document.getElementById('numberDisplay');
+		const toggleDisplayBtn = document.getElementById('toggleDisplay');
+
+		// 生日计时器相关元素
+		const timeString = document.getElementById('time-string');
+		const displayYears = document.getElementById('displayYears');
+		const displayDays = document.getElementById('displayDays');
+		const displayHMS = document.getElementById('displayHMS');
+
+		// 初始状态
+		let showAll = false;
+
+		// 设置生日日期 (2024年12月10日)
+		const birthday = new Date(1995, 10, 5); // 注意：月份从0开始，11代表12月
+
+		// 计算年龄和经过的时间
+		function updateAge() {
+			const now = new Date();
+
+			// 检查是否是生日当天
+			const isBirthday = now.getMonth() === birthday.getMonth() &&
+				now.getDate() === birthday.getDate();
+
+			// 显示或隐藏生日快乐消息和全屏按钮
+			const birthdayMessage = document.getElementById('birthdayMessage');
+			const fullscreenBtn = document.getElementById('fullscreenBtn');
+			if (isBirthday) {
+				birthdayMessage.style.display = 'block';
+				fullscreenBtn.style.display = 'block';
+			} else {
+				birthdayMessage.style.display = 'none';
+				fullscreenBtn.style.display = 'none';
+				exitBirthdayMode();
+			}
+
+			// 计算周岁
+			let years = now.getFullYear() - birthday.getFullYear();
+
+			// 如果当前月份小于生日月份，或者月份相同但日期小于生日日期，则年龄减1
+			if (now.getMonth() < birthday.getMonth() ||
+				(now.getMonth() === birthday.getMonth() && now.getDate() < birthday.getDate())) {
+				years--;
+			}
+
+			// 计算今年的生日日期
+			const thisYearBirthday = new Date(now.getFullYear(), birthday.getMonth(), birthday.getDate());
+
+			// 如果今年的生日还没到，则使用去年的生日作为起点
+			let lastBirthday;
+			if (now < thisYearBirthday) {
+				lastBirthday = new Date(now.getFullYear() - 1, birthday.getMonth(), birthday.getDate());
+			} else {
+				lastBirthday = thisYearBirthday;
+			}
+
+			// 计算距离上次生日的天数、小时、分钟和秒数
+			const diffMs = now - lastBirthday;
+			const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+			const diffHours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+			const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+			const diffSeconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+			const h_zero = diffHours < 10 ? '0' : '';
+			const m_zero = diffMinutes < 10 ? '0' : '';
+			const s_zero = diffSeconds < 10 ? '0' : '';
+
+			// 更新正常模式显示
+			displayYears.textContent = years + "岁";
+			displayDays.textContent = diffDays + "天";
+			displayHMS.textContent = h_zero + diffHours + ":" + m_zero + diffMinutes + ":" + s_zero + diffSeconds;
+
+			// 更新全屏模式显示
+			const fullscreenYears = document.getElementById('fullscreenYears');
+			const fullscreenDays = document.getElementById('fullscreenD');
+			const fullscreenHMS = document.getElementById('fullscreenH');
+
+			if (fullscreenYears) {
+				fullscreenYears.textContent = years + "岁";
+				fullscreenDays.style.display = "none";
+				fullscreenHMS.style.display = "none";
+				// fullscreenDays.textContent = diffDays + "天";
+				// fullscreenHMS.textContent = h_zero + diffHours + ":" + m_zero + diffMinutes + ":" + s_zero + diffSeconds;
+			}
+		}
+
+		// 渲染数字内容
+		function renderNumber() {
+			let displayContent = '';
+			if (showAll) {
+				// 显示全部内容，始终高亮查找结果
+				const beforeFound = longNumber.substring(0, foundPosition);
+				const foundPart = longNumber.substring(foundPosition, foundPosition + foundLength);
+				const afterFound = longNumber.substring(foundPosition + foundLength);
+
+				displayContent = beforeFound + '<span class="highlighted-string">' + foundPart + '</span>' + afterFound;
+			} else {
+				// 默认显示前20位和后20位，始终高亮查找结果
+				const beforeFound = longNumber.substring(0, foundPosition);
+				const foundPart = longNumber.substring(foundPosition, foundPosition + foundLength);
+				const afterFound = longNumber.substring(foundPosition + foundLength);
+
+				// 如果查找结果在前20位内
+				if (foundPosition <= 20) {
+					displayContent = beforeFound + '<span class="highlighted-string">' + foundPart + '</span>' +
+						afterFound.substring(0, 20 - foundPosition - foundLength) + '...' +
+						longNumber.substring(longNumber.length - 20);
+				}
+				// 如果查找结果在后20位内
+				else if (foundPosition >= longNumber.length - 20) {
+					displayContent = longNumber.substring(0, 20) + '...' +
+						beforeFound.substring(beforeFound.length - (20 - (longNumber.length - foundPosition))) +
+						'<span class="highlighted-string">' + foundPart + '</span>' + afterFound;
+				}
+				// 如果查找结果在中间
+				else {
+					displayContent = longNumber.substring(0, 20) + '...' +
+						beforeFound.substring(foundPosition - 10, foundPosition) +
+						'<span class="highlighted-string">' + foundPart + '</span>' +
+						afterFound.substring(0, 10) + '...' +
+						longNumber.substring(longNumber.length - 20);
+				}
+			}
+
+			numberDisplay.innerHTML = '2<sup>19524</sup> = ' + displayContent;
+		}
+
+		// 进入生日全屏模式
+		function enterBirthdayMode() {
+			const fullscreen = document.getElementById('birthdayFullscreen');
+			const song = document.getElementById('birthdaySong');
+
+			// 显示全屏界面
+			fullscreen.style.display = 'flex';
+
+			// 播放生日快乐歌
+			song.play().catch(e => {
+				console.log('自动播放被阻止，请手动点击播放');
+			});
+
+			// 隐藏主容器
+			document.querySelector('.container').style.display = 'none';
+		}
+
+		// 退出生日全屏模式
+		function exitBirthdayMode() {
+			const fullscreen = document.getElementById('birthdayFullscreen');
+			const song = document.getElementById('birthdaySong');
+
+			// 隐藏全屏界面
+			fullscreen.style.display = 'none';
+
+			// 停止音乐
+			song.pause();
+			song.currentTime = 0;
+
+			// 显示主容器
+			document.querySelector('.container').style.display = 'block';
+		}
+
+		// 切换显示全部/部分内容
+		toggleDisplayBtn.addEventListener('click', function () {
+			showAll = !showAll;
+			toggleDisplayBtn.textContent = showAll ? '显示部分内容' : '显示全部内容';
+			renderNumber();
+		});
+
+		// 初始渲染
+		renderNumber();
+
+		// 启动计时器
+		updateAge();
+		setInterval(updateAge, 100);
+	</script>
+</body>
+
+</html>
