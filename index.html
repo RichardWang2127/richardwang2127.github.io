@@ -557,7 +557,7 @@
     <!-- 跳转确认弹窗 -->
     <div id="domainRedirectPopup" class="popup">
         <div class="popup-content">
-            <p id="domainRedirectPopupText">本域名将减少维护，建议访问新网站。是否跳转到新域名075038.xyz？</p>
+            <p id="domainRedirectPopupText">本域名将减少维护，建议访问新网站。是否跳转到新域名ciallo0721.org？</p>
             <button id="redirectYesButton">是</button>
             <button id="redirectNoButton">否</button>
         </div>
@@ -780,7 +780,7 @@
                 if (!redirect) {
                     return 1;
                 }
-            } else if (currentDomain.includes('075038.xyz')) {
+            } else if (currentDomain.includes('ciallo0721.org')) {
                 newDomain = 'xxx.' + currentDomain;
                 if (!redirect) {
                     return 2;
@@ -795,7 +795,7 @@
                 }
             } else {
                 if (!redirect) {
-                    document.getElementById('domainRedirectPopupText').innerText = '建议访问主网站: 075038.xyz，是否跳转？';
+                    document.getElementById('domainRedirectPopupText').innerText = '建议访问主网站: ciallo0721.org，是否跳转？';
                     showRedirectPopup(); // 显示跳转确认弹窗
 
                     return -1; // 未匹配到任何域名
@@ -810,7 +810,7 @@
 
         // 显示跳转确认弹窗
         function showRedirectPopup() {
-            newDomain = '075038.xyz'; // 设置新的域名
+            newDomain = 'ciallo0721.org'; // 设置新的域名
             console.log("显示跳转确认弹窗，新的域名为：" + newDomain);
             const popup = document.getElementById('domainRedirectPopup');
             popup.style.display = 'flex';
