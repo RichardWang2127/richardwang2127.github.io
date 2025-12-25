@@ -2,6 +2,60 @@
 <html lang="zh" data-theme="light">
 
 <head>
+    <script>
+        // 优先级保护：确保 enterSite 函数不被阻塞
+        (function () {
+            'use strict';
+
+            // 保存原始的 enterSite 函数
+            const originalEnterSite = window.enterSite;
+
+            // 重写 enterSite，添加保护机制
+            window.enterSite = function () {
+                console.log('🔒 Protected enterSite called with priority');
+
+                // 立即执行，不等待任何脚本
+                const startTime = Date.now();
+
+                // 方法1：立即执行（最高优先级）
+                try {
+                    if (originalEnterSite) {
+                        // 调用原始函数
+                        originalEnterSite();
+
+                        // 记录执行时间
+                        const elapsed = Date.now() - startTime;
+                        console.log(`✅ enterSite executed in ${elapsed}ms`);
+                    }
+                } catch (error) {
+                    console.error('❌ enterSite error:', error);
+                    // 即使出错也继续
+                }
+
+                // 方法2：清理可能阻塞的 CF 脚本
+                setTimeout(() => {
+                    const cfScripts = document.querySelectorAll(
+                        'script[src*="cloudflareinsights.com"], script[src*="beacon.min.js"]'
+                    );
+
+                    cfScripts.forEach(script => {
+                        // 移除事件监听器，防止阻塞
+                        script.onload = null;
+                        script.onerror = null;
+
+                        // 如果脚本还没开始加载，延迟它
+                        if (!script.hasAttribute('data-started')) {
+                            script.setAttribute('data-delayed', 'true');
+                        }
+                    });
+                }, 0);
+
+                return true;
+            };
+
+            console.log('🛡️ enterSite protection installed');
+        })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
@@ -11,184 +65,6 @@
     <meta name="apple-mobile-web-app-title" content="02A01 西瓜" />
     <link rel="manifest" href="/assets/site.webmanifest" />
     <title>东铁线SP1900</title>
-    <script>
-        (function () {
-            'use strict';
-
-            // 在 Cloudflare 注入 script 之前，先设置一个拦截器
-            const originalAppendChild = Element.prototype.appendChild;
-            const originalInsertBefore = Element.prototype.insertBefore;
-
-            // 存储我们要延迟加载的脚本信息
-            let cfScriptConfig = null;
-
-            // 拦截 appendChild
-            Element.prototype.appendChild = function (node) {
-                if (node.nodeName === 'SCRIPT' &&
-                    node.src &&
-                    (node.src.includes('cloudflareinsights.com') ||
-                        node.src.includes('beacon.min.js'))) {
-
-                    console.log('Intercepted CF Insights script injection');
-
-                    // 保存脚本配置以便稍后使用
-                    cfScriptConfig = {
-                        src: node.src,
-                        integrity: node.integrity,
-                        crossOrigin: node.crossOrigin,
-                        dataset: node.dataset.cfBeacon ? JSON.parse(node.dataset.cfBeacon) : null
-                    };
-
-                    // 不添加到 DOM，而是返回一个空的 script 占位符
-                    const placeholder = document.createElement('script');
-                    placeholder.textContent = '// CF Insights placeholder';
-                    return originalAppendChild.call(this, placeholder);
-                }
-                return originalAppendChild.call(this, node);
-            };
-
-            // 拦截 insertBefore
-            Element.prototype.insertBefore = function (newNode, referenceNode) {
-                if (newNode.nodeName === 'SCRIPT' &&
-                    newNode.src &&
-                    (newNode.src.includes('cloudflareinsights.com') ||
-                        newNode.src.includes('beacon.min.js'))) {
-
-                    console.log('Intercepted CF Insights script insertion');
-
-                    if (!cfScriptConfig) {
-                        cfScriptConfig = {
-                            src: newNode.src,
-                            integrity: newNode.integrity,
-                            crossOrigin: newNode.crossOrigin,
-                            dataset: newNode.dataset.cfBeacon ? JSON.parse(newNode.dataset.cfBeacon) : null
-                        };
-                    }
-
-                    // 不添加到 DOM
-                    const placeholder = document.createElement('script');
-                    placeholder.textContent = '// CF Insights placeholder';
-                    return originalInsertBefore.call(this, placeholder, referenceNode);
-                }
-                return originalInsertBefore.call(this, newNode, referenceNode);
-            };
-
-            // 预定义 cfBeacon 函数收集数据
-            window.cfBeacon = window.cfBeacon || function () {
-                (window.cfBeacon.queue = window.cfBeacon.queue || []).push(arguments);
-            };
-
-            // 存储待发送的事件
-            window.__cf_pending_events = [];
-            const originalCfBeacon = window.cfBeacon;
-
-            window.cfBeacon = function () {
-                window.__cf_pending_events.push({
-                    args: Array.from(arguments),
-                    timestamp: Date.now()
-                });
-                console.log('CF event queued:', arguments[0]);
-                return originalCfBeacon.apply(this, arguments);
-            };
-
-            // 延迟加载函数
-            function loadDelayedCfInsights() {
-                if (window.__cf_loaded || !cfScriptConfig) return;
-                window.__cf_loaded = true;
-
-                const script = document.createElement('script');
-                script.defer = true;
-                script.async = true;
-                script.src = cfScriptConfig.src;
-
-                if (cfScriptConfig.integrity) {
-                    script.integrity = cfScriptConfig.integrity;
-                }
-
-                if (cfScriptConfig.crossOrigin) {
-                    script.crossOrigin = cfScriptConfig.crossOrigin;
-                }
-
-                if (cfScriptConfig.dataset) {
-                    script.setAttribute('data-cf-beacon', JSON.stringify(cfScriptConfig.dataset));
-                }
-
-                // 添加超时保护
-                const timeoutId = setTimeout(() => {
-                    if (script.parentNode) {
-                        console.log('CF Insights load timeout');
-                        script.remove();
-                    }
-                }, 10000);
-
-                script.onload = function () {
-                    clearTimeout(timeoutId);
-                    console.log('CF Insights loaded in background');
-
-                    // 发送暂存的事件
-                    if (window.__cf_pending_events.length > 0) {
-                        console.log('Sending queued events:', window.__cf_pending_events.length);
-                        window.__cf_pending_events.forEach(event => {
-                            originalCfBeacon.apply(window, event.args);
-                        });
-                    }
-                };
-
-                script.onerror = function () {
-                    clearTimeout(timeoutId);
-                    console.log('CF Insights failed to load');
-                };
-
-                // 在页面完全加载后添加到 body 末尾
-                if (document.body) {
-                    document.body.appendChild(script);
-                } else {
-                    document.addEventListener('DOMContentLoaded', () => {
-                        document.body.appendChild(script);
-                    });
-                }
-            }
-
-            // 在页面 load 事件后延迟加载
-            window.addEventListener('load', function () {
-                setTimeout(loadDelayedCfInsights, 3000);
-            });
-
-            // 用户交互时加速加载
-            let userInteracted = false;
-            const quickLoadEvents = ['click', 'keydown', 'scroll'];
-
-            quickLoadEvents.forEach(eventType => {
-                document.addEventListener(eventType, function () {
-                    if (!userInteracted && !window.__cf_loaded) {
-                        userInteracted = true;
-                        console.log('User interacted, loading CF Insights sooner');
-                        loadDelayedCfInsights();
-                    }
-                }, { once: true, passive: true });
-            });
-
-            // 保护 enterSite 函数
-            const originalEnterSite = window.enterSite;
-            if (originalEnterSite) {
-                window.enterSite = function () {
-                    console.log('Enter site - CF Insights will load after');
-
-                    // 确保统计会加载
-                    setTimeout(loadDelayedCfInsights, 1000);
-
-                    return originalEnterSite.apply(this, arguments);
-                };
-            }
-
-            // 30秒后恢复原始的 DOM 方法（避免长期影响）
-            setTimeout(() => {
-                Element.prototype.appendChild = originalAppendChild;
-                Element.prototype.insertBefore = originalInsertBefore;
-                console.log('Restored original DOM methods');
-            }, 30000);
-        })();
-    </script>
     <style>
         :root {
             /* 港铁线路主题色 */
@@ -876,7 +752,66 @@
         var entered = false;
         function autoEnter() {
             if (entered) return;
-            enterSite();
+
+            console.log('🚀 autoEnter triggered');
+
+            // 强制立即执行，不等待任何条件
+            const startTime = Date.now();
+
+            // 设置超时保护：如果 enterSite 被阻塞，强制继续
+            const safetyTimeout = setTimeout(() => {
+                console.log('⚠️ Safety timeout triggered - forcing site entry');
+                forceSiteEntry();
+            }, 1000); // 最多等待 1 秒
+
+            try {
+                enterSite();
+                clearTimeout(safetyTimeout);
+
+                const elapsed = Date.now() - startTime;
+                console.log(`✅ autoEnter completed in ${elapsed}ms`);
+            } catch (error) {
+                console.error('❌ autoEnter error:', error);
+                clearTimeout(safetyTimeout);
+                forceSiteEntry();
+            }
+        }
+
+        // 强制进入网站的备用函数
+        function forceSiteEntry() {
+            if (entered) return;
+
+            console.log('🔄 forceSiteEntry called');
+            entered = true;
+
+            // 直接显示文字
+            const doorText = document.getElementById('doorText');
+            const mainContent = document.getElementById('mainContent');
+
+            if (doorText) {
+                doorText.style.opacity = '1';
+                doorText.style.transition = 'opacity 0.5s ease';
+            }
+
+            // 立即开始动画，不等待
+            setTimeout(() => {
+                if (doorText) {
+                    doorText.style.opacity = '0';
+                }
+
+                setTimeout(() => {
+                    if (mainContent) {
+                        mainContent.classList.remove('initial-hide');
+                        musicCheck();
+
+                        setTimeout(() => {
+                            mainContent.classList.add('show');
+                            document.body.style.overflow = 'auto';
+                            console.log('✅ Site fully loaded');
+                        }, 100);
+                    }
+                }, 500);
+            }, 2000);
         }
 
         window.addEventListener('load', function () {
