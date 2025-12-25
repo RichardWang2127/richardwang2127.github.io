@@ -154,7 +154,7 @@
         })();
     </script>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
     <!-- <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" /> -->
     <link rel="shortcut icon" href="/assets/favicon.ico" />
@@ -223,47 +223,40 @@
             overflow: hidden;
         }
 
+        /* 柚子社风格 */
         :root {
-            /* 柚子社主色调 */
             --yuzu-mint: #D3E9B5;
-            /* 柔和的薄荷绿 */
             --yuzu-cream: #FFF7A4;
-            /* 柔和的奶油黄 */
             --yuzu-pink: #FFB6C1;
-            /* 柔和樱花粉 */
             --yuzu-lavender: #E6E6FA;
-            /* 柔和薰衣草紫 */
             --yuzu-sky: #B5D3FF;
-            /* 柔和天空蓝 */
-
-            /* 深色调用于文字和边框 */
             --yuzu-dark-green: #8BA88A;
-            /* 深抹茶绿 */
             --yuzu-dark-yellow: #D4B85E;
-            /* 深奶油黄 */
             --yuzu-dark-pink: #D88A9B;
-            /* 深樱花粉 */
             --yuzu-dark-purple: #B0A8D9;
-            /* 深薰衣草紫 */
             --yuzu-dark-blue: #8AA8D8;
-            /* 深天空蓝 */
-
-            /* 柚子社渐变 */
-            --yuzu-gradient-sunrise: linear-gradient(135deg, var(--yuzu-cream), var(--yuzu-pink));
-            --yuzu-gradient-spring: linear-gradient(135deg, var(--yuzu-mint), var(--yuzu-sky));
-            --yuzu-gradient-sakura: linear-gradient(135deg, var(--yuzu-pink), var(--yuzu-lavender));
-            --yuzu-gradient-cafe: linear-gradient(135deg, var(--yuzu-cream), var(--yuzu-dark-yellow));
-
-            /* 背景和卡片颜色 */
             --bg-light: #FDFDF6;
-            /* 极浅米白背景 */
             --card-light: rgba(255, 255, 255, 0.95);
             --bg-dark: #2A2A3A;
-            /* 深蓝紫背景 */
             --card-dark: rgba(42, 42, 58, 0.95);
+
+            /* 联系我区域颜色 - 自定义修改 */
+            --contact-light-main: #555555;
+            /* 白主题主色 */
+            --contact-light-text: #000000;
+            /* 白主题文字黑 */
+            --contact-dark-main: #FFF7A4;
+            /* 黑主题黄色 */
+            --contact-dark-text: #FFFFFF;
+            /* 黑主题文字白 */
         }
 
-        /* 柚子社风格 body */
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
         body.yuzusoft {
             font-family: 'M PLUS Rounded 1c', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
             background-color: var(--bg-light);
@@ -316,75 +309,29 @@
                 0 4px 12px rgba(255, 182, 193, 0.15);
         }
 
-        /* 柚子社按钮 */
-        button.yuzu {
-            background: var(--yuzu-gradient-sunrise);
-            color: #5A5A6E;
-            border: none;
-            border-radius: 25px;
-            padding: 12px 24px;
-            font-weight: bold;
-            font-size: 16px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-            box-shadow:
-                0 4px 15px rgba(255, 247, 164, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6);
-        }
-
-        button.yuzu::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-            transition: left 0.5s ease;
-        }
-
-        button.yuzu:hover {
-            background: var(--yuzu-gradient-sakura);
-            transform: translateY(-3px) scale(1.05);
-            box-shadow:
-                0 8px 25px rgba(255, 182, 193, 0.4),
-                inset 0 1px 0 rgba(255, 255, 255, 0.8);
-            color: #6E5A8C;
-        }
-
-        button.yuzu:hover::before {
-            left: 100%;
-        }
-
-        button.yuzu:active {
-            transform: translateY(-1px) scale(1.02);
-        }
-
-        /* 不同柚子社按钮变体 */
-        button.yuzu.mint {
-            background: var(--yuzu-gradient-spring);
-        }
-
-        button.yuzu.sakura {
-            background: var(--yuzu-gradient-sakura);
-        }
-
-        button.yuzu.cafe {
-            background: var(--yuzu-gradient-cafe);
-        }
-
-        /* 柚子社导航栏 */
-        .yuzu-nav {
-            background: rgba(255, 255, 255, 0.9);
+        /* 柚子社导航栏 - 常驻顶部+修复位置 */
+        #navbar.yuzu-nav {
+            display: flex !important;
+            justify-content: center !important;
+            /* 水平居中 */
+            align-items: center !important;
+            /* 垂直居中 */
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(15px);
             border-bottom: 3px solid var(--yuzu-mint);
-            box-shadow: 0 4px 20px rgba(211, 233, 181, 0.2);
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            z-index: 1000 !important;
+            padding: 10px 0 !important;
+            height: auto !important;
+            box-sizing: border-box !important;
         }
 
-        [data-theme="dark"] .yuzu-nav {
-            background: rgba(42, 42, 58, 0.9);
+
+        [data-theme="dark"] #navbar.yuzu-nav {
+            background: rgba(42, 42, 58, 0.95);
             border-bottom-color: var(--yuzu-dark-green);
         }
 
@@ -395,6 +342,8 @@
             margin: 0 5px;
             transition: all 0.3s ease;
             position: relative;
+            text-decoration: none;
+            display: inline-block;
         }
 
         [data-theme="dark"] .yuzu-nav a {
@@ -410,18 +359,6 @@
         [data-theme="dark"] .yuzu-nav a:hover {
             background: var(--yuzu-dark-green);
             color: #E0E0E8;
-        }
-
-        .yuzu-nav a::after {
-            content: '☆';
-            position: absolute;
-            right: 5px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .yuzu-nav a:hover::after {
-            opacity: 1;
         }
 
         /* 柚子社标题 */
@@ -442,160 +379,7 @@
             background-clip: text;
         }
 
-        /* 柚子社进度条 */
-        progress.yuzu-progress {
-            height: 20px;
-            border-radius: 10px;
-            border: 2px solid var(--yuzu-mint);
-            overflow: hidden;
-        }
-
-        progress.yuzu-progress::-webkit-progress-bar {
-            background: rgba(211, 233, 181, 0.2);
-            border-radius: 8px;
-        }
-
-        progress.yuzu-progress::-webkit-progress-value {
-            background: var(--yuzu-gradient-spring);
-            border-radius: 8px;
-            transition: width 0.5s ease;
-        }
-
-        /* 柚子社输入框 */
-        input.yuzu-input,
-        textarea.yuzu-input {
-            background: rgba(211, 233, 181, 0.1);
-            border: 2px solid var(--yuzu-mint);
-            border-radius: 15px;
-            padding: 12px 20px;
-            font-family: inherit;
-            transition: all 0.3s ease;
-        }
-
-        input.yuzu-input:focus,
-        textarea.yuzu-input:focus {
-            outline: none;
-            border-color: var(--yuzu-pink);
-            box-shadow: 0 0 0 3px rgba(255, 182, 193, 0.3);
-            background: rgba(255, 247, 164, 0.1);
-        }
-
-        /* 柚子社分隔线 */
-        .yuzu-divider {
-            height: 3px;
-            background: var(--yuzu-gradient-sunrise);
-            border: none;
-            border-radius: 2px;
-            margin: 30px 0;
-        }
-
-        /* 柚子社页脚 */
-        .yuzu-footer {
-            background: linear-gradient(90deg, rgba(211, 233, 181, 0.1), rgba(255, 247, 164, 0.1));
-            border-top: 3px solid var(--yuzu-mint);
-            padding: 30px;
-            margin-top: 40px;
-            text-align: center;
-            border-radius: 30px 30px 0 0;
-        }
-
-        .yuzu-footer p {
-            color: var(--yuzu-dark-green);
-            margin: 10px 0;
-        }
-
-        [data-theme="dark"] .yuzu-footer p {
-            color: var(--yuzu-mint);
-        }
-
-        .yuzu-signature {
-            font-family: 'Brush Script MT', cursive;
-            font-size: 18px;
-            color: var(--yuzu-dark-pink);
-            margin-top: 15px;
-        }
-
-        /* 柚子社徽章 */
-        .yuzu-badge {
-            display: inline-block;
-            background: var(--yuzu-gradient-sakura);
-            color: white;
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-left: 10px;
-            vertical-align: middle;
-            box-shadow: 0 2px 8px rgba(255, 182, 193, 0.3);
-        }
-
-        /* 柚子社动画 */
-        @keyframes yuzuFloat {
-
-            0%,
-            100% {
-                transform: translateY(0);
-            }
-
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-
-        @keyframes yuzuSparkle {
-            0% {
-                opacity: 0;
-                transform: scale(0);
-            }
-
-            50% {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            100% {
-                opacity: 0;
-                transform: scale(0);
-            }
-        }
-
-        .yuzu-float {
-            animation: yuzuFloat 3s ease-in-out infinite;
-        }
-
-        /* Ciallo 问候动画 */
-        @keyframes cialloGreeting {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.5) rotate(-15deg);
-            }
-
-            70% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1.1) rotate(5deg);
-            }
-
-            100% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1) rotate(0deg);
-            }
-        }
-
-        #doorText.showing {
-            animation: cialloGreeting 1.2s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
-        }
-
-        input,
-        button,
-        textarea {
-            padding: 8px;
-            margin: 4px 0;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-
+        /* 基础按钮样式 */
         button {
             color: white;
             border: none;
@@ -605,19 +389,21 @@
             align-items: center;
             justify-content: center;
             gap: 6px;
-            padding: 8px 16px;
-            /* 默认按钮背景色改为东铁线 */
+            padding: 10px 20px;
             background-color: var(--mtr-east-rail);
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            font-family: inherit;
         }
 
         button:hover {
             transform: scale(1.06);
         }
 
-        /* 为不同按钮增加特定类以使用不同颜色 */
+        /* 不同按钮的颜色 */
         button.shmetro {
             background-color: var(--mtr-tsuen-wan);
-            /* 荃湾线红 */
         }
 
         button.shmetro:hover {
@@ -626,7 +412,6 @@
 
         button.nbmetro {
             background-color: var(--mtr-island);
-            /* 观塘线绿 */
         }
 
         button.nbmetro:hover {
@@ -635,7 +420,6 @@
 
         button.awards {
             background-color: var(--mtr-airport);
-            /* 机场快线青绿色 */
         }
 
         button.awards:hover {
@@ -650,28 +434,7 @@
             background-color: var(--mtr-east-rail);
         }
 
-        /* 默认进度条颜色为东铁线 */
-        progress[value]::-webkit-progress-value {
-            background-color: var(--mtr-east-rail);
-            border-radius: 8px;
-        }
-
-        progress[value]::-moz-progress-bar {
-            background-color: var(--mtr-east-rail);
-            border-radius: 8px;
-        }
-
-        progress[value] {
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        progress::-webkit-progress-bar {
-            border-radius: 8px;
-            background-color: #f0f0f0;
-        }
-
-        /* 强制进度条背景圆角和遮罩效果 */
+        /* 进度条 */
         progress {
             -webkit-appearance: none;
             appearance: none;
@@ -680,27 +443,31 @@
             border-radius: 8px;
             overflow: hidden;
             background-color: #f0f0f0;
+            margin: 5px 0;
         }
 
-        /* Chrome 内层轨道 */
         progress::-webkit-progress-bar {
             background-color: #f0f0f0;
             border-radius: 8px;
             overflow: hidden;
         }
 
-        /* Chrome 进度值 */
         progress::-webkit-progress-value {
             border-radius: 8px;
         }
 
-        /* Firefox 进度值 */
         progress::-moz-progress-bar {
             border-radius: 8px;
         }
 
+        progress[value]::-webkit-progress-value {
+            background-color: var(--mtr-east-rail);
+        }
 
-        /* 各项目颜色 */
+        progress[value]::-moz-progress-bar {
+            background-color: var(--mtr-east-rail);
+        }
+
         .progress-shmetro[value]::-webkit-progress-value {
             background-color: var(--mtr-tsuen-wan);
         }
@@ -725,76 +492,7 @@
             background-color: var(--mtr-kwun-tong);
         }
 
-        .output {
-            background-color: var(--card-color);
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            padding: 10px;
-            margin-top: 8px;
-            font-size: 16px;
-            white-space: nowrap;
-            line-height: 1.3;
-            overflow: hidden;
-        }
-
-        progress {
-            max-width: 100%;
-            height: 15px;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            background-color: #f0f0f0;
-        }
-
-        #navbar {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            background-color: var(--card-color);
-            z-index: 100;
-            padding: 10px 0;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        #navbar a {
-            padding: 12px;
-            text-decoration: none;
-            color: var(--text-color);
-        }
-
-        #navbar a:hover {
-            background-color: var(--btn-hover);
-        }
-
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px;
-        }
-
-        .gallery img {
-            width: 100%;
-            height: auto;
-            border-radius: 8px;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 10px;
-                margin-top: 50px;
-            }
-
-            table {
-                display: block;
-                overflow-x: auto;
-            }
-
-            .output {
-                white-space: normal;
-            }
-        }
-
+        /* 容器和布局 */
         .container {
             width: 100%;
             max-width: 1000px;
@@ -810,138 +508,63 @@
             padding-top: 50px;
         }
 
+        #ciallo-title {
+            font-size: 30px;
+        }
+
         .number {
             color: var(--h1-color);
         }
 
-        input,
-        textarea {
-            width: 100%;
-        }
-
-        input,
-        button,
-        textarea {
-            /* width: 100%; */
-            padding: 8px;
-            margin: 4px 0;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-
-        .forbidden {
-            cursor: not-allowed;
-        }
-
-        #themeToggle {
-            position: fixed;
-            top: 60px;
-            right: 12px;
-            background-color: var(--card-color);
-            border: 2px solid var(--text-color);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 18px;
-            z-index: 101;
-            cursor: pointer;
-        }
-
+        /* 主题切换按钮 */
+        #themeToggle,
         #musicToggle {
             position: fixed;
-            top: 100px;
-            right: 12px;
             background-color: var(--card-color);
             border: 2px solid var(--text-color);
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 18px;
-            z-index: 101;
+            z-index: 1001;
             cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 8px;
-            table-layout: fixed;
-        }
-
-        td {
-            padding: 6px;
-            vertical-align: middle;
-            word-wrap: break-word;
-        }
-
-        #enterButton {
+        /* 门文字 */
+        #doorText {
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            z-index: 1000;
-            padding: 20px 40px;
-            font-size: 24px;
-            background: linear-gradient(135deg, #007BFF, #00BFFF);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0, 123, 255, 0.3);
-            transition: all 0.5s ease;
+            font-size: 36px;
+            font-weight: bold;
+            color: #fff;
+            text-shadow: 0 0 8px rgba(0, 0, 0, 0.7), 0 0 10px rgba(0, 0, 0, 0.5);
+            background-color: rgba(0, 0, 0, 0.4);
+            padding: 12px 24px;
+            border-radius: 12px;
             opacity: 0;
-            transform: translate(-50%, -50%) scale(0.8);
+            z-index: 910;
+            transition: opacity 0.5s ease;
+            text-align: center;
             pointer-events: none;
-            display: none;
         }
 
-        #enterButton.ready {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-            pointer-events: auto;
-            animation: pulse 2s infinite;
+        #doorText .line1,
+        #doorText .line2,
+        #doorText .line3 {
             display: block;
         }
 
-        @keyframes pulse {
-            0% {
-                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4);
-            }
-
-            70% {
-                box-shadow: 0 0 0 15px rgba(0, 123, 255, 0);
-            }
-
-            100% {
-                box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
-            }
+        #doorText .line3 {
+            font-size: 16px;
+            font-weight: normal;
+            opacity: 0.8;
+            margin-top: 8px;
         }
 
-        #loader {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #f5f5f5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 28px;
-            font-weight: bold;
-            z-index: 999;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.5s ease, visibility 0.5s ease;
-        }
-
-        #loader.show {
-            opacity: 1;
-            visibility: visible;
-        }
-
+        /* 主要内容 */
         #mainContent {
             opacity: 0;
             transform: translateY(20px);
@@ -957,99 +580,7 @@
             display: none;
         }
 
-        .content {
-            padding: 20px;
-            /* height: 2000px; 仅为演示 */
-        }
-
-        /* 修改后的门后面文字样式 */
-        #doorText {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 36px;
-            font-weight: bold;
-            color: #fff;
-            text-shadow: 0 0 8px rgba(0, 0, 0, 0.7), 0 0 10px rgba(0, 0, 0, 0.5);
-            background-color: rgba(0, 0, 0, 0.4);
-            padding: 12px 24px;
-            border-radius: 12px;
-            opacity: 0;
-            z-index: 910;
-            /* 提高z-index确保在地铁门之上 */
-            transition: opacity 0.5s ease;
-            text-align: center;
-            pointer-events: none;
-            /* 确保不会干扰点击事件 */
-        }
-
-        #doorText .line1,
-        #doorText .line2,
-        #doorText .line3 {
-            display: block;
-        }
-
-        #doorText .line2 {
-            font-size: 36px;
-            /* 默认大小同line1 */
-        }
-
-        #doorText .line3 {
-            font-size: 16px;
-            /* 英文小字 */
-            font-weight: normal;
-            opacity: 0.8;
-            margin-top: 8px;
-        }
-
-        /* 确保地铁门的z-index低于文字 */
-        .subway-doors {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            opacity: 0;
-            pointer-events: none;
-            z-index: 1000;
-            /* display: none; */
-        }
-
-        .subway-door {
-            width: 50%;
-            height: 100%;
-            background-color: #333;
-            transition: all 2s ease;
-        }
-
-        .subway-door.left {
-            transform: translateX(0);
-        }
-
-        .subway-door.right {
-            transform: translateX(0);
-        }
-
-        .subway-doors.opening {
-            opacity: 1;
-        }
-
-        .subway-doors.opening .subway-door.left {
-            transform: translateX(-100%);
-        }
-
-        .subway-doors.opening .subway-door.right {
-            transform: translateX(100%);
-        }
-
-        /* 当门打开时显示文字 */
-        .subway-doors.opening~#doorText {
-            opacity: 1;
-        }
-
-        /* 弹窗样式 */
+        /* 弹窗 */
         .popup {
             position: fixed;
             top: 0;
@@ -1058,7 +589,6 @@
             height: 100%;
             background-color: rgba(0, 0, 0, 0.5);
             display: none;
-            /* 默认隐藏 */
             justify-content: center;
             align-items: center;
             z-index: 1001;
@@ -1087,505 +617,591 @@
             background-color: var(--btn-hover);
         }
 
-        @media (max-width: 480px) {
-            #doorText .line2 {
-                font-size: 24px;
-                /* 第二行符号缩小 */
-                line-height: 1.1;
-            }
-
-            #doorText .line3 {
-                font-size: 14px;
-                /* 英文行略微缩小，可选 */
-            }
+        /* 联系我区域特殊样式 - 彻底移除多余换行和间距 */
+        #outputBox {
+            line-height: 1.1 !important;
+            /* 进一步缩小行距 */
+            font-size: 16px;
         }
 
-        /* ==================== 移动端优化 ==================== */
-
-        /* 基础响应式设置 */
-        @media (max-width: 768px) {
-            html {
-                font-size: 14px;
-            }
-
-            body {
-                overflow-x: hidden;
-                -webkit-overflow-scrolling: touch;
-            }
-
-            /* 容器调整 */
-            .container {
-                padding: 10px;
-                margin-top: 40px;
-                max-width: 100%;
-            }
-
-            /* 标题优化 */
-            h1.yuzu-title {
-                font-size: 1.8rem;
-                padding-top: 30px;
-                margin-bottom: 20px;
-                text-align: center;
-                line-height: 1.3;
-            }
-
-            /* 导航栏优化 */
-            #navbar.yuzu-nav {
-                padding: 8px 0;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                z-index: 1000;
-                backdrop-filter: blur(20px);
-                -webkit-backdrop-filter: blur(20px);
-            }
-
-            #navbar.yuzu-nav a {
-                padding: 8px 12px;
-                margin: 0 3px;
-                font-size: 0.9rem;
-                display: inline-block;
-                white-space: nowrap;
-            }
-
-            /* 表格响应式 */
-            table {
-                display: block;
-                width: 100%;
-                overflow-x: auto;
-                -webkit-overflow-scrolling: touch;
-                margin: 10px 0;
-            }
-
-            table tr {
-                display: flex;
-                flex-direction: column;
-                margin-bottom: 15px;
-                border-bottom: 1px solid rgba(211, 233, 181, 0.3);
-                padding-bottom: 10px;
-            }
-
-            table td {
-                padding: 8px 5px;
-                width: 100% !important;
-                display: block;
-                text-align: left;
-            }
-
-            table td:first-child {
-                margin-bottom: 5px;
-            }
-
-            /* 按钮优化 */
-            button.yuzu,
-            button.shmetro,
-            button.nbmetro,
-            button.awards,
-            button.attendance {
-                width: 100%;
-                padding: 12px 16px;
-                margin: 5px 0;
-                font-size: 1rem;
-                text-align: center;
-                display: block;
-                white-space: normal;
-                word-break: break-word;
-                line-height: 1.4;
-            }
-
-            /* 柚子卡片优化 */
-            .yuzu-card {
-                padding: 15px;
-                margin: 15px 0;
-                border-radius: 15px;
-            }
-
-            /* 进度条优化 */
-            progress.yuzu-progress {
-                height: 16px;
-                width: 100%;
-            }
-
-            /* 主题切换按钮优化 */
-            #themeToggle,
-            #musicToggle {
-                width: 36px;
-                height: 36px;
-                font-size: 16px;
-                top: 50px;
-                right: 10px;
-            }
-
-            #musicToggle {
-                top: 90px;
-            }
-
-            /* 输出区域优化 */
-            #outputBox,
-            #progressBoard {
-                white-space: normal;
-                word-break: break-word;
-                line-height: 1.5;
-            }
-
-            /* 倒计时区域 */
-            .yuzu-card strong {
-                display: block;
-                margin-bottom: 8px;
-                font-size: 1rem;
-            }
-
-            .number {
-                font-size: 1.1rem;
-                word-break: break-all;
-            }
+        #outputBox br {
+            display: none !important;
+            /* 强制隐藏所有换行符 */
         }
 
-        /* 超小屏幕优化（iPhone SE等） */
-        @media (max-width: 375px) {
-            html {
-                font-size: 13px;
-            }
-
-            .container {
-                padding: 8px;
-            }
-
-            h1.yuzu-title {
-                font-size: 1.6rem;
-                padding-top: 25px;
-            }
-
-            #navbar.yuzu-nav a {
-                padding: 6px 8px;
-                font-size: 0.85rem;
-                margin: 0 2px;
-            }
-
-            button.yuzu,
-            button.shmetro,
-            button.nbmetro,
-            button.awards,
-            button.attendance {
-                padding: 10px 12px;
-                font-size: 0.95rem;
-            }
-
-            .yuzu-card {
-                padding: 12px;
-                margin: 12px 0;
-            }
+        #outputBox strong {
+            display: block;
+            margin-bottom: 4px !important;
         }
 
-        /* 平板优化 */
-        @media (min-width: 769px) and (max-width: 1024px) {
-            .container {
-                max-width: 95%;
-                padding: 15px;
-            }
-
-            table td {
-                padding: 10px;
-            }
-
-            button.yuzu,
-            button.shmetro,
-            button.nbmetro,
-            button.awards,
-            button.attendance {
-                padding: 10px 18px;
-            }
+        #outputBox a {
+            text-decoration: none;
+            transition: color 0.3s ease;
+            margin: 0 !important;
+            /* 完全移除上下边距 */
+            padding: 0 !important;
+            line-height: 1.1 !important;
+            display: block;
+            /* 确保链接垂直排列但无间距 */
+            margin-bottom: 2px !important;
+            /* 仅保留极小间距 */
         }
 
-        /* ==================== 触摸优化 ==================== */
-        @media (hover: none) and (pointer: coarse) {
-
-            /* 移除 hover 效果，用 active 替代 */
-            button.yuzu:hover,
-            button.shmetro:hover,
-            button.nbmetro:hover,
-            button.awards:hover,
-            button.attendance:hover,
-            #navbar.yuzu-nav a:hover {
-                transform: none;
-            }
-
-            button.yuzu:active,
-            button.shmetro:active,
-            button.nbmetro:active,
-            button.awards:active,
-            button.attendance:active {
-                transform: scale(0.98);
-                opacity: 0.9;
-            }
-
-            #navbar.yuzu-nav a:active {
-                background: var(--yuzu-mint);
-                transform: translateY(-1px);
-            }
-
-            [data-theme="dark"] #navbar.yuzu-nav a:active {
-                background: var(--yuzu-dark-green);
-            }
+        #outputBox .contact-group {
+            margin: 6px 0 !important;
         }
 
-        /* ==================== doorText 移动端优化 ==================== */
-        @media (max-width: 768px) {
-            #doorText {
-                width: 90%;
-                max-width: 300px;
-                padding: 15px 20px;
-                border-radius: 15px;
-                font-size: 1.5rem;
-                transform: translate(-50%, -50%);
-                text-align: center;
-            }
-
-            #doorText .line1 {
-                font-size: 1.8rem;
-                margin-bottom: 5px;
-            }
-
-            #doorText .line2 {
-                font-size: 1.6rem;
-                margin-bottom: 5px;
-            }
-
-            #doorText .line3 {
-                font-size: 0.9rem;
-                margin-top: 5px;
-            }
+        [data-theme="light"] #outputBox a {
+            color: var(--contact-light-main);
+            /* 白主题主色 */
         }
 
-        @media (max-width: 480px) {
-            #doorText {
-                width: 85%;
-                padding: 12px 15px;
-                font-size: 1.3rem;
-            }
-
-            #doorText .line1 {
-                font-size: 1.5rem;
-            }
-
-            #doorText .line2 {
-                font-size: 1.4rem;
-            }
-
-            #doorText .line3 {
-                font-size: 0.8rem;
-            }
+        [data-theme="dark"] #outputBox a {
+            color: var(--contact-dark-main);
+            /* 黑主题黄色 */
         }
 
-        /* ==================== 防止文字溢出 ==================== */
-        .ellipsis {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
+        [data-theme="light"] #outputBox a span {
+            color: var(--contact-light-text);
+            /* 白主题文字黑 */
+            font-weight: bold;
         }
 
-        .multi-line-ellipsis {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
+        [data-theme="dark"] #outputBox a span {
+            color: var(--contact-dark-text);
+            /* 黑主题文字白 */
+            font-weight: bold;
         }
 
-        /* ==================== 安全区域适配（iPhone X+） ==================== */
-        @supports (padding: max(0px)) {
-            body {
-                padding-left: min(0vmin, env(safe-area-inset-left));
-                padding-right: min(0vmin, env(safe-area-inset-right));
-                padding-top: min(0vmin, env(safe-area-inset-top));
-                padding-bottom: min(0vmin, env(safe-area-inset-bottom));
-            }
-
-            #navbar.yuzu-nav {
-                padding-top: max(8px, env(safe-area-inset-top));
-                padding-left: max(10px, env(safe-area-inset-left));
-                padding-right: max(10px, env(safe-area-inset-right));
-            }
-
-            .container {
-                padding-left: max(12px, env(safe-area-inset-left));
-                padding-right: max(12px, env(safe-area-inset-right));
-                padding-bottom: max(12px, env(safe-area-inset-bottom));
-            }
-        }
-
-        /* ==================== 性能优化 ==================== */
-        @media (prefers-reduced-motion: reduce) {
-
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
-                scroll-behavior: auto !important;
-            }
-
-            .yuzu-float,
-            #doorText.showing {
-                animation: none !important;
-            }
-        }
-
-        /* ==================== 深色模式优化 ==================== */
-        @media (prefers-color-scheme: dark) {
-            [data-theme="auto"] body.yuzusoft {
-                background-color: var(--bg-dark);
-                color: #E0E0E8;
-            }
-
-            [data-theme="auto"] .yuzu-card {
-                background: var(--card-dark);
-                border-color: var(--yuzu-dark-green);
-            }
-        }
-
-        /* ==================== 打印优化 ==================== */
-        @media print {
-
-            #navbar,
-            #themeToggle,
-            #musicToggle,
-            audio {
-                display: none !important;
-            }
-
-            body {
-                background: white !important;
-                color: black !important;
-                overflow: visible !important;
-            }
-
-            .container {
-                max-width: 100%;
-                margin: 0;
-                padding: 0;
-            }
-
-            .yuzu-card {
-                border: 1px solid #ccc;
-                box-shadow: none;
-                margin: 10px 0;
-                page-break-inside: avoid;
-            }
-        }
-
-        /* 移动端表格容器 */
+        /* 移动端表格容器 - 大框样式，按钮无边框 */
         .mobile-table-container {
             width: 100%;
-            margin: 20px 0;
+            margin: 15px 0;
+            /* 统一外框样式：和其他yuzu-card一致 */
+            background: var(--card-light);
+            border-radius: 20px;
+            padding: 25px;
+            border: 2px solid var(--yuzu-mint);
+            box-shadow:
+                0 8px 32px rgba(211, 233, 181, 0.15),
+                0 2px 8px rgba(211, 233, 181, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        /* 深色主题下移动端按钮容器样式同步 */
+        [data-theme="dark"] .mobile-table-container {
+            background: var(--card-dark);
+            border-color: var(--yuzu-dark-green);
+            box-shadow:
+                0 8px 32px rgba(139, 168, 138, 0.15),
+                0 2px 8px rgba(139, 168, 138, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        /* 移动端按钮容器 hover 效果同步 */
+        .mobile-table-container:hover {
+            transform: translateY(-5px);
+            border-color: var(--yuzu-pink);
+            box-shadow:
+                0 12px 40px rgba(255, 182, 193, 0.2),
+                0 4px 12px rgba(255, 182, 193, 0.15);
         }
 
         .mobile-table {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
+            /* 按钮之间的间距 */
+            padding: 0;
+            margin: 0;
         }
 
+        /* 移除每个按钮的外框 */
         .mobile-row {
             display: flex;
             flex-direction: column;
-            gap: 8px;
-            padding: 15px;
-            background: var(--card-light);
-            border-radius: 15px;
-            border: 2px solid var(--yuzu-mint);
-            transition: all 0.3s ease;
-        }
-
-        [data-theme="dark"] .mobile-row {
-            background: var(--card-dark);
-            border-color: var(--yuzu-dark-green);
+            gap: 0;
+            padding: 0 !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            width: 100%;
+            box-sizing: border-box;
         }
 
         .mobile-row:hover {
-            transform: translateY(-3px);
-            border-color: var(--yuzu-pink);
-            box-shadow: 0 8px 25px rgba(255, 182, 193, 0.15);
+            transform: none !important;
+            border: none !important;
+            box-shadow: none !important;
         }
 
         .mobile-row-info {
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: var(--yuzu-dark-green);
             text-align: right;
-            padding-right: 10px;
             opacity: 0.8;
+            align-self: flex-end;
+            margin-top: 5px;
         }
 
         [data-theme="dark"] .mobile-row-info {
             color: var(--yuzu-mint);
         }
 
-        /* 桌面端保持原有表格 */
-        @media (min-width: 769px) {
-            .mobile-table-container {
-                display: none;
+        /* 开发进度布局修复 - 强制同一行显示 */
+        #progressBoard {
+            line-height: 1.8;
+        }
+
+        #progressBoard br {
+            display: none;
+        }
+
+        #progressBoard .progress-item {
+            display: flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            margin-bottom: 10px !important;
+            flex-wrap: nowrap !important;
+            /* 禁止换行 */
+            width: 100% !important;
+        }
+
+        #progressBoard .progress-item progress {
+            flex: 1 !important;
+            /* 自适应宽度 */
+            min-width: 100px !important;
+            /* 最小宽度 */
+            max-width: 250px !important;
+            /* 最大宽度 */
+            margin-right: 8px !important;
+        }
+
+        #progressBoard .progress-item span {
+            white-space: nowrap !important;
+            /* 文字不换行 */
+        }
+
+        /* ==================== 移动端优化 ==================== */
+        @media (max-width: 768px) {
+            body {
+                overflow: hidden !important;
             }
 
-            /* 显示原始表格 */
-            #appBox table {
-                display: table;
+            #mainContent {
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                height: 100dvh;
             }
         }
 
         @media (max-width: 768px) {
-            .mobile-table-container {
-                display: block;
+            html {
+                font-size: 14px;
+                margin: 0 !important;
+                padding: 0 !important;
             }
 
-            /* 隐藏原始表格 */
-            #appBox table {
+            body {
+                overflow-x: hidden;
+                -webkit-overflow-scrolling: touch;
+                margin: 0 !important;
+                padding: 0 !important;
+                padding-top: 0 !important;
+            }
+
+            /* 彻底修复容器和顶部导航栏 - 完全移除顶部空白 */
+            .container {
+                padding: 10px 15px !important;
+                /* margin-top: 48px !important; */
+                /* 精准匹配导航栏高度 */
+                max-width: 100%;
+                width: 100%;
+                box-sizing: border-box;
+                padding-top: 10px !important;
+            }
+
+            /* 导航栏 - 强制常驻顶部，彻底修复位置 */
+            /* 柚子社导航栏 - 常驻顶部+修复位置 */
+            #navbar.yuzu-nav {
+                background: rgba(255, 255, 255, 0.95);
+                backdrop-filter: blur(15px);
+                border-bottom: 3px solid var(--yuzu-mint);
+                box-shadow: 0 4px 20px rgba(211, 233, 181, 0.2);
+                position: fixed !important;
+                /* 强制固定定位 */
+                top: 0 !important;
+                /* 强制置顶 */
+                left: 0 !important;
+                width: 100% !important;
+                z-index: 1000 !important;
+                margin: 0 !important;
+                padding: 10px 0 !important;
+                box-sizing: border-box !important;
+                height: auto !important;
+                /* 新增：移除默认的外边距/内边距影响 */
+                border-top: 0 !important;
+                outline: 0 !important;
+                /* 关键修复：重置所有可能导致顶部空白的样式 */
+                transform: translateY(0) !important;
+            }
+
+            /* #navbar.yuzu-nav {
+                background: red !important;
+            }
+
+            html {
+                background: lime !important;
+            } */
+
+            /* 安全区域适配 - 彻底修复顶部空白 */
+            @supports (padding: max(0px)) {
+                @media (max-width: 768px) {
+                    @media (max-width: 768px) {
+                        body {
+                            padding-top: 0 !important;
+                        }
+
+                        #navbar.yuzu-nav {
+                            top: 0 !important;
+                            height: 48px !important;
+                            padding-top: env(safe-area-inset-top);
+                        }
+
+                        .container {
+                            margin-top: 48px !important;
+                        }
+                    }
+
+                    #themeToggle,
+                    #musicToggle {
+                        right: calc(15px + env(safe-area-inset-right));
+                        /* 修改：不叠加safe-area-inset-top，避免按钮位置偏移 */
+                        top: 8px !important;
+                    }
+
+                    #musicToggle {
+                        /* 修改：不叠加safe-area-inset-top */
+                        top: 53px !important;
+                    }
+                }
+            }
+
+
+            #navbar.yuzu-nav::-webkit-scrollbar {
                 display: none;
             }
-        }
 
-        /* 字体加载优化 */
-        .fonts-loaded body {
-            font-display: swap;
-        }
-
-        /* 加载状态 */
-        body.loaded .yuzu-card {
-            animation: fadeInUp 0.5s ease forwards;
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
+            #navbar.yuzu-nav a {
+                padding: 8px 12px;
+                font-size: 0.9rem;
+                flex-shrink: 0;
+                margin: 0 3px;
             }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
+            /* 修复标题位置 */
+            h1.yuzu-title {
+                font-size: 1.8rem;
+                padding-top: 0 !important;
+                /* 完全移除标题顶部内边距 */
+                margin-bottom: 15px !important;
+                line-height: 1.3;
+                margin-top: 0 !important;
+            }
+
+            #ciallo-title {
+                font-size: 1.3rem;
+            }
+
+            /* 隐藏电脑版表格容器 */
+            #appBox.yuzu-card {
+                display: none !important;
+            }
+
+            /* 显示移动版表格容器 */
+            .mobile-table-container {
+                display: block !important;
+                padding: 15px;
+                margin: 10px 0;
+                border-radius: 12px;
+                margin-top: 0 !important;
+            }
+
+            /* 移动端按钮样式 - 无边框 */
+            .mobile-row button {
+                width: 100% !important;
+                padding: 12px 16px !important;
+                margin: 0 !important;
+                font-size: 1rem !important;
+                text-align: center;
+                white-space: normal;
+                word-break: break-word;
+                line-height: 1.4;
+                border-radius: 8px !important;
+            }
+
+            /* 开发进度移动端布局 - 强制同一行 */
+            #progressBoard .progress-item {
+                flex-direction: row !important;
+                /* 强制横向排列 */
+                align-items: center !important;
+                gap: 5px !important;
+                flex-wrap: nowrap !important;
+            }
+
+            #progressBoard .progress-item progress {
+                flex: 1 !important;
+                width: auto !important;
+                min-width: 80px !important;
+                max-width: 200px !important;
+                margin-right: 5px !important;
+            }
+
+            /* 修复主题切换和音乐按钮的位置 */
+            #themeToggle,
+            #musicToggle {
+                top: 8px !important;
+                /* 极致贴近顶部 */
+                right: 15px;
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+                z-index: 1002 !important;
+            }
+
+            #musicToggle {
+                top: 53px !important;
+            }
+
+            /* 修复卡片间距 */
+            .yuzu-card {
+                padding: 15px;
+                margin: 8px 0 !important;
+                border-radius: 12px;
+            }
+
+            /* 修复门文字 */
+            #doorText {
+                font-size: 20px;
+                padding: 15px 25px;
+                width: 80%;
+                max-width: 300px;
+            }
+
+            #doorText .line3 {
+                font-size: 0.8rem;
+                margin-top: 5px;
+            }
+
+            /* 防止文字溢出 */
+            * {
+                max-width: 100%;
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            /* 移动端联系我区域进一步优化 */
+            #outputBox {
+                padding: 15px !important;
+                margin: 8px 0 !important;
+            }
+
+            #outputBox a {
+                margin-bottom: 1px !important;
+                font-size: 14px;
             }
         }
 
-        /* 为每个卡片添加延迟动画 */
-        body.loaded .yuzu-card:nth-child(1) {
-            animation-delay: 0.1s;
+        /* 桌面端样式 */
+        @media (min-width: 769px) {
+
+            /* 隐藏移动版表格 */
+            .mobile-table-container {
+                display: none !important;
+            }
+
+            /* 显示电脑版表格 */
+            #appBox.yuzu-card {
+                display: block !important;
+            }
+
+            /* 电脑端表格布局优化 */
+            #appBox table {
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 8px;
+                table-layout: fixed;
+            }
+
+            #appBox td {
+                padding: 12px 15px;
+                vertical-align: middle;
+                word-wrap: break-word;
+            }
+
+            #appBox td:first-child {
+                width: 70%;
+            }
+
+            #appBox td:last-child {
+                width: 30%;
+                text-align: right;
+                padding-left: 20px;
+            }
+
+            /* 开发进度桌面端布局 */
+            #progressBoard .progress-item {
+                display: flex !important;
+                align-items: center !important;
+                gap: 10px !important;
+                margin-bottom: 12px !important;
+                flex-wrap: nowrap !important;
+            }
+
+            #progressBoard .progress-item progress {
+                flex: 0 0 250px !important;
+            }
+
+            /* 主题切换按钮 */
+            #themeToggle,
+            #musicToggle {
+                top: 20px;
+                right: 20px;
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+
+            #musicToggle {
+                top: 70px;
+            }
+
+            /* 联系我区域桌面端样式 - 彻底移除多余换行 */
+            #outputBox {
+                line-height: 1.1 !important;
+            }
+
+            #outputBox br {
+                display: none !important;
+            }
+
+            #outputBox a {
+                display: block;
+                margin: 1px 0 !important;
+                line-height: 1.1 !important;
+            }
         }
 
-        body.loaded .yuzu-card:nth-child(2) {
-            animation-delay: 0.2s;
+        /* 超小屏幕优化 */
+        @media (max-width: 375px) {
+            html {
+                font-size: 13px;
+            }
+
+            .container {
+                padding: 8px 10px !important;
+                margin-top: 45px !important;
+                /* 极致减少顶部间距 */
+            }
+
+            h1.yuzu-title {
+                font-size: 1.6rem;
+                padding-top: 0 !important;
+                margin-top: 0 !important;
+            }
+
+            #ciallo-title {
+                font-size: 1rem;
+            }
+
+            #navbar.yuzu-nav {
+                padding: 4px 0 !important;
+                height: 45px !important;
+                top: 0 !important;
+            }
+
+            #navbar.yuzu-nav a {
+                padding: 6px 10px;
+                font-size: 0.85rem;
+                margin: 0 2px;
+            }
+
+            .mobile-row button {
+                padding: 10px 12px !important;
+                font-size: 0.9rem !important;
+            }
+
+            .yuzu-card {
+                padding: 12px;
+                margin: 8px 0;
+            }
+
+            #themeToggle,
+            #musicToggle {
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+                top: 6px !important;
+            }
+
+            #musicToggle {
+                top: 48px !important;
+            }
         }
 
-        body.loaded .yuzu-card:nth-child(3) {
-            animation-delay: 0.3s;
+        /* 触摸优化 */
+        @media (hover: none) and (pointer: coarse) {
+
+            button:hover,
+            #navbar.yuzu-nav a:hover {
+                transform: none;
+            }
+
+            button:active,
+            #navbar.yuzu-nav a:active {
+                transform: scale(0.98);
+                opacity: 0.9;
+            }
         }
 
-        body.loaded .yuzu-card:nth-child(4) {
-            animation-delay: 0.4s;
-        }
+        /* 安全区域适配 - 彻底修复顶部空白 */
+        /* @supports (padding: max(0px)) {
+            @media (max-width: 768px) {
+                body {
+                    padding-top: 0 !important;
+                    padding-bottom: env(safe-area-inset-bottom);
+                }
+
+                #navbar.yuzu-nav {
+                    padding-top: env(safe-area-inset-top) !important;
+                    padding-left: env(safe-area-inset-left);
+                    padding-right: env(safe-area-inset-right);
+                    height: calc(48px + env(safe-area-inset-top)) !important;
+                    top: 0 !important;
+                }
+
+                #themeToggle,
+                #musicToggle {
+                    right: calc(15px + env(safe-area-inset-right));
+                    top: calc(8px + env(safe-area-inset-top)) !important;
+                }
+
+                #musicToggle {
+                    top: calc(53px + env(safe-area-inset-top)) !important;
+                }
+
+                .container {
+                    margin-top: calc(48px + env(safe-area-inset-top)) !important;
+                }
+            }
+        } */
     </style>
 </head>
 
-<body style="overflow: hidden;">
+<body style="overflow: hidden;" class="yuzusoft">
     <!-- <button id="enterButton" class="initial-hide" onclick="enterSite()">🚇 进入</button> -->
     <!-- <div id="loader">🚇 地铁门正在打开...</div> -->
     <!-- <div class="subway-doors" id="subwayDoors">
@@ -1594,8 +1210,8 @@
     </div> -->
 
     <div id="doorText" class="yuzu-card">
-        <span class="line1">Ciallo～</span>
-        <span class="line2">(∠・ω&lt; )⌒☆</span>
+        <span class="line1">Ciallo～(∠・ω&lt; )⌒☆</span>
+        <!-- <span class="line2"></span> -->
         <span class="line3">Welcome to ciallo0721.org</span>
     </div>
 
@@ -1613,7 +1229,7 @@
             <button id="themeToggle" onclick="toggleTheme()">🌓</button>
             <button id="musicToggle" onclick="toggleMusic()">🎶</button>
 
-            <!-- 顶部悬浮导航栏 -->
+            <!-- 顶部悬浮导航栏 - 常驻顶部 -->
             <div id="navbar" class="yuzu-nav">
                 <a href="#appBox">首页</a>
                 <a href="#progressBoard">项目进度</a>
@@ -1622,27 +1238,26 @@
             </div>
 
             <div class="container">
-                <h1 class="yuzu-title">RichardWang2127的网站</h1>
-                <div id="appBox" class="mobile-table-container">
+                <h1 class="yuzu-title">03A01黄鱼<br><span id="ciallo-title">Ciallo～(∠・ω&lt; )⌒☆
+                    </span></h1>
+                <div class="mobile-table-container">
                     <div class="mobile-table">
                         <div class="mobile-row">
-                            <button onclick="window.location.href=('/shmetro/')" class="shmetro yuzu">🚇
-                                上海地铁列车查询工具</button>
+                            <button onclick="window.location.href=('/shmetro/')" class="shmetro">🚇 上海地铁列车查询工具</button>
                             <div class="mobile-row-info">0.6.9 / 网页</div>
                         </div>
                         <div class="mobile-row">
-                            <button onclick="location.href=('/nbmetro_line1/')" class="nbmetro yuzu">🛤️
+                            <button onclick="location.href=('/nbmetro_line1/')" class="nbmetro">🛤️
                                 宁波轨道交通1号线闪灯图模拟</button>
                             <div class="mobile-row-info">0.1 / Python</div>
                         </div>
                         <div class="mobile-row">
-                            <button onclick="window.location.href=('/y8/awards')" class="awards yuzu">🏆
-                                Y8第二学期奖项查询(宁波赫德新Y9学生)</button>
+                            <button onclick="window.location.href=('/y8/awards')" class="awards">🏆 Y8第二学期奖项查询</button>
                             <div class="mobile-row-info">1.0 / 网页</div>
                         </div>
                         <div class="mobile-row">
                             <button onclick="window.location.href=('https://attendance.075038.xyz')"
-                                class="attendance yuzu">📅 宁波鄞州赫德实验学校社团管理系统</button>
+                                class="attendance">📅 宁波赫德社团管理系统</button>
                             <div class="mobile-row-info">0.8 Beta / 网页</div>
                         </div>
                     </div>
@@ -1674,17 +1289,34 @@
                     </table>
                 </div>
 
-                <!-- 项目进度 -->
+                <!-- 项目进度 - 强制同一行 -->
                 <div class="yuzu-card" id="progressBoard">
-                    <strong class="subheading">🧱 项目开发进度：</strong><br>
-                    上海地铁工具：<progress value="93" max="100" class="progress-shmetro"></progress> 93%<br>
-                    宁波闪灯模拟：<progress value="98" max="100" class="progress-nbmetro"></progress> 调试更改中<br>
-                    Y8奖项查询：<progress value="100" max="100" class="progress-awards"></progress> ✅
+                    <strong class="subheading">🧱 项目开发进度：</strong>
+                    <div class="progress-item">
+                        上海地铁工具：<progress value="93" max="100" class="progress-shmetro"></progress> 93%
+                    </div>
+                    <div class="progress-item">
+                        宁波闪灯模拟：<progress value="98" max="100" class="progress-nbmetro"></progress> 调试更改中
+                    </div>
+                    <div class="progress-item">
+                        Y8奖项查询：<progress value="100" max="100" class="progress-awards"></progress> ✅
+                    </div>
                 </div>
 
-                <div class="yuzu-card" id="outputBox">信息：<br>年龄: <span id="age" class="number">好几</span>岁。<br>城市: 浙江宁波。
-                </div>
+                <!-- 联系我区域 - 重构HTML结构，移除多余换行 -->
+                <div class="yuzu-card" id="outputBox">
+                    <strong class="subheading">信息：</strong>
+                    年龄: <span id="age" class="number">好几</span>岁。
+                    城市: 浙江宁波。
 
+                    <strong class="subheading contact-group">联系我：</strong>
+                    <a href="https://space.bilibili.com/1272995329" target="_blank"
+                        style="text-decoration: none;"><span>Bilibili:</span>宁波轨道交通1号线(点击跳转)</a>
+                    <a href="mailto:admin@075038.xyz" target="_blank" style="text-decoration: none;"><span>邮件:</span>
+                        admin@075038.xyz</a>
+                    <a href="https://github.com/RichardWang2127" target="_blank"
+                        style="text-decoration: none;"><span>Github:</span>RichardWang2127(点击跳转)</a>
+                </div>
                 <!-- 图库 -->
                 <!-- <div id="gallery" class="output">
                     <strong>📸 图库</strong><br>
@@ -1697,9 +1329,9 @@
 
                 <!-- 倒计时 -->
                 <div class="yuzu-card">
-                    <strong>📅 铁路纸质报销凭证已退出历史舞台：<span id="railway-paper" class="number"></span></strong>
+                    <strong>📅 纸质报销凭证停用已 <span id="railway-paper" class="number"></span></strong>
                     <br>
-                    <strong>📅 7·23甬温线特别重大铁路交通事故发生已经：<span id="0723-accident" class="number"></span></strong>
+                    <strong>📅 7·23铁路事故发生已 <span id="0723-accident" class="number"></span></strong>
                 </div>
 
                 <!-- 背景音乐播放按钮 -->
@@ -1772,7 +1404,10 @@
 
                         setTimeout(() => {
                             mainContent.classList.add('show');
-                            document.body.style.overflow = 'auto';
+                            // document.body.style.overflow = 'auto';
+                            if (window.innerWidth >= 769) {
+                                document.body.style.overflow = 'auto';
+                            }
                             console.log('✅ Site fully loaded');
                         }, 100);
                     }
@@ -1887,8 +1522,21 @@
         function updateAge() {
             document.getElementById("age").innerText = `${calculateAge()}`;
         }
-        setInterval(updateAge, 50);
+        const updateAge_interval = 15; // 刷新年龄的间隔 ms
+        let interval_set = setInterval(updateAge, updateAge_interval);
         updateAge();
+        document.addEventListener("visibilitychange", () => {
+            console.log("Browser visibility change: visible", !document.hidden);
+            if (!document.hidden) {
+                console.log("Page is visible, age update continued.")
+                interval_set = setInterval(updateAge, updateAge_interval);
+                updateAge();
+            }
+            else {
+                console.log("Page is invisible, age update paused.")
+                clearInterval(interval_set);
+            }
+        })
 
         function savePopup() {
             localStorage.setItem("PopupRedirectState", "Displayed");
