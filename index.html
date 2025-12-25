@@ -56,6 +56,103 @@
             console.log('🛡️ enterSite protection installed');
         })();
     </script>
+    <script>
+        // 立即触发进入序列，不等待任何事件
+        (function () {
+            'use strict';
+
+            // 记录开始时间
+            const startTime = Date.now();
+            console.log('🚀 Page initialization started at', startTime);
+
+            // 1. 立即定义关键函数，防止被覆盖
+            window.forceSiteEntry = function () {
+                if (window.__siteEntered) return;
+                window.__siteEntered = true;
+
+                console.log('🔄 forceSiteEntry called at', Date.now() - startTime, 'ms');
+
+                const doorText = document.getElementById('doorText');
+                const mainContent = document.getElementById('mainContent');
+
+                if (doorText) {
+                    doorText.style.opacity = '1';
+                    doorText.style.transition = 'opacity 0.5s ease';
+                }
+
+                // 立即开始动画，不等待
+                setTimeout(() => {
+                    if (doorText) {
+                        doorText.style.opacity = '0';
+                    }
+
+                    setTimeout(() => {
+                        if (mainContent) {
+                            mainContent.classList.remove('initial-hide');
+
+                            // 尝试恢复音乐
+                            try {
+                                const savedMusicState = localStorage.getItem("musicState") || "paused";
+                                if (savedMusicState === "playing") {
+                                    const audio = document.getElementById("backgroundMusic");
+                                    if (audio) audio.play().catch(e => console.log('Music play failed:', e));
+                                }
+                            } catch (e) { }
+
+                            setTimeout(() => {
+                                mainContent.classList.add('show');
+                                document.body.style.overflow = 'auto';
+                                console.log('✅ Site fully loaded at', Date.now() - startTime, 'ms');
+                            }, 100);
+                        }
+                    }, 300); // 缩短到 300ms
+                }, 800); // 缩短到 800ms
+            };
+
+            // 2. 多个入口点触发
+            function triggerEntry() {
+                if (window.__entryTriggered) return;
+                window.__entryTriggered = true;
+
+                console.log('🎯 Entry triggered at', Date.now() - startTime, 'ms');
+
+                // 尝试调用 enterSite，如果存在
+                if (typeof window.enterSite === 'function') {
+                    try {
+                        window.enterSite();
+                    } catch (e) {
+                        console.error('enterSite failed, using fallback:', e);
+                        window.forceSiteEntry();
+                    }
+                } else {
+                    window.forceSiteEntry();
+                }
+            }
+
+            // 3. 立即设置一个超时触发器（最可靠）
+            setTimeout(triggerEntry, 50); // 50ms 后无论如何都触发
+
+            // 4. DOMContentLoaded 时触发（如果还没触发）
+            document.addEventListener('DOMContentLoaded', () => {
+                console.log('📄 DOMContentLoaded at', Date.now() - startTime, 'ms');
+                setTimeout(triggerEntry, 0);
+            });
+
+            // 5. load 事件时触发（如果还没触发）
+            window.addEventListener('load', () => {
+                console.log('📊 window.load at', Date.now() - startTime, 'ms');
+                setTimeout(triggerEntry, 0);
+            });
+
+            // 6. 如果页面已经加载完成，立即触发
+            if (document.readyState === 'interactive' || document.readyState === 'complete') {
+                console.log('⚡ Document readyState:', document.readyState);
+                setTimeout(triggerEntry, 0);
+            }
+
+            console.log('⏱️ Entry scheduler installed');
+        })();
+    </script>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
@@ -829,7 +926,9 @@
 
         // 进入网站函数
         function enterSite() {
-            console.log("按钮被点击"); // 调试用
+            if (window.__siteEntered) return;
+            window.__siteEntered = true;
+            console.log("enterSite called at", Date.now(), "ms");
 
             // const enterBtn = document.getElementById('enterButton');
             // const loader = document.getElementById('loader');
