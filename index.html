@@ -13,56 +13,69 @@
     <title>东铁线SP1900</title>
     <script>
         (function () {
-            // 设置队列系统
-            window.cfBeacon = window.cfBeacon || function () {
+            'use strict';
+
+            // 阶段1：预定义函数（立即执行）
+            window.cfBeacon = function () {
                 (window.cfBeacon.queue = window.cfBeacon.queue || []).push(arguments);
             };
 
-            // 使用空闲时间加载
-            function loadWhenIdle() {
-                if ('requestIdleCallback' in window) {
-                    window.requestIdleCallback(function (deadline) {
-                        // 在空闲时间加载
-                        if (deadline.timeRemaining() > 0 || deadline.didTimeout) {
-                            loadCfInsights();
-                        }
-                    }, { timeout: 5000 }); // 最多等待5秒
-                } else {
-                    // 不支持 requestIdleCallback，使用 load 事件
-                    window.addEventListener('load', function () {
-                        setTimeout(loadCfInsights, 2000);
-                    });
+            // 阶段2：页面加载后加载基础脚本
+            window.addEventListener('DOMContentLoaded', function () {
+                // 只加载最小的脚本部分
+                const smallScript = document.createElement('script');
+                smallScript.textContent = `
+            // 最小化的 beacon 功能
+            (function() {
+                var queue = window.cfBeacon.queue || [];
+                var send = function() {
+                    // 存储到 localStorage 等待主脚本发送
+                    var events = JSON.parse(localStorage.getItem('cf_pending') || '[]');
+                    events.push(Array.from(arguments));
+                    localStorage.setItem('cf_pending', JSON.stringify(events));
+                };
+                
+                // 处理队列中的事件
+                queue.forEach(function(args) {
+                    send.apply(null, args);
+                });
+                
+                window.cfBeacon = send;
+            })();
+        `;
+                document.head.appendChild(smallScript);
+            });
+
+            // 阶段3：完全加载后加载完整脚本
+            window.addEventListener('load', function () {
+                setTimeout(function () {
+                    const fullScript = document.createElement('script');
+                    fullScript.async = true;
+                    fullScript.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+                    fullScript.crossOrigin = 'anonymous';
+
+                    fullScript.onload = function () {
+                        // 发送暂存的事件
+                        var pending = JSON.parse(localStorage.getItem('cf_pending') || '[]');
+                        pending.forEach(function (args) {
+                            if (window.cfBeacon) {
+                                window.cfBeacon.apply(null, args);
+                            }
+                        });
+                        localStorage.removeItem('cf_pending');
+                    };
+
+                    document.body.appendChild(fullScript);
+                }, 4000); // 页面加载4秒后加载
+            });
+
+            // 确保你的网站功能不受影响
+            window.addEventListener('error', function (e) {
+                if (e.target && e.target.src && e.target.src.includes('cloudflareinsights')) {
+                    e.preventDefault();
+                    console.log('CF Insights failed silently');
                 }
-            }
-
-            function loadCfInsights() {
-                if (window.__cf_loaded) return;
-                window.__cf_loaded = true;
-
-                const script = document.createElement('script');
-                script.async = true;
-                script.defer = true;
-                script.src = 'https://static.cloudflareinsights.com/beacon.min.js';
-                script.crossOrigin = 'anonymous';
-
-                // 监听网络状态，只在良好网络时加载
-                if (navigator.connection) {
-                    const conn = navigator.connection;
-                    if (conn.saveData || conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g') {
-                        console.log('Slow connection, skipping CF Insights');
-                        return;
-                    }
-                }
-
-                document.body.appendChild(script);
-            }
-
-            // 页面加载完成后开始空闲检测
-            if (document.readyState === 'complete') {
-                loadWhenIdle();
-            } else {
-                window.addEventListener('load', loadWhenIdle);
-            }
+            }, true);
         })();
     </script>
     <style>
