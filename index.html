@@ -11,6 +11,60 @@
     <meta name="apple-mobile-web-app-title" content="02A01 西瓜" />
     <link rel="manifest" href="/assets/site.webmanifest" />
     <title>东铁线SP1900</title>
+    <script>
+        (function () {
+            // 设置队列系统
+            window.cfBeacon = window.cfBeacon || function () {
+                (window.cfBeacon.queue = window.cfBeacon.queue || []).push(arguments);
+            };
+
+            // 使用空闲时间加载
+            function loadWhenIdle() {
+                if ('requestIdleCallback' in window) {
+                    window.requestIdleCallback(function (deadline) {
+                        // 在空闲时间加载
+                        if (deadline.timeRemaining() > 0 || deadline.didTimeout) {
+                            loadCfInsights();
+                        }
+                    }, { timeout: 5000 }); // 最多等待5秒
+                } else {
+                    // 不支持 requestIdleCallback，使用 load 事件
+                    window.addEventListener('load', function () {
+                        setTimeout(loadCfInsights, 2000);
+                    });
+                }
+            }
+
+            function loadCfInsights() {
+                if (window.__cf_loaded) return;
+                window.__cf_loaded = true;
+
+                const script = document.createElement('script');
+                script.async = true;
+                script.defer = true;
+                script.src = 'https://static.cloudflareinsights.com/beacon.min.js';
+                script.crossOrigin = 'anonymous';
+
+                // 监听网络状态，只在良好网络时加载
+                if (navigator.connection) {
+                    const conn = navigator.connection;
+                    if (conn.saveData || conn.effectiveType === 'slow-2g' || conn.effectiveType === '2g') {
+                        console.log('Slow connection, skipping CF Insights');
+                        return;
+                    }
+                }
+
+                document.body.appendChild(script);
+            }
+
+            // 页面加载完成后开始空闲检测
+            if (document.readyState === 'complete') {
+                loadWhenIdle();
+            } else {
+                window.addEventListener('load', loadWhenIdle);
+            }
+        })();
+    </script>
     <style>
         :root {
             /* 港铁线路主题色 */
