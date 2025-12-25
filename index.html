@@ -15,66 +15,131 @@
         (function () {
             'use strict';
 
-            // 预定义 cfBeacon 函数，防止脚本未加载时的错误
+            // 在 Cloudflare 注入 script 之前，先设置一个拦截器
+            const originalAppendChild = Element.prototype.appendChild;
+            const originalInsertBefore = Element.prototype.insertBefore;
+
+            // 存储我们要延迟加载的脚本信息
+            let cfScriptConfig = null;
+
+            // 拦截 appendChild
+            Element.prototype.appendChild = function (node) {
+                if (node.nodeName === 'SCRIPT' &&
+                    node.src &&
+                    (node.src.includes('cloudflareinsights.com') ||
+                        node.src.includes('beacon.min.js'))) {
+
+                    console.log('Intercepted CF Insights script injection');
+
+                    // 保存脚本配置以便稍后使用
+                    cfScriptConfig = {
+                        src: node.src,
+                        integrity: node.integrity,
+                        crossOrigin: node.crossOrigin,
+                        dataset: node.dataset.cfBeacon ? JSON.parse(node.dataset.cfBeacon) : null
+                    };
+
+                    // 不添加到 DOM，而是返回一个空的 script 占位符
+                    const placeholder = document.createElement('script');
+                    placeholder.textContent = '// CF Insights placeholder';
+                    return originalAppendChild.call(this, placeholder);
+                }
+                return originalAppendChild.call(this, node);
+            };
+
+            // 拦截 insertBefore
+            Element.prototype.insertBefore = function (newNode, referenceNode) {
+                if (newNode.nodeName === 'SCRIPT' &&
+                    newNode.src &&
+                    (newNode.src.includes('cloudflareinsights.com') ||
+                        newNode.src.includes('beacon.min.js'))) {
+
+                    console.log('Intercepted CF Insights script insertion');
+
+                    if (!cfScriptConfig) {
+                        cfScriptConfig = {
+                            src: newNode.src,
+                            integrity: newNode.integrity,
+                            crossOrigin: newNode.crossOrigin,
+                            dataset: newNode.dataset.cfBeacon ? JSON.parse(newNode.dataset.cfBeacon) : null
+                        };
+                    }
+
+                    // 不添加到 DOM
+                    const placeholder = document.createElement('script');
+                    placeholder.textContent = '// CF Insights placeholder';
+                    return originalInsertBefore.call(this, placeholder, referenceNode);
+                }
+                return originalInsertBefore.call(this, newNode, referenceNode);
+            };
+
+            // 预定义 cfBeacon 函数收集数据
             window.cfBeacon = window.cfBeacon || function () {
                 (window.cfBeacon.queue = window.cfBeacon.queue || []).push(arguments);
             };
 
-            // 标记为延迟加载模式
-            window.__cf_delayed_load = true;
-
-            // 存储用户交互数据，等待脚本加载后发送
+            // 存储待发送的事件
             window.__cf_pending_events = [];
-
-            // 重写 cfBeacon 以捕获事件
             const originalCfBeacon = window.cfBeacon;
+
             window.cfBeacon = function () {
-                if (window.__cf_script_loaded) {
-                    // 脚本已加载，直接发送
-                    return originalCfBeacon.apply(this, arguments);
-                } else {
-                    // 脚本未加载，暂存事件
-                    window.__cf_pending_events.push(arguments);
-                    console.log('CF event queued:', arguments[0]);
-                    return true;
-                }
+                window.__cf_pending_events.push({
+                    args: Array.from(arguments),
+                    timestamp: Date.now()
+                });
+                console.log('CF event queued:', arguments[0]);
+                return originalCfBeacon.apply(this, arguments);
             };
 
-            // 监听页面可见性变化，在页面隐藏时加载（不影响用户体验）
-            let cfScriptLoaded = false;
-
-            function loadCfInsights() {
-                if (cfScriptLoaded) return;
-                cfScriptLoaded = true;
+            // 延迟加载函数
+            function loadDelayedCfInsights() {
+                if (window.__cf_loaded || !cfScriptConfig) return;
+                window.__cf_loaded = true;
 
                 const script = document.createElement('script');
                 script.defer = true;
                 script.async = true;
-                script.src = 'https://static.cloudflareinsights.com/beacon.min.js';
-                script.integrity = 'sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==';
-                script.crossOrigin = 'anonymous';
-                script.setAttribute('data-cf-beacon', '{"version":"2024.11.0","token":"3cce2b3de48843a8a868a9bf57bdb70e"}');
+                script.src = cfScriptConfig.src;
+
+                if (cfScriptConfig.integrity) {
+                    script.integrity = cfScriptConfig.integrity;
+                }
+
+                if (cfScriptConfig.crossOrigin) {
+                    script.crossOrigin = cfScriptConfig.crossOrigin;
+                }
+
+                if (cfScriptConfig.dataset) {
+                    script.setAttribute('data-cf-beacon', JSON.stringify(cfScriptConfig.dataset));
+                }
+
+                // 添加超时保护
+                const timeoutId = setTimeout(() => {
+                    if (script.parentNode) {
+                        console.log('CF Insights load timeout');
+                        script.remove();
+                    }
+                }, 10000);
 
                 script.onload = function () {
-                    window.__cf_script_loaded = true;
+                    clearTimeout(timeoutId);
                     console.log('CF Insights loaded in background');
 
                     // 发送暂存的事件
                     if (window.__cf_pending_events.length > 0) {
-                        console.log('Sending', window.__cf_pending_events.length, 'queued events');
-                        window.__cf_pending_events.forEach(args => {
-                            originalCfBeacon.apply(window, args);
+                        console.log('Sending queued events:', window.__cf_pending_events.length);
+                        window.__cf_pending_events.forEach(event => {
+                            originalCfBeacon.apply(window, event.args);
                         });
-                        window.__cf_pending_events = [];
                     }
                 };
 
                 script.onerror = function () {
-                    console.log('CF Insights failed to load, events lost:', window.__cf_pending_events.length);
-                    window.__cf_pending_events = [];
+                    clearTimeout(timeoutId);
+                    console.log('CF Insights failed to load');
                 };
 
-                // 在 body 末尾添加，确保不阻塞
+                // 在页面完全加载后添加到 body 末尾
                 if (document.body) {
                     document.body.appendChild(script);
                 } else {
@@ -84,47 +149,44 @@
                 }
             }
 
-            // 策略1：页面完全加载后延迟加载
+            // 在页面 load 事件后延迟加载
             window.addEventListener('load', function () {
-                // 等待3秒，确保主要内容已显示
-                setTimeout(loadCfInsights, 3000);
+                setTimeout(loadDelayedCfInsights, 3000);
             });
 
-            // 策略2：用户首次交互时加载
+            // 用户交互时加速加载
             let userInteracted = false;
-            const interactionEvents = ['click', 'scroll', 'keydown', 'mousemove', 'touchstart'];
+            const quickLoadEvents = ['click', 'keydown', 'scroll'];
 
-            interactionEvents.forEach(eventType => {
-                document.addEventListener(eventType, function handler() {
-                    if (!userInteracted) {
+            quickLoadEvents.forEach(eventType => {
+                document.addEventListener(eventType, function () {
+                    if (!userInteracted && !window.__cf_loaded) {
                         userInteracted = true;
-                        console.log('User interacted, loading CF Insights');
-                        setTimeout(loadCfInsights, 1000);
-                        // 移除监听器避免重复
-                        interactionEvents.forEach(type => {
-                            document.removeEventListener(type, handler);
-                        });
+                        console.log('User interacted, loading CF Insights sooner');
+                        loadDelayedCfInsights();
                     }
                 }, { once: true, passive: true });
             });
 
-            // 策略3：页面离开时加载（确保捕获退出数据）
-            document.addEventListener('visibilitychange', function () {
-                if (document.visibilityState === 'hidden' && !cfScriptLoaded) {
-                    loadCfInsights();
-                }
-            });
-
-            // 保护你的 enterSite 函数
+            // 保护 enterSite 函数
             const originalEnterSite = window.enterSite;
             if (originalEnterSite) {
                 window.enterSite = function () {
-                    console.log('Enter site - CF Insights will load in background');
-                    // 标记页面已进入，可以安全加载统计
-                    setTimeout(loadCfInsights, 1000);
+                    console.log('Enter site - CF Insights will load after');
+
+                    // 确保统计会加载
+                    setTimeout(loadDelayedCfInsights, 1000);
+
                     return originalEnterSite.apply(this, arguments);
                 };
             }
+
+            // 30秒后恢复原始的 DOM 方法（避免长期影响）
+            setTimeout(() => {
+                Element.prototype.appendChild = originalAppendChild;
+                Element.prototype.insertBefore = originalInsertBefore;
+                console.log('Restored original DOM methods');
+            }, 30000);
         })();
     </script>
     <style>
