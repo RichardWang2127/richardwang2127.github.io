@@ -241,7 +241,7 @@
             --card-dark: rgba(42, 42, 58, 0.95);
 
             /* 联系我区域颜色 - 自定义修改 */
-            --contact-light-main: #555555;
+            --contact-light-main: #085EFF;
             /* 白主题主色 */
             --contact-light-text: #000000;
             /* 白主题文字黑 */
@@ -264,7 +264,7 @@
                 radial-gradient(circle at 10% 20%, rgba(211, 233, 181, 0.15), transparent 40%),
                 radial-gradient(circle at 90% 30%, rgba(255, 247, 164, 0.15), transparent 40%),
                 radial-gradient(circle at 50% 80%, rgba(255, 182, 193, 0.1), transparent 40%);
-            color: #5A5A6E;
+            color: #000000;
             transition: all 0.3s ease;
         }
 
@@ -274,7 +274,7 @@
                 radial-gradient(circle at 10% 20%, rgba(139, 168, 138, 0.15), transparent 40%),
                 radial-gradient(circle at 90% 30%, rgba(212, 184, 94, 0.15), transparent 40%),
                 radial-gradient(circle at 50% 80%, rgba(216, 138, 155, 0.1), transparent 40%);
-            color: #E0E0E8;
+            color: #FFFFFF;
         }
 
         /* 柚子社卡片 */
@@ -513,10 +513,12 @@
         }
 
         .number {
+            font-family: 'Cascadia Code', 'Consolas', sans-serif;
             color: var(--h1-color);
         }
 
         .number-accident {
+            font-family: 'Cascadia Code', 'Consolas', sans-serif;
             color: var(--mtr-tsuen-wan);
         }
 
@@ -544,28 +546,67 @@
             font-size: 36px;
             font-weight: bold;
             color: #fff;
-            text-shadow: 0 0 8px rgba(0, 0, 0, 0.7), 0 0 10px rgba(0, 0, 0, 0.5);
+            /* text-shadow: 0 0 8px rgba(0, 0, 0, 0.7), 0 0 10px rgba(0, 0, 0, 0.5); */
             background-color: rgba(0, 0, 0, 0.4);
-            padding: 12px 24px;
+            padding: 12px 60px;
             border-radius: 12px;
             opacity: 0;
             z-index: 910;
             transition: opacity 0.5s ease;
             text-align: center;
             pointer-events: none;
+            /* min-width: 250px; */
+        }
+
+        /* 门文字样式修正 - 移除之前错误的部分，改为下面的正确样式 */
+        #doorText.yuzu-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: var(--yuzu-mint);
+            box-shadow:
+                0 8px 32px rgba(211, 233, 181, 0.2),
+                0 4px 16px rgba(211, 233, 181, 0.15);
+            /* 移除错误的background-clip和background-image */
+        }
+
+        [data-theme="dark"] #doorText.yuzu-card {
+            background: rgba(42, 42, 58, 0.9);
+            border-color: var(--yuzu-dark-green);
+            box-shadow:
+                0 8px 32px rgba(139, 168, 138, 0.2),
+                0 4px 16px rgba(139, 168, 138, 0.15);
         }
 
         #doorText .line1,
-        #doorText .line2,
-        #doorText .line3 {
+        #doorText .line2 {
+            /* 文字颜色设置为渐变，和标题一致 */
+            background: linear-gradient(135deg, var(--yuzu-dark-green), var(--yuzu-dark-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
             display: block;
+        }
+
+        [data-theme="dark"] #doorText .line1,
+        [data-theme="dark"] #doorText .line2 {
+            background: linear-gradient(135deg, var(--yuzu-mint), var(--yuzu-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         #doorText .line3 {
             font-size: 16px;
             font-weight: normal;
-            opacity: 0.8;
+            opacity: 0.9;
             margin-top: 8px;
+            color: var(--contact-light-main);
+            /* 第三行使用主题色 */
+        }
+
+        [data-theme="dark"] #doorText .line3 {
+            color: var(--yuzu-mint);
         }
 
         /* 主要内容 */
@@ -623,18 +664,19 @@
 
         /* 联系我区域特殊样式 - 彻底移除多余换行和间距 */
         #outputBox {
-            line-height: 1.1 !important;
+            line-height: 1.6 !important;
             /* 进一步缩小行距 */
             font-size: 16px;
         }
 
         #outputBox br {
-            display: none !important;
+            display: block !important;
             /* 强制隐藏所有换行符 */
         }
 
         #outputBox strong {
             display: block;
+            font-size: 23px;
             margin-bottom: 4px !important;
         }
 
@@ -1061,7 +1103,7 @@
                 display: flex !important;
                 align-items: center !important;
                 gap: 10px !important;
-                margin-bottom: 12px !important;
+                margin-bottom: 0 !important;
                 flex-wrap: nowrap !important;
             }
 
@@ -1085,17 +1127,17 @@
 
             /* 联系我区域桌面端样式 - 彻底移除多余换行 */
             #outputBox {
-                line-height: 1.1 !important;
+                line-height: 1.6 !important;
             }
 
             #outputBox br {
-                display: none !important;
+                display: block !important;
             }
 
             #outputBox a {
                 display: block;
                 margin: 1px 0 !important;
-                line-height: 1.1 !important;
+                line-height: 1.3 !important;
             }
         }
 
@@ -1214,8 +1256,8 @@
     </div> -->
 
     <div id="doorText" class="yuzu-card">
-        <span class="line1">Ciallo～(∠・ω&lt; )⌒☆</span>
-        <!-- <span class="line2"></span> -->
+        <span class="line1" style="font-size: 38px;">03A01 黄鱼</span>
+        <span class="line1" style="font-size: 23px;">Ciallo～(∠・ω&lt; )⌒☆</span>
         <span class="line3">Welcome to ciallo0721.org</span>
     </div>
 
@@ -1293,6 +1335,44 @@
                     </table>
                 </div>
 
+                <!-- 倒计时 -->
+                <div class="yuzu-card">
+                    <strong>📅 纸质报销凭证停用已 <span id="railway-paper" class="number"></span></strong>
+                    <br>
+                    <strong>📅 7·23铁路事故发生已 <span id="0723-accident" class="number-accident"></span></strong>
+                </div>
+
+                <!-- 联系我区域 -->
+                <div class="yuzu-card" id="outputBox">
+                    <strong class="subheading">ℹ️ 信息：</strong>
+                    年龄: <span id="age" class="number">好几</span>岁。
+                    <br>
+                    城市: 浙江宁波。
+                    <br>
+
+
+                    <strong class="subheading contact-group">📞 联系我：(点击可跳转)</strong>
+                    <a href="https://space.bilibili.com/1272995329" target="_blank"
+                        style="text-decoration: none;"><span>Bilibili: </span>宁波轨道交通1号线</a>
+                    <a href="mailto:admin@075038.xyz" target="_blank" style="text-decoration: none;"><span>邮件: </span>
+                        admin@075038.xyz</a>
+                    <a href="https://github.com/RichardWang2127" target="_blank"
+                        style="text-decoration: none;"><span>Github: </span>RichardWang2127</a>
+                </div>
+                <!-- 图库 -->
+                <!-- <div id="gallery" class="output">
+                    <strong>📸 图库</strong><br>
+                    <div class="gallery">
+                        <img src="your_image_path.jpg" alt="地铁车站">
+                        <img src="your_image_path_2.jpg" alt="宁波港">
+                        <img src="your_image_path_3.jpg" alt="模型图">
+                    </div>
+                </div> -->
+
+                <!-- <div class="yuzu-card" id="gallery">
+                    <strong class="subheading">📷 图库</strong>
+
+                </div> -->
                 <!-- 项目进度 - 强制同一行 -->
                 <div class="yuzu-card" id="progressBoard">
                     <strong class="subheading">🧱 项目开发进度：</strong>
@@ -1307,37 +1387,12 @@
                     </div>
                 </div>
 
-                <!-- 联系我区域 - 重构HTML结构，移除多余换行 -->
-                <div class="yuzu-card" id="outputBox">
-                    <strong class="subheading">信息：</strong>
-                    年龄: <span id="age" class="number">好几</span>岁。
-                    城市: 浙江宁波。
-
-                    <strong class="subheading contact-group">联系我：</strong>
-                    <a href="https://space.bilibili.com/1272995329" target="_blank"
-                        style="text-decoration: none;"><span>Bilibili:</span>宁波轨道交通1号线(点击跳转)</a>
-                    <a href="mailto:admin@075038.xyz" target="_blank" style="text-decoration: none;"><span>邮件:</span>
-                        admin@075038.xyz</a>
-                    <a href="https://github.com/RichardWang2127" target="_blank"
-                        style="text-decoration: none;"><span>Github:</span>RichardWang2127(点击跳转)</a>
-                </div>
-                <!-- 图库 -->
-                <!-- <div id="gallery" class="output">
-                    <strong>📸 图库</strong><br>
-                    <div class="gallery">
-                        <img src="your_image_path.jpg" alt="地铁车站">
-                        <img src="your_image_path_2.jpg" alt="宁波港">
-                        <img src="your_image_path_3.jpg" alt="模型图">
-                    </div>
-                </div> -->
-
-                <!-- 倒计时 -->
-                <div class="yuzu-card">
-                    <strong>📅 纸质报销凭证停用已 <span id="railway-paper" class="number"></span></strong>
-                    <br>
-                    <strong>📅 7·23铁路事故发生已 <span id="0723-accident" class="number-accident"></span></strong>
-                </div>
-
+                <!-- Ciallo -->
+                <audio id="enterSound" preload="auto" style="display:none;">
+                    <source
+                        src="file:///D:/Wang%20Richard/Documents/Github/richardwang2127.github.io/resources/ciallo.mp3"
+                        type="audio/mp3">
+                </audio>
                 <!-- 背景音乐播放按钮 -->
                 <audio id="backgroundMusic" loop>
                     <source src="resources/music.mp3" type="audio/mp3">
@@ -1432,6 +1487,19 @@
         //     document.getElementById('enterButton').classList.remove('initial-hide');
         // });
 
+        // 播放进入音效函数
+        function playEnterSound() {
+            try {
+                const enterSound = document.getElementById("enterSound");
+                if (enterSound) {
+                    enterSound.volume = 0.3;
+                    enterSound.currentTime = 0; // 从头开始播放
+                    enterSound.play().catch(e => console.log('Enter sound play failed:', e));
+                }
+            } catch (e) {
+                console.error('Could not play enter sound:', e);
+            }
+        }
         // 进入网站函数
         function enterSite() {
             if (window.__siteEntered) return;
@@ -1452,24 +1520,27 @@
             // subwayDoors.classList.add('opening');
 
             doorText.style.opacity = '1';
+            // 在文字完全显示后播放入场音效
             setTimeout(function () {
-                // enterBtn.style.display = 'none';
-
-                // 文字淡出
-                doorText.style.transition = 'opacity 0.5s ease';
-                doorText.style.opacity = '0';
+                playEnterSound(); // 这里播放音效
 
                 setTimeout(function () {
-                    mainContent.classList.remove('initial-hide');
-                    entered = true;
-                    musicCheck();
+                    // 文字淡出
+                    doorText.style.transition = 'opacity 0.5s ease';
+                    doorText.style.opacity = '0';
 
                     setTimeout(function () {
-                        mainContent.classList.add('show');
-                        document.body.style.overflow = 'auto';
-                    }, 100);
-                }, 500); // 文字显示0.5秒后淡出
-            }, 2000); // 文字保持显示2秒
+                        mainContent.classList.remove('initial-hide');
+                        entered = true;
+                        musicCheck();
+
+                        setTimeout(function () {
+                            mainContent.classList.add('show');
+                            document.body.style.overflow = 'auto';
+                        }, 100);
+                    }, 500); // 文字显示0.5秒后淡出
+                }, 1500); // 文字保持显示1.5秒后再淡出
+            }, 50); // 等待50ms确保文字完全显示
         }
         // console.log(processDomain(redirect = false));
 
