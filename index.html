@@ -1186,7 +1186,7 @@
             animation: spin 1s linear infinite;
         }
 
-        @keyframes spin {
+        /* @keyframes spin {
             0% {
                 transform: rotate(0deg);
             }
@@ -1194,7 +1194,7 @@
             100% {
                 transform: rotate(360deg);
             }
-        }
+        } */
 
 
         /* 重试中状态 */
@@ -1210,16 +1210,6 @@
             color: #007bff;
             font-size: 13px;
             font-weight: 500;
-        }
-
-        /* 加载动画 */
-        .spinner {
-            width: 26px;
-            height: 26px;
-            border: 2px solid rgba(0, 123, 255, 0.3);
-            border-top-color: #007bff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
         }
 
         /* 预览遮罩 */
@@ -1273,35 +1263,6 @@
             transition: opacity 0.3s ease;
         }
 
-        /* 加载状态 */
-        .preview-loading {
-            position: absolute;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            background: rgba(255, 255, 255, 0.9);
-            border-radius: 10px;
-            padding: 30px;
-            z-index: 1;
-        }
-
-        .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid rgba(0, 123, 255, 0.3);
-            border-top-color: #007bff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        .loading-text {
-            color: #333;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
         /* 错误状态 */
         .preview-error {
             position: absolute;
@@ -1336,16 +1297,6 @@
 
         .retry-preview-btn:hover {
             background: #0056b3;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
         }
 
         /* 关闭按钮 */
@@ -1384,6 +1335,159 @@
 
         .gallery-item img.loaded {
             opacity: 1;
+        }
+
+        /* 加载动画 - 统一电脑/手机端样式 */
+        .spinner {
+            width: 26px !important;
+            height: 26px !important;
+            border: 3px solid rgba(0, 123, 255, 0.3) !important;
+            border-top-color: #007bff !important;
+            border-radius: 50% !important;
+            animation: spin 1s linear infinite !important;
+            /* 强制居中，防止偏移 */
+            margin: 0 auto !important;
+        }
+
+        /* 修改 .loading-spinner 的动画 */
+        .loading-spinner {
+            width: 40px !important;
+            height: 40px !important;
+            border: 3px solid rgba(0, 123, 255, 0.3) !important;
+            border-top-color: #007bff !important;
+            border-radius: 50% !important;
+            animation: spin 1s linear infinite !important;
+            -webkit-animation: spin 1s linear infinite !important;
+            animation-play-state: running !important;
+            /* 新增：确保动画在运行 */
+            will-change: transform;
+            /* 新增：提示浏览器优化动画 */
+        }
+
+        /* 加载文字 - 禁止换行，统一样式 */
+        .loading-text,
+        .retrying-text {
+            color: #007bff !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            white-space: nowrap !important;
+            /* 关键：禁止文字换行 */
+            text-align: center !important;
+            /* 文字居中 */
+            margin-top: 8px !important;
+            /* 与动画保持固定间距 */
+            line-height: 1.2 !important;
+            /* 行高统一 */
+        }
+
+        /* 预览加载容器 - 统一间距 */
+        /* 修改 .preview-loading 相关样式 */
+        .preview-loading {
+            position: absolute !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 15px !important;
+            background: rgba(255, 255, 255, 0.9) !important;
+            border-radius: 10px !important;
+            padding: 30px !important;
+            z-index: 1 !important;
+            min-width: 120px !important;
+            width: auto !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            transition: opacity 0.3s ease, visibility 0.3s ease !important;
+        }
+
+        /* 修改 .hidden 类对 .preview-loading 的特别处理 */
+        .preview-loading.hidden {
+            opacity: 0 !important;
+            visibility: hidden !important;
+            /* 注意：这里不要设置 display: none，保持 flex */
+        }
+
+        /* 移动端适配 - 加载动画和文字 */
+        @media (max-width: 768px) {
+            .spinner {
+                width: 20px !important;
+                height: 20px !important;
+                border-width: 2px !important;
+            }
+
+            .loading-spinner {
+                width: 30px !important;
+                height: 30px !important;
+            }
+
+            .loading-text,
+            .retrying-text {
+                font-size: 12px !important;
+            }
+
+            .preview-loading {
+                padding: 20px !important;
+                gap: 10px !important;
+            }
+        }
+
+        /* 旋转动画 - 统一速度和轨迹 */
+        /* @keyframes spin {
+            0% {
+                transform: rotate(0deg) !important;
+            }
+
+            100% {
+                transform: rotate(360deg) !important;
+            }
+        } */
+
+        /* 把这个统一的旋转动画放在 CSS 最底部，确保覆盖所有冲突 */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        /* 在CSS文件顶部或现有的spin动画之后添加这个强制定义 */
+        /* @keyframes spin {
+            0% {
+                transform: rotate(0deg) !important;
+                -webkit-transform: rotate(0deg) !important;
+            }
+
+            100% {
+                transform: rotate(360deg) !important;
+                -webkit-transform: rotate(360deg) !important;
+            }
+        } */
+
+        /* 确保 .loading-spinner 正确应用动画 */
+        .loading-spinner {
+            width: 40px !important;
+            height: 40px !important;
+            border: 3px solid rgba(0, 123, 255, 0.3) !important;
+            border-top-color: #007bff !important;
+            border-radius: 50% !important;
+            animation: spin 1s linear infinite !important;
+            -webkit-animation: spin 1s linear infinite !important;
+            animation-play-state: running !important;
+            animation-name: spin !important;
+            /* 强制指定动画名称 */
+            will-change: transform;
+        }
+
+        /* 给 spinner 增加浏览器前缀，确保兼容性 */
+        .spinner,
+        .loading-spinner {
+            animation: spin 1s linear infinite !important;
+            -webkit-animation: spin 1s linear infinite !important;
         }
     </style>
 </head>
@@ -1927,6 +2031,9 @@
         let scrollPosition = 0;
         let currentPreviewData = null;
         let isClosing = false; // 防止重复关闭
+        // 全局变量 - 跟踪当前加载的图片
+        let currentImageLoad = null;
+        let currentImageLoadTimeout = null;
 
         // 初始化图库
         document.addEventListener("DOMContentLoaded", () => {
@@ -1954,8 +2061,51 @@
             const closePreview = () => {
                 if (isClosing) return;
                 isClosing = true;
+
+                console.log('关闭预览，取消当前加载');
+
+                // 取消当前的图片加载请求
+                if (currentImageLoad) {
+                    currentImageLoad.onload = null;
+                    currentImageLoad.onerror = null;
+                    currentImageLoad.src = ''; // 中断加载
+                    currentImageLoad = null;
+                }
+
+                // 清除超时定时器
+                if (currentImageLoadTimeout) {
+                    clearTimeout(currentImageLoadTimeout);
+                    currentImageLoadTimeout = null;
+                }
+
                 const overlay = document.getElementById("previewOverlay");
                 overlay.classList.add("hidden");
+
+                // 立即重置所有预览状态
+                const previewImg = document.getElementById('previewImage');
+                const previewLoading = document.getElementById('previewLoading');
+                const previewError = document.getElementById('previewError');
+
+                if (previewImg) {
+                    previewImg.style.opacity = '0';
+                    previewImg.src = ''; // 清空图片源
+                    previewImg.style.display = 'none'; // 隐藏图片
+                }
+
+                // 强制重置加载状态
+                if (previewLoading) {
+                    previewLoading.classList.add('hidden');
+                    // 重置spinner动画
+                    const spinner = previewLoading.querySelector('.loading-spinner');
+                    if (spinner) {
+                        spinner.style.animation = 'none';
+                        spinner.style.webkitAnimation = 'none';
+                    }
+                }
+
+                if (previewError) {
+                    previewError.classList.add('hidden');
+                }
 
                 setTimeout(() => {
                     document.body.style.overflow = siteScrollEnabled ? (document.body.dataset.prevOverflow || 'auto') : 'hidden';
@@ -1967,16 +2117,6 @@
 
                     isClosing = false;
                     currentPreviewData = null;
-                    const previewImg = document.getElementById('previewImage');
-                    const previewLoading = document.getElementById('previewLoading');
-                    const previewError = document.getElementById('previewError');
-
-                    if (previewImg) {
-                        previewImg.style.opacity = '0';
-                        previewImg.src = '';
-                    }
-                    if (previewLoading) previewLoading.classList.add('hidden');
-                    if (previewError) previewError.classList.add('hidden');
                 }, 100);
             };
 
@@ -2026,9 +2166,9 @@
             retryingDiv.className = "retrying";
             retryingDiv.style.display = "none";
             retryingDiv.innerHTML = `
-        <div class="spinner"></div>
-        <span class="retrying-text">加载中...</span>
-    `;
+                <div class="spinner"></div>
+                <span class="retrying-text">加载中...</span>
+            `;
 
             parent.appendChild(errorDiv);
             parent.appendChild(retryingDiv);
@@ -2065,31 +2205,33 @@
             const errorDiv = parent.querySelector('.error');
             const retryingDiv = parent.querySelector('.retrying');
 
-            // 显示加载状态
+            // 立即显示加载状态
             errorDiv.style.display = "none";
             retryingDiv.style.display = "flex";
             parent.classList.add("retrying-state");
             parent.classList.remove("error");
 
-            // 创建新图片对象加载（移除loading="lazy"）
+            // 创建新图片对象加载
             const newImg = new Image();
             const imageSrc = forceRefresh ? `${data.thumb}?t=${Date.now()}` : data.thumb;
 
+            // 加载成功
             newImg.onload = () => {
                 img.src = newImg.src;
                 img.style.display = "block";
                 img.classList.add('loaded');
 
-                setTimeout(() => {
-                    retryingDiv.style.display = "none";
-                    parent.classList.remove("placeholder", "error", "retrying-state");
-                }, 100);
+                // 立即隐藏加载状态（移除多余延迟）
+                retryingDiv.style.display = "none";
+                parent.classList.remove("placeholder", "error", "retrying-state");
             };
 
+            // 加载失败
             newImg.onerror = () => {
                 img.style.display = "none";
                 img.classList.remove('loaded');
 
+                // 立即隐藏加载状态
                 retryingDiv.style.display = "none";
                 errorDiv.style.display = "flex";
                 parent.classList.remove("placeholder", "retrying-state");
@@ -2100,19 +2242,21 @@
         }
 
         function openPreview(data) {
+            console.log('打开预览，数据:', data);
+
+            // 保存滚动位置
             scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
             currentPreviewData = data;
 
             const overlay = document.getElementById("previewOverlay");
             const previewImg = document.getElementById("previewImage");
-            const previousOverflow = document.body.style.overflow;
-            document.body.dataset.prevOverflow = previousOverflow;
 
-            // 重置预览状态
-            previewImg.style.opacity = '0';
-            previewImg.src = '';
-            document.getElementById('previewError').classList.add('hidden');
-            document.getElementById('previewLoading').classList.remove('hidden');
+            // 确保预览图片完全重置
+            if (previewImg) {
+                previewImg.style.opacity = '0';
+                previewImg.src = '';
+                previewImg.style.display = 'none';
+            }
 
             // 锁定滚动
             const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
@@ -2128,46 +2272,121 @@
             loadPreviewImage(data);
         }
 
+        // 修改 loadPreviewImage 函数
         function loadPreviewImage(data) {
             const previewImg = document.getElementById("previewImage");
             const loadingEl = document.getElementById('previewLoading');
             const errorEl = document.getElementById('previewError');
 
-            loadingEl.classList.remove('hidden');
-            errorEl.classList.add('hidden');
-            previewImg.style.opacity = '0';
+            console.log('开始加载大图:', data.full);
 
-            const fullImg = new Image();
-            fullImg.onload = function () {
-                previewImg.src = this.src;
+            // 先取消可能存在的上一个加载
+            if (currentImageLoad) {
+                currentImageLoad.onload = null;
+                currentImageLoad.onerror = null;
+                currentImageLoad.src = '';
+                currentImageLoad = null;
+            }
+
+            if (currentImageLoadTimeout) {
+                clearTimeout(currentImageLoadTimeout);
+                currentImageLoadTimeout = null;
+            }
+
+            // 重置所有状态
+            previewImg.style.opacity = '0';
+            previewImg.src = '';
+            previewImg.style.display = 'none'; // 确保图片是隐藏的
+
+            // 重置错误状态
+            errorEl.classList.add('hidden');
+
+            // 显示加载状态
+            loadingEl.classList.remove('hidden');
+
+            // 更彻底地重置动画
+            const spinner = loadingEl.querySelector('.loading-spinner');
+            if (spinner) {
+                // 直接应用动画样式
+                spinner.style.animation = 'spin 1s linear infinite';
+                spinner.style.webkitAnimation = 'spin 1s linear infinite';
+                spinner.style.animationName = 'spin';
+                spinner.style.webkitAnimationName = 'spin';
+
+                // 强制重绘
+                void spinner.offsetWidth;
+            }
+
+            // 创建新的图片加载对象
+            currentImageLoad = new Image();
+
+            // 设置超时处理
+            currentImageLoadTimeout = setTimeout(() => {
+                if (currentImageLoad) {
+                    console.log('图片加载超时');
+                    currentImageLoad.onload = null;
+                    currentImageLoad.onerror = null;
+                    handleImageLoadError();
+                }
+            }, 20000); // 20秒超时
+
+            function handleImageLoadSuccess() {
+                if (!currentImageLoad) return; // 如果已经取消，不执行
+
+                console.log('大图加载成功');
+                clearTimeout(currentImageLoadTimeout);
+
+                // 隐藏加载动画
+                loadingEl.classList.add('hidden');
+
+                // 显示图片
+                previewImg.src = currentImageLoad.src;
+                previewImg.style.display = 'block';
                 setTimeout(() => {
                     previewImg.style.opacity = '1';
-                    loadingEl.classList.add('hidden');
-                }, 300);
-            };
+                }, 10);
 
-            fullImg.onerror = function () {
+                currentImageLoad = null;
+            }
+
+            function handleImageLoadError() {
+                if (!currentImageLoad) return; // 如果已经取消，不执行
+
+                console.log('大图加载失败');
+                clearTimeout(currentImageLoadTimeout);
+
+                // 隐藏加载动画
                 loadingEl.classList.add('hidden');
-                errorEl.classList.remove('hidden');
 
-                // 如果大图失败，尝试加载缩略图
-                if (data.thumb !== data.full) {
-                    const thumbImg = new Image();
-                    thumbImg.onload = function () {
-                        previewImg.src = this.src;
-                        previewImg.style.opacity = '1';
-                        errorEl.classList.add('hidden');
-                    };
-                    thumbImg.onerror = function () {
-                        previewImg.src = '';
-                    };
-                    thumbImg.src = data.thumb;
-                } else {
-                    previewImg.src = '';
-                }
-            };
+                // 显示错误状态
+                setTimeout(() => {
+                    errorEl.classList.remove('hidden');
 
-            fullImg.src = data.full || data.thumb;
+                    // 尝试加载缩略图
+                    if (data.thumb !== data.full) {
+                        const thumbImg = new Image();
+                        thumbImg.onload = function () {
+                            if (!currentImageLoad) return; // 再次检查是否已取消
+                            previewImg.src = this.src;
+                            previewImg.style.display = 'block';
+                            previewImg.style.opacity = '1';
+                            errorEl.classList.add('hidden');
+                        };
+                        thumbImg.onerror = function () {
+                            // 保持错误状态显示
+                        };
+                        thumbImg.src = data.thumb;
+                    }
+                }, 10);
+
+                currentImageLoad = null;
+            }
+
+            currentImageLoad.onload = handleImageLoadSuccess;
+            currentImageLoad.onerror = handleImageLoadError;
+
+            // 开始加载
+            currentImageLoad.src = data.full || data.thumb;
         }
 
         function toggleGallery() {
@@ -2176,6 +2395,28 @@
             const isHidden = gallery.classList.contains("hidden");
             gallery.classList.toggle("hidden");
             btn.textContent = isHidden ? "收起" : "展开";
+        }
+        // 在控制台测试动画状态
+        function testSpinnerAnimation() {
+            const spinner = document.querySelector('.loading-spinner');
+            if (!spinner) {
+                console.log('找不到spinner元素');
+                return;
+            }
+
+            const computedStyle = window.getComputedStyle(spinner);
+            console.log('动画状态:', {
+                animationName: computedStyle.animationName,
+                animationDuration: computedStyle.animationDuration,
+                animationPlayState: computedStyle.animationPlayState,
+                animationIterationCount: computedStyle.animationIterationCount,
+                transform: computedStyle.transform
+            });
+
+            // 手动触发动画
+            spinner.style.animation = 'none';
+            void spinner.offsetWidth; // 触发重绘
+            spinner.style.animation = 'spin 1s linear infinite';
         }
     </script>
 
