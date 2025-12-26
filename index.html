@@ -1434,6 +1434,55 @@
             }
         }
 
+        // 预加载音效和音乐，并设置自动播放策略
+        (function () {
+            'use strict';
+
+            // 页面加载时立即静音预加载音效和音乐
+            window.addEventListener('DOMContentLoaded', function () {
+                console.log('🎵 开始预加载音频资源');
+
+                // 预加载入场音效（不静音，直接尝试播放）
+                try {
+                    const enterSound = document.getElementById("enterSound");
+                    if (enterSound) {
+                        enterSound.volume = 0.3;
+                        enterSound.preload = 'auto';
+                        enterSound.load();
+                        console.log('✅ 入场音效预加载完成');
+                    }
+                } catch (e) {
+                    console.log('入场音效预加载出错:', e);
+                }
+
+                // 预加载背景音乐（静音预加载，提高自动播放成功率）
+                try {
+                    const bgMusic = document.getElementById("backgroundMusic");
+                    if (bgMusic) {
+                        // 静音预加载以避免自动播放限制
+                        bgMusic.muted = true;
+                        bgMusic.volume = 0;
+                        bgMusic.preload = 'auto';
+                        bgMusic.load();
+                        console.log('✅ 背景音乐预加载完成');
+
+                        // 尝试静音播放以"激活"音频上下文
+                        setTimeout(() => {
+                            bgMusic.play().then(() => {
+                                console.log('🎵 背景音乐静音预播放成功');
+                                bgMusic.pause();
+                                bgMusic.currentTime = 0;
+                            }).catch(e => {
+                                console.log('静音预播放失败（可忽略）:', e);
+                            });
+                        }, 100);
+                    }
+                } catch (e) {
+                    console.log('背景音乐预加载出错:', e);
+                }
+            });
+        })();
+
         // 强制进入网站的备用函数
         function forceSiteEntry() {
             if (entered) return;
@@ -1441,16 +1490,17 @@
             console.log('🔄 forceSiteEntry called');
             entered = true;
 
-            // 直接显示文字
             const doorText = document.getElementById('doorText');
             const mainContent = document.getElementById('mainContent');
 
             if (doorText) {
                 doorText.style.opacity = '1';
                 doorText.style.transition = 'opacity 0.5s ease';
+
+                // 立即播放入场音效
+                playEnterSound();
             }
 
-            // 立即开始动画，不等待
             setTimeout(() => {
                 if (doorText) {
                     doorText.style.opacity = '0';
@@ -1459,19 +1509,18 @@
                 setTimeout(() => {
                     if (mainContent) {
                         mainContent.classList.remove('initial-hide');
-                        musicCheck();
+                        musicCheck(); // 检查并播放背景音乐
 
                         setTimeout(() => {
                             mainContent.classList.add('show');
-                            // document.body.style.overflow = 'auto';
                             if (window.innerWidth >= 769) {
                                 document.body.style.overflow = 'auto';
                             }
                             console.log('✅ Site fully loaded');
                         }, 100);
                     }
-                }, 500);
-            }, 2000);
+                }, 300);
+            }, 800);
         }
 
         window.addEventListener('load', function () {
@@ -1487,43 +1536,61 @@
         //     document.getElementById('enterButton').classList.remove('initial-hide');
         // });
 
-        // 播放进入音效函数
+        // 播放进入音效函数 - 直接尝试播放，不等待用户交互
         function playEnterSound() {
             try {
                 const enterSound = document.getElementById("enterSound");
                 if (enterSound) {
                     enterSound.volume = 0.3;
                     enterSound.currentTime = 0; // 从头开始播放
-                    enterSound.play().catch(e => console.log('Enter sound play failed:', e));
+
+                    console.log('🎵 尝试播放入场音效');
+                    const playPromise = enterSound.play();
+
+                    if (playPromise !== undefined) {
+                        playPromise.catch(error => {
+                            console.log('入场音效自动播放被阻止:', error.name);
+
+                            // 如果是自动播放被阻止，立即静音播放，然后尝试取消静音
+                            if (error.name === 'NotAllowedError') {
+                                console.log('🎵 尝试静音播放入场音效');
+
+                                // 静音播放
+                                enterSound.muted = true;
+                                enterSound.play().then(() => {
+                                    console.log('🎵 入场音效静音播放成功');
+                                    // 播放后立即取消静音
+                                    setTimeout(() => {
+                                        enterSound.muted = false;
+                                    }, 100);
+                                }).catch(e => {
+                                    console.log('静音播放也失败:', e);
+                                });
+                            }
+                        });
+                    }
                 }
             } catch (e) {
-                console.error('Could not play enter sound:', e);
+                console.error('播放入场音效出错:', e);
             }
         }
-        // 进入网站函数
+
+        // 进入网站函数 - 确保入场音效播放
         function enterSite() {
             if (window.__siteEntered) return;
             window.__siteEntered = true;
             console.log("enterSite called at", Date.now(), "ms");
 
-            // const enterBtn = document.getElementById('enterButton');
-            // const loader = document.getElementById('loader');
-            const subwayDoors = document.getElementById('subwayDoors');
             const mainContent = document.getElementById('mainContent');
 
-            // 隐藏进入按钮
-            // enterBtn.style.transition = 'all 0.5s ease';
-            // enterBtn.style.opacity = '0';
-            // enterBtn.style.transform = 'translate(-50%, -50%) scale(0.8)';
-            // enterBtn.classList.remove('ready');
-
-            // subwayDoors.classList.add('opening');
-
+            // 显示门文字
             doorText.style.opacity = '1';
-            // 在文字完全显示后播放入场音效
-            setTimeout(function () {
-                playEnterSound(); // 这里播放音效
 
+            // 立即尝试播放入场音效（不等待）
+            playEnterSound();
+
+            // 在文字完全显示后
+            setTimeout(function () {
                 setTimeout(function () {
                     // 文字淡出
                     doorText.style.transition = 'opacity 0.5s ease';
@@ -1532,27 +1599,76 @@
                     setTimeout(function () {
                         mainContent.classList.remove('initial-hide');
                         entered = true;
-                        musicCheck();
+                        musicCheck(); // 检查并播放背景音乐
 
                         setTimeout(function () {
                             mainContent.classList.add('show');
                             document.body.style.overflow = 'auto';
                         }, 100);
-                    }, 500); // 文字显示0.5秒后淡出
-                }, 1500); // 文字保持显示1.5秒后再淡出
-            }, 50); // 等待50ms确保文字完全显示
+                    }, 500);
+                }, 1500);
+            }, 50);
         }
         // console.log(processDomain(redirect = false));
 
-        // 音乐控制函数
+        // 改进的音乐控制函数 - 尽量自动播放
         function toggleMusic() {
             const audio = document.getElementById("backgroundMusic");
+
             if (audio.paused) {
-                audio.play();
+                // 确保不静音
+                audio.muted = false;
+                audio.volume = 0.5;
+
+                audio.play().then(() => {
+                    localStorage.setItem("musicState", "playing");
+                    console.log('🎵 音乐播放成功');
+                }).catch(error => {
+                    console.log('音乐播放被阻止:', error.name);
+
+                    // 如果是自动播放被阻止，先静音播放再取消静音
+                    if (error.name === 'NotAllowedError') {
+                        console.log('🎵 尝试静音播放音乐');
+
+                        audio.muted = true;
+                        audio.play().then(() => {
+                            console.log('🎵 音乐静音播放成功');
+                            localStorage.setItem("musicState", "playing");
+
+                            // 尝试取消静音
+                            setTimeout(() => {
+                                audio.muted = false;
+                                console.log('🎵 已取消音乐静音');
+                            }, 500);
+                        }).catch(e => {
+                            console.log('静音播放也失败:', e);
+
+                            // 如果静音播放也失败，等待用户交互
+                            const playOnInteraction = () => {
+                                audio.muted = false;
+                                audio.play().then(() => {
+                                    localStorage.setItem("musicState", "playing");
+                                    console.log('🎵 用户交互后音乐播放成功');
+                                }).catch(e => {
+                                    console.log('用户交互后播放失败:', e);
+                                });
+
+                                document.removeEventListener('click', playOnInteraction);
+                                document.removeEventListener('keydown', playOnInteraction);
+                                document.removeEventListener('touchstart', playOnInteraction);
+                            };
+
+                            document.addEventListener('click', playOnInteraction, { once: true });
+                            document.addEventListener('keydown', playOnInteraction, { once: true });
+                            document.addEventListener('touchstart', playOnInteraction, { once: true });
+                        });
+                    }
+                });
             } else {
                 audio.pause();
+                localStorage.setItem("musicState", "paused");
+                console.log('⏸️ 音乐已暂停');
             }
-            localStorage.setItem("musicState", audio.paused ? "paused" : "playing");
         }
 
         function calculateAge() {
@@ -1682,29 +1798,72 @@
             localStorage.setItem("preferred-theme", isDark ? "light" : "dark");
         }
 
-        // 恢复上次音乐状态
+        // 改进的恢复音乐状态函数 - 尽量自动播放
         function musicCheck() {
             if (!entered) {
                 return;
             }
+
             let savedMusicState = "paused";
             try {
                 savedMusicState = localStorage.getItem("musicState") || "paused";
-            }
-            catch (e) {
+            } catch (e) {
                 console.log("加载savedMusicState出错: ", e);
             }
-            // const savedMusicState = "paused";
+
             console.log("恢复音乐状态:", savedMusicState);
+
             if (savedMusicState === "playing") {
-                document.getElementById("backgroundMusic").play();
+                const audio = document.getElementById("backgroundMusic");
+
+                // 确保音频设置正确
+                audio.muted = false;
+                audio.volume = 0.5;
+
+                // 直接尝试播放
+                audio.play().then(() => {
+                    console.log('🎵 自动恢复音乐成功');
+                }).catch(error => {
+                    console.log('音乐自动播放被阻止:', error.name);
+
+                    // 如果是自动播放被阻止，尝试静音播放策略
+                    if (error.name === 'NotAllowedError') {
+                        console.log('🎵 尝试静音恢复音乐');
+
+                        audio.muted = true;
+                        audio.play().then(() => {
+                            console.log('🎵 音乐静音恢复成功');
+
+                            // 稍后尝试取消静音
+                            setTimeout(() => {
+                                audio.muted = false;
+                                console.log('🎵 已取消音乐静音');
+                            }, 1000);
+                        }).catch(e => {
+                            console.log('静音恢复也失败:', e);
+
+                            // 如果静音播放也失败，等待用户交互
+                            const restoreOnInteraction = () => {
+                                audio.muted = false;
+                                audio.play().then(() => {
+                                    console.log('🎵 用户交互后恢复音乐成功');
+                                }).catch(e => {
+                                    console.log('用户交互后恢复失败:', e);
+                                });
+
+                                document.removeEventListener('click', restoreOnInteraction);
+                                document.removeEventListener('keydown', restoreOnInteraction);
+                                document.removeEventListener('touchstart', restoreOnInteraction);
+                            };
+
+                            // 添加用户交互监听器
+                            document.addEventListener('click', restoreOnInteraction, { once: true });
+                            document.addEventListener('keydown', restoreOnInteraction, { once: true });
+                            document.addEventListener('touchstart', restoreOnInteraction, { once: true });
+                        });
+                    }
+                });
             }
-        }
-        try {
-            musicCheck();
-        }
-        catch (e) {
-            console.error("无法恢复音乐状态:", e);
         }
 
         // 倒计时功能
@@ -1785,6 +1944,58 @@
 
         // setInterval(updateCountdown,); // 每天更新
         // updateCountdown();
+        // 添加页面可见性变化时的音乐处理
+        document.addEventListener('visibilitychange', function () {
+            const audio = document.getElementById("backgroundMusic");
+            const savedMusicState = localStorage.getItem("musicState") || "paused";
+
+            if (document.hidden) {
+                // 页面隐藏时暂停音乐
+                if (!audio.paused) {
+                    audio.pause();
+                    console.log('⏸️ 页面隐藏，音乐暂停');
+                }
+            } else {
+                // 页面显示时恢复音乐
+                if (audio.paused && savedMusicState === "playing" && entered) {
+                    audio.play().catch(e => {
+                        console.log('页面显示后恢复音乐失败:', e);
+                    });
+                }
+            }
+        });
+
+        // 在页面完全加载后尝试播放背景音乐
+        window.addEventListener('load', function () {
+            setTimeout(() => {
+                // 如果用户之前设置了播放音乐，尝试自动播放
+                const savedMusicState = localStorage.getItem("musicState") || "paused";
+                if (savedMusicState === "playing") {
+                    console.log('🎵 页面加载完成，尝试自动播放背景音乐');
+
+                    // 这里不直接调用 musicCheck()，因为会在进入动画后调用
+                    // 但我们可以预准备音频上下文
+                    try {
+                        const audio = document.getElementById("backgroundMusic");
+                        if (audio) {
+                            // 尝试静音播放以激活音频上下文
+                            audio.muted = true;
+                            audio.volume = 0;
+                            audio.play().then(() => {
+                                audio.pause();
+                                audio.currentTime = 0;
+                                audio.muted = false;
+                                console.log('🎵 音频上下文激活成功');
+                            }).catch(e => {
+                                console.log('音频上下文激活失败:', e);
+                            });
+                        }
+                    } catch (e) {
+                        console.log('音频上下文激活出错:', e);
+                    }
+                }
+            }, 1000);
+        });
     </script>
 </body>
 
