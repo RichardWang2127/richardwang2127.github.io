@@ -19,7 +19,7 @@
 | Email    | richard.wang2011@outlook.com |
 | Github   | richardwang2127              |
 
-[我的网页 My Website]: https://075038.xyz
+[我的网页 My Website]: https://ciallo0721.org
 
 [网页链接 Spare Link-1]: https://sp1900.netlify.app
 
