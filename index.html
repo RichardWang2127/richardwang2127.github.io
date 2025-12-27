@@ -1607,7 +1607,12 @@
                 <!-- 联系我区域 -->
                 <div class="yuzu-card" id="outputBox">
                     <strong class="subheading">ℹ️ 信息：</strong>
-                    年龄: <span id="age" class="number">好几</span>岁。
+                    年龄: <span id="age" class="number" style="font-size: 20px; font-weight: 560;">好几</span>岁。
+                    <br>
+                    还有: <span id="to-next-birthday" class="number"
+                        style="font-size: 20px; font-weight: 560;">&lt;366天</span>
+                    <br>
+                    生日: <span class="number" style="font-size: 20px; font-weight: 560;">2011/05/11</span>
                     <br>
                     城市: 浙江宁波。
                     <br>
@@ -1674,6 +1679,57 @@
         </div>
     </div>
 
+    <script>
+        // 开发者模式检测
+        const isDevMode = window.location.hostname.includes('127.0.0.1') ||
+            window.location.hostname.includes('localhost');
+
+        if (isDevMode) {
+            console.log('🚀 开发者模式已启用，直接显示主内容');
+
+            // 直接修改样式，隐藏欢迎页，显示主内容
+            window.addEventListener('DOMContentLoaded', function () {
+                // 立即隐藏欢迎页
+                const welcomePage = document.getElementById('welcomePage');
+                if (welcomePage) {
+                    welcomePage.style.display = 'none';
+                }
+
+                // 直接显示主内容
+                const mainContent = document.getElementById('mainContent');
+                if (mainContent) {
+                    mainContent.classList.remove('initial-hide');
+                    mainContent.classList.add('show');
+                    siteScrollEnabled = true;
+                    document.body.style.overflow = 'auto';
+                }
+
+                // 加载图库
+                setTimeout(() => {
+                    loadGalleryImages();
+                }, 100);
+
+                console.log('✅ 开发者模式：已直接加载主内容');
+            });
+
+            // 开发者模式下禁用所有音效和音乐相关功能
+            window.addEventListener('load', function () {
+                // 禁用背景音乐
+                const bgMusic = document.getElementById('backgroundMusic');
+                if (bgMusic) {
+                    bgMusic.pause();
+                    bgMusic.currentTime = 0;
+                }
+
+                // 禁用入场音效
+                const enterSound = document.getElementById('enterSound');
+                if (enterSound) {
+                    enterSound.pause();
+                    enterSound.currentTime = 0;
+                }
+            });
+        }
+    </script>
     <script>
         // 音频加载超时配置
         const CIALLO_LOAD_PRIORITY = true; // ciallo.mp3 高优先级标识
@@ -2174,6 +2230,11 @@
             'use strict';
 
             window.addEventListener('DOMContentLoaded', function () {
+                if (isDevMode) {
+                    console.log('🚀 开发者模式：跳过所有音频相关初始化');
+                    return;
+                }
+
                 console.log('🎵 开始预加载音频资源');
 
                 // 1. 优先加载 ciallo.mp3（高优先级）
@@ -2314,6 +2375,11 @@
             window.__siteEntered = true;
             console.log("enterSite called at", Date.now(), "ms");
 
+            if (isDevMode) {
+                console.log('🚀 开发者模式：enterSite 函数被跳过');
+                return;
+            }
+
             // 获取背景音乐元素
             const bgMusic = document.getElementById("backgroundMusic");
 
@@ -2398,7 +2464,7 @@
             }
         }
 
-        function calculateAge() {
+        function calculateAge(type) {
             const birthDate = new Date(2011, 4, 11);
             const currentDate = new Date();
 
@@ -2432,17 +2498,71 @@
 
             const daysInYear = (nextBirthday - lastBirthday) / (1000 * 60 * 60 * 24);
             const daysSinceBirthday = (currentDate - lastBirthday) / (1000 * 60 * 60 * 24);
-            const fractionOfYear = daysSinceBirthday / daysInYear;
 
-            const preciseAge = age + fractionOfYear;
-            return preciseAge.toFixed(9);
+            if (type === "current_decimal") {
+                const fractionOfYear = daysSinceBirthday / daysInYear;
+                const preciseAge = age + fractionOfYear;
+                return preciseAge.toFixed(9);
+            }
+            else if (type === "to_next_formatted") {
+                const msToBirthday = (daysInYear - daysSinceBirthday) * (1000 * 60 * 60 * 24);
+
+                // 剩余时长计算 - 每项
+                const totalSeconds = Math.floor(msToBirthday / 1000);
+                const toBirthdayDays = Math.floor(totalSeconds / (60 * 60 * 24));
+                const toBirthdayHours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+                const toBirthdayMinutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+                const toBirthdaySeconds = totalSeconds % 60;
+
+                let hour0 = min0 = sec0 = '';
+                if (toBirthdayHours < 10) hour0 = '0';
+                if (toBirthdayMinutes < 10) min0 = '0';
+                if (toBirthdaySeconds < 10) sec0 = '0';
+
+                const formatted_string = toBirthdayDays + "天 " + hour0 + toBirthdayHours + ":" + min0 + toBirthdayMinutes + ":" + sec0 + toBirthdaySeconds;
+                return formatted_string;
+            }
+            else if (type === "both") {
+                let returnItems = [];
+
+                // current_decimal
+                const fractionOfYear = daysSinceBirthday / daysInYear;
+                const preciseAge = age + fractionOfYear;
+                returnItems[0] = preciseAge.toFixed(9);
+
+                // to_next_formatted
+                const msToBirthday = (daysInYear - daysSinceBirthday) * (1000 * 60 * 60 * 24);
+
+                // 剩余时长计算 - 每项
+                const totalSeconds = Math.floor(msToBirthday / 1000);
+                const toBirthdayDays = Math.floor(totalSeconds / (60 * 60 * 24));
+                const toBirthdayHours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+                const toBirthdayMinutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+                const toBirthdaySeconds = totalSeconds % 60;
+
+                let hour0 = min0 = sec0 = '';
+                if (toBirthdayHours < 10) hour0 = '0';
+                if (toBirthdayMinutes < 10) min0 = '0';
+                if (toBirthdaySeconds < 10) sec0 = '0';
+
+                const formatted_string = toBirthdayDays + "天 " + hour0 + toBirthdayHours + ":" + min0 + toBirthdayMinutes + ":" + sec0 + toBirthdaySeconds;
+                returnItems[1] = formatted_string;
+
+                return returnItems;
+            }
         }
+
         function updateAge() {
-            document.getElementById("age").innerText = `${calculateAge()}`;
+            const returnedItems = calculateAge("both");
+            document.getElementById("age").innerText = `${returnedItems[0]}`;
+            document.getElementById("to-next-birthday").innerText = `${returnedItems[1]}`;
         }
+
         const updateAge_interval = 45; // 刷新年龄的间隔 ms
         let interval_set = setInterval(updateAge, updateAge_interval);
         updateAge();
+        updateCustom();
+
         document.addEventListener("visibilitychange", () => {
             console.log("Browser visibility change: visible", !document.hidden);
             if (!document.hidden) {
@@ -2530,6 +2650,7 @@
             if (!entered) {
                 return;
             }
+            if (isDevMode) return;
             let savedMusicState = "playing";
             // 一律自动播放
             // try {
@@ -2615,10 +2736,14 @@
             document.getElementById(element_id).innerHTML = output;
         }
 
-        // 可自定义每隔一定时间进行更新
-        setInterval(function () {
+        function updateCustom() {
             updateRailway("2025-10-01T00:00:00+08:00", "railway-paper"); // 传入日期和时间
             updateRailway("2011-07-23T20:30:05+08:00", "0723-accident"); // 传入日期和时间
+        }
+
+        // 可自定义每隔一定时间进行更新
+        setInterval(function () {
+            updateCustom();
         }, 50); // 每隔1秒更新一次
 
         // setInterval(updateCountdown,); // 每天更新
