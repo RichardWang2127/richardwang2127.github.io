@@ -1498,10 +1498,16 @@
         style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999;">
         <h1 class="yuzu-title" style="font-size: 48px; margin-bottom: -30px;">03A01 黄鱼</h1>
         <h1 class="yuzu-title" style="font-size: 35px; margin-bottom: 50px; margin-top: 0;">Ciallo～(∠・ω&lt; )⌒☆ </h1>
-        <button id="enterButton"
-            style="padding: 15px 40px; font-size: 24px; border-radius: 12px; color: var(--yuzu-cream); background: var(--mtr-tsuen-wan)">
-            🎉 点击进入
-        </button>
+        <!-- 修改后的按钮（新增spinner，默认隐藏按钮、显示spinner） -->
+        <div id="enterButtonContainer" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
+            <!-- 转圈spinner（默认显示） -->
+            <div id="enterSpinner" class="loading-spinner" style="display: block;"></div>
+            <!-- 进入按钮（默认隐藏） -->
+            <button id="enterButton"
+                style="padding: 15px 40px; font-size: 24px; border-radius: 12px; color: var(--yuzu-cream); background: var(--mtr-tsuen-wan); display: none;">
+                🎉 点击进入
+            </button>
+        </div>
     </div>
 
     <!-- <button id="enterButton" class="initial-hide" onclick="enterSite()">🚇 进入</button> -->
@@ -1664,320 +1670,54 @@
         </div>
     </div>
 
-    <!-- <script>
-        const images = [
-            {
-                thumb: "/images/thumb/IMG_8014.jpg",
-                full: "/images/full/IMG_8014.jpg"
-            },
-            {
-                thumb: "/images/thumb/IMG_8042.jpg",
-                full: "/images/full/IMG_8042.jpg"
-            },
-            {
-                thumb: "/images/thumb/IMG_8091.jpg",
-                full: "/images/full/IMG_8091.jpg"
-            },
-            {
-                thumb: "/images/thumb/IMG_8706.jpg",
-                full: "/images/full/IMG_8706.jpg"
-            },
-            {
-                thumb: "/images/thumb/IMG_7362.jpg",
-                full: "/images/full/IMG_7362.jpg"
-            },
-            {
-                thumb: "/images/thumb/IMG_0050.jpg",
-                full: "/images/full/IMG_0050.jpg"
-            },
-            {
-                thumb: "/images/thumb/IMG_0104.jpg",
-                full: "/images/full/IMG_0104.jpg"
-            },
-            {
-                thumb: "/images/thumb/IMG_0155.jpg",
-                full: "/images/full/IMG_0155.jpg"
-            },
-            {
-                thumb: "/images/thumb/IMG_0156.jpg",
-                full: "/images/full/IMG_0156.jpg"
-            },
-            {
-                thumb: "/images/thumb/IMG_0158.jpg",
-                full: "/images/full/IMG_0158.jpg"
-            },
-            {
-                thumb: "/images/thumb/IMG_8078.jpg",
-                full: "/images/full/IMG_8078.jpg"
-            },
-        ];
+    <script>
+        // 音频加载超时配置
+        const CIALLO_LOAD_PRIORITY = true; // ciallo.mp3 高优先级标识
+        const CIALLO_TIMEOUT = 10 * 1000; // ciallo.mp3 超时
+        const CIALLO_LOADED_WAIT_MUSIC = 5 * 1000; // ciallo加载后等待music的时长
+        let cialloLoaded = false; // ciallo加载状态
+        let musicLoaded = false; // music加载状态
+        let cialloLoadTimer = null; // ciallo超时定时器
+        let cialloAfterWaitTimer = null; // ciallo加载后等待music的定时器
 
-        // 保存滚动位置和当前加载的图片数据
-        let scrollPosition = 0;
-        let currentPreviewData = null;
-        let isClosing = false; // 防止重复关闭
+        // 新增：检查音频加载状态，更新按钮/Spinner显示
+        function checkAudioLoadStatus() {
+            const enterButton = document.getElementById('enterButton');
+            const enterSpinner = document.getElementById('enterSpinner');
+            if (!enterButton || !enterSpinner) return;
 
-        // 初始化图库
-        document.addEventListener("DOMContentLoaded", () => {
-            const gallery = document.getElementById("galleryContent");
-
-            // 创建图片项
-            images.forEach((data, index) => {
-                const item = document.createElement("div");
-                item.className = "gallery-item placeholder";
-
-                const img = document.createElement("img");
-                img.src = data.thumb;
-                img.alt = "";
-                img.style.display = "none";
-
-                item.appendChild(img);
-                gallery.appendChild(item);
-
-                handleImageLoad(img, data, index);
-            });
-
-            // 关闭预览事件 - 修复卡死和无法滚动问题
-            const closePreview = () => {
-                if (isClosing) return;
-
-                isClosing = true;
-                const overlay = document.getElementById("previewOverlay");
-
-                // 1. 先隐藏遮罩
-                overlay.classList.add("hidden");
-
-                // 2. 立即恢复body所有滚动相关样式（移除固定定位等限制）
-                setTimeout(() => {
-                    // 重置body样式，彻底恢复滚动能力
-                    document.body.style.overflow =
-                        siteScrollEnabled
-                            ? (document.body.dataset.prevOverflow || 'auto')
-                            : 'hidden';
-                    document.body.style.paddingRight = '';
-
-                    // 3. 恢复滚动位置（兼容不同浏览器）
-                    if (scrollPosition !== undefined && scrollPosition !== null) {
-                        window.scrollTo({
-                            top: scrollPosition,
-                            behavior: 'auto' // 立即恢复，不带动画
-                        });
-                    }
-
-                    // 4. 重置预览相关状态
-                    isClosing = false;
-                    currentPreviewData = null;
-                    const previewImg = document.getElementById('previewImage');
-                    const previewLoading = document.getElementById('previewLoading');
-                    const previewError = document.getElementById('previewError');
-
-                    if (previewImg) {
-                        previewImg.style.opacity = '0';
-                        previewImg.src = '';
-                    }
-                    if (previewLoading) previewLoading.classList.add('hidden');
-                    if (previewError) previewError.classList.add('hidden');
-                }, 100); // 短暂延迟，确保遮罩隐藏后再恢复样式
-            };
-
-            document.getElementById("closePreview").onclick = closePreview;
-
-            // 点击遮罩背景关闭预览
-            document.getElementById("previewOverlay").onclick = (e) => {
-                if (e.target.id === "previewOverlay" || e.target.id === "closePreview") {
-                    closePreview();
-                }
-            };
-
-            // ESC键关闭预览
-            document.addEventListener("keydown", (e) => {
-                if (e.key === "Escape") {
-                    const overlay = document.getElementById("previewOverlay");
-                    if (!overlay.classList.contains("hidden")) {
-                        closePreview();
-                    }
-                }
-            });
-
-            // 预览重试按钮
-            document.getElementById('retryPreview').onclick = () => {
-                if (currentPreviewData) {
-                    loadPreviewImage(currentPreviewData);
-                }
-            };
-        });
-
-        function handleImageLoad(img, data, index) {
-            const parent = img.parentNode;
-
-            // 创建失败占位
-            const errorDiv = document.createElement("div");
-            errorDiv.className = "error";
-            errorDiv.style.display = "none";
-            errorDiv.innerHTML = `
-            <div class="retry-button" title="重新加载">
-                <svg class="retry-icon" viewBox="0 0 72 72" role="img" preserveAspectRatio="xMinYMin meet">
-                    <title>重试</title>
-                    <path d="M53.9,35.9h9c0,3.7-0.7,7.2-2.1,10.5s-3.3,6.1-5.8,8.5c-2.4,2.4-5.3,4.4-8.6,5.8s-6.7,2.1-10.4,2.1
-                    c-3.7,0-7.2-0.7-10.5-2.1s-6.1-3.3-8.5-5.8s-4.4-5.3-5.8-8.5s-2.1-6.7-2.1-10.5s0.7-7.2,2.1-10.5s3.3-6.1,5.8-8.5s5.3-4.4,8.6-5.8
-                    S32.3,9.1,36,9.1h5.3l-2.7-2.7L45,0.1l13.4,13.4L45,27.1l-6.4-6.4l2.6-2.6L36,18c-2.5,0-4.8,0.5-7,1.4s-4.1,2.2-5.7,3.8
-                    s-2.9,3.5-3.8,5.7c-0.9,2.2-1.4,4.5-1.4,7s0.5,4.8,1.4,7c0.9,2.2,2.2,4.1,3.8,5.7c1.6,1.6,3.5,2.9,5.7,3.8s4.5,1.4,7,1.4
-                    s4.8-0.5,7-1.4c2.2-0.9,4.1-2.2,5.7-3.8c1.6-1.6,2.9-3.5,3.8-5.7C53.4,40.7,53.9,38.4,53.9,35.9z"></path>
-                </svg>
-                <span class="retry-text">重试</span>
-            </div>
-        `;
-
-            // 创建重试中状态
-            const retryingDiv = document.createElement("div");
-            retryingDiv.className = "retrying";
-            retryingDiv.style.display = "none";
-            retryingDiv.innerHTML = `
-            <div class="spinner"></div>
-            <span class="retrying-text">加载中...</span>
-        `;
-
-            parent.appendChild(errorDiv);
-            parent.appendChild(retryingDiv);
-
-            // 重试按钮点击
-            const retryButton = errorDiv.querySelector(".retry-button");
-            retryButton.onclick = e => {
-                e.stopPropagation();
-                errorDiv.style.display = "none";
-                retryingDiv.style.display = "flex";
-                parent.classList.add("retrying-state");
-                parent.classList.remove("error");
-
-                const newImg = new Image();
-                newImg.onload = () => {
-                    img.src = data.thumb;
-                    setTimeout(() => {
-                        retryingDiv.style.display = "none";
-                        parent.classList.remove("retrying-state");
-                    }, 300);
-                };
-
-                newImg.onerror = () => {
-                    retryingDiv.style.display = "none";
-                    errorDiv.style.display = "flex";
-                    parent.classList.add("error");
-                    parent.classList.remove("retrying-state");
-                };
-
-                newImg.src = data.thumb + '?retry=' + Date.now();
-            };
-
-            img.onload = () => {
-                errorDiv.style.display = "none";
-                retryingDiv.style.display = "none";
-                img.style.display = "block";
-                parent.classList.remove("placeholder");
-                parent.classList.remove("error");
-                parent.classList.remove("retrying-state");
-            };
-
-            img.onerror = () => {
-                img.style.display = "none";
-                errorDiv.style.display = "flex";
-                retryingDiv.style.display = "none";
-                parent.classList.remove("placeholder");
-                parent.classList.add("error");
-                parent.classList.remove("retrying-state");
-            };
-
-            // 点击放大预览
-            parent.onclick = () => {
-                if (img.style.display !== "none" && img.src && img.complete) {
-                    openPreview(data);
-                }
-            };
-        }
-
-        function openPreview(data) {
-            // 保存当前滚动位置（兼容窗口和文档滚动）
-            scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
-            currentPreviewData = data;
-
-            const overlay = document.getElementById("previewOverlay");
-            const previewImg = document.getElementById("previewImage");
-            const previousOverflow = document.body.style.overflow;
-            document.body.dataset.prevOverflow = previousOverflow;
-            document.body.style.overflow = 'hidden';
-
-
-            // 重置预览状态
-            previewImg.style.opacity = '0';
-            previewImg.src = '';
-            document.getElementById('previewError').classList.add('hidden');
-            document.getElementById('previewLoading').classList.remove('hidden');
-
-            // 锁定滚动：仅隐藏滚动条，不使用fixed定位（减少样式冲突）
-            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
-            document.body.style.overflow = 'hidden';
-            if (scrollbarWidth > 0) {
-                document.body.style.paddingRight = `${scrollbarWidth}px`;
+            // 情况1：ciallo和music都加载完成 → 隐藏spinner，显示按钮
+            if (cialloLoaded && musicLoaded) {
+                clearTimeout(cialloAfterWaitTimer); // 清除ciallo加载后的等待定时器
+                enterSpinner.style.display = 'none';
+                enterButton.style.display = 'block';
+                return;
             }
 
-            // 显示遮罩
-            overlay.classList.remove("hidden");
+            // 情况2：ciallo加载完成，music未加载
+            if (cialloLoaded && !musicLoaded) {
+                // 清除原有等待定时器，重新设置5秒超时
+                clearTimeout(cialloAfterWaitTimer);
+                cialloAfterWaitTimer = setTimeout(function () {
+                    // 5秒后music仍未加载，强制显示按钮
+                    enterSpinner.style.display = 'none';
+                    enterButton.style.display = 'block';
+                    console.warn('⚠️ 入场音效已加载，背景音乐', CIALLO_LOADED_WAIT_MUSIC / 1000, '秒超时，显示进入按钮');
+                }, CIALLO_LOADED_WAIT_MUSIC);
 
-            // 加载预览图片
-            loadPreviewImage(data);
+                // 此时仍显示spinner（等待5秒）
+                enterSpinner.style.display = 'block';
+                enterButton.style.display = 'none';
+                return;
+            }
+
+            // 情况3：ciallo未加载（未到10秒超时）→ 显示spinner，隐藏按钮
+            if (!cialloLoaded) {
+                enterSpinner.style.display = 'block';
+                enterButton.style.display = 'none';
+            }
         }
-
-
-        function loadPreviewImage(data) {
-            const previewImg = document.getElementById("previewImage");
-            const loadingEl = document.getElementById('previewLoading');
-            const errorEl = document.getElementById('previewError');
-
-            // 显示加载状态
-            loadingEl.classList.remove('hidden');
-            errorEl.classList.add('hidden');
-            previewImg.style.opacity = '0';
-
-            const fullImg = new Image();
-            fullImg.onload = function () {
-                previewImg.src = this.src;
-                setTimeout(() => {
-                    previewImg.style.opacity = '1';
-                    loadingEl.classList.add('hidden');
-                }, 300);
-            };
-
-            fullImg.onerror = function () {
-                loadingEl.classList.add('hidden');
-                errorEl.classList.remove('hidden');
-
-                // 如果大图失败，尝试加载缩略图
-                if (data.thumb !== data.full) {
-                    const thumbImg = new Image();
-                    thumbImg.onload = function () {
-                        previewImg.src = this.src;
-                        previewImg.style.opacity = '1';
-                        errorEl.classList.add('hidden');
-                    };
-                    thumbImg.onerror = function () {
-                        previewImg.src = '';
-                    };
-                    thumbImg.src = data.thumb;
-                } else {
-                    previewImg.src = '';
-                }
-            };
-
-            fullImg.src = data.full || data.thumb;
-        }
-
-        function toggleGallery() {
-            const gallery = document.getElementById("galleryContent");
-            const btn = event.target;
-            const isHidden = gallery.classList.contains("hidden");
-            gallery.classList.toggle("hidden");
-            btn.textContent = isHidden ? "收起" : "展开";
-        }
-    </script> -->
+    </script>
 
     <script>
         const images = [
@@ -2425,40 +2165,80 @@
         const mainContent = document.getElementById('mainContent');
         var entered = false;
         // 预加载音效和音乐，并设置自动播放策略
+        // 原预加载代码修改，新增状态跟踪
         (function () {
             'use strict';
 
-            // 页面加载时立即静音预加载音效和音乐
             window.addEventListener('DOMContentLoaded', function () {
                 console.log('🎵 开始预加载音频资源');
 
-                // 预加载入场音效（不静音，直接尝试播放）
+                // 1. 优先加载 ciallo.mp3（高优先级）
                 try {
                     const enterSound = document.getElementById("enterSound");
                     if (enterSound) {
                         enterSound.volume = 0.3;
                         enterSound.preload = 'auto';
+
+                        // 新增：ciallo加载成功回调
+                        enterSound.onloadeddata = function () {
+                            cialloLoaded = true;
+                            console.log('✅ 入场音效（ciallo.mp3）加载完成');
+                            checkAudioLoadStatus(); // 检查音频加载状态，更新按钮
+                        };
+
+                        // 新增：ciallo加载失败也标记为"可用"（避免阻塞）
+                        enterSound.onerror = function () {
+                            cialloLoaded = true;
+                            console.warn('⚠️ 入场音效加载失败，强制显示进入按钮');
+                            checkAudioLoadStatus();
+                        };
+
                         enterSound.load();
-                        console.log('✅ 入场音效预加载完成');
                     }
                 } catch (e) {
                     console.log('入场音效预加载出错:', e);
+                    cialloLoaded = true; // 异常时标记为可用
+                    checkAudioLoadStatus();
                 }
 
-                // 预加载背景音乐（静音预加载，提高自动播放成功率）
+                // 2. 后加载 backgroundMusic（低优先级）
                 try {
                     const bgMusic = document.getElementById("backgroundMusic");
                     if (bgMusic) {
-                        // 静音预加载以避免自动播放限制
                         bgMusic.muted = true;
                         bgMusic.volume = 0;
                         bgMusic.preload = 'auto';
+
+                        // 新增：music加载成功回调
+                        bgMusic.onloadeddata = function () {
+                            musicLoaded = true;
+                            console.log('✅ 背景音乐（music.mp3）加载完成');
+                            checkAudioLoadStatus(); // 检查音频加载状态，更新按钮
+                        };
+
+                        // 新增：music加载失败不影响按钮显示
+                        bgMusic.onerror = function () {
+                            musicLoaded = false;
+                            console.warn('⚠️ 背景音乐加载失败');
+                            checkAudioLoadStatus();
+                        };
+
                         bgMusic.load();
-                        console.log('✅ 背景音乐预加载完成');
                     }
                 } catch (e) {
                     console.log('背景音乐预加载出错:', e);
+                    musicLoaded = false;
+                    checkAudioLoadStatus();
                 }
+
+                // 新增：设置ciallo.mp3 超时
+                cialloLoadTimer = setTimeout(function () {
+                    if (!cialloLoaded) {
+                        cialloLoaded = true;
+                        console.warn('⚠️ 入场音效', CIALLO_TIMEOUT / 1000, '秒加载超时，强制显示进入按钮');
+                        checkAudioLoadStatus();
+                    }
+                }, CIALLO_TIMEOUT);
             });
         })();
 
