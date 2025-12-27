@@ -2350,16 +2350,18 @@
                     // 文字消失后播放背景音乐
                     setTimeout(function () {
                         let musicState = null;
-                        try {
-                            musicState = localStorage.getItem("musicState");
-                        } catch (e) { }
+                        // 注释：一律自动播放音乐
+                        // try {
+                        //     musicState = localStorage.getItem("musicState");
+                        // } catch (e) { }
 
                         if (musicState === null || musicState === "playing") {
                             bgMusic.muted = false;
                             bgMusic.volume = 0.5;
                             bgMusic.currentTime = 0;
                             bgMusic.play();
-                            localStorage.setItem("musicState", "playing");
+                            // 因一律自动播放，无需设置
+                            // localStorage.setItem("musicState", "playing");
                         }
 
                         // 显示主内容
@@ -2387,10 +2389,12 @@
             if (audio.paused) {
                 audio.muted = false;
                 audio.play();
-                localStorage.setItem("musicState", "playing");
+                // 因一律自动播放，无需设置
+                // localStorage.setItem("musicState", "playing");
             } else {
                 audio.pause();
-                localStorage.setItem("musicState", "paused");
+                // 因一律自动播放，无需设置
+                // localStorage.setItem("musicState", "paused");
             }
         }
 
@@ -2526,13 +2530,14 @@
             if (!entered) {
                 return;
             }
-            let savedMusicState = "paused";
-            try {
-                savedMusicState = localStorage.getItem("musicState") || "paused";
-            }
-            catch (e) {
-                console.log("加载savedMusicState出错: ", e);
-            }
+            let savedMusicState = "playing";
+            // 一律自动播放
+            // try {
+            //     savedMusicState = localStorage.getItem("musicState") || "paused";
+            // }
+            // catch (e) {
+            //     console.log("加载savedMusicState出错: ", e);
+            // }
             // const savedMusicState = "paused";
             console.log("恢复音乐状态:", savedMusicState);
             if (savedMusicState === "playing") {
