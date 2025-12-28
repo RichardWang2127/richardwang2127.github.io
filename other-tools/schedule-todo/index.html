@@ -1,0 +1,250 @@
+<!--本代码全篇AI生成，by ChatGPT-->
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <title>日程管理系统</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 text-gray-800">
+
+  <!-- 页面切换 -->
+  <div class="flex justify-center space-x-4 p-4">
+    <button onclick="switchPage('manage')" class="bg-indigo-500 text-white px-4 py-2 rounded hover:bg-indigo-600">管理日程</button>
+    <button onclick="switchPage('view')" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">查看日程</button>
+  </div>
+
+  <div id="managePage" class="max-w-4xl mx-auto p-4">
+    <!-- 添加单个 -->
+    <div class="bg-white p-4 rounded shadow">
+      <h2 class="text-xl font-semibold mb-2">➕ 添加单个任务</h2>
+      <input id="taskInput" placeholder="任务标题" class="w-full p-2 border rounded mb-2" />
+      <button onclick="addTask()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">添加</button>
+    </div>
+
+    <!-- 批量添加 -->
+    <div class="bg-white p-4 rounded shadow mt-6">
+      <h2 class="text-xl font-semibold mb-2">📥 批量添加任务（每行一个）</h2>
+      <textarea id="bulkInput" rows="4" class="w-full p-2 border rounded mb-2" placeholder="任务1\n任务2\n任务3"></textarea>
+      <button onclick="bulkAdd()" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">批量添加</button>
+    </div>
+
+    <!-- 编辑任务 -->
+    <div class="bg-white p-4 rounded shadow mt-6">
+      <h2 class="text-xl font-semibold mb-4">🛠 编辑任务触发方式</h2>
+      <div id="taskList" class="space-y-2"></div>
+    </div>
+  </div>
+
+  <!-- 查看页面 -->
+  <div id="viewPage" class="max-w-3xl mx-auto p-4 hidden">
+    <h2 class="text-2xl font-semibold mb-4">📋 未完成任务列表</h2>
+    <div id="taskViewList" class="space-y-2 mb-8"></div>
+
+    <h2 class="text-xl font-semibold mb-2">✅ 已完成任务清单</h2>
+    <div id="completedTaskList" class="space-y-2 text-gray-600"></div>
+  </div>
+
+  <script>
+    let tasks = JSON.parse(localStorage.getItem("tasks") || "[]");
+
+    function save() {
+      localStorage.setItem("tasks", JSON.stringify(tasks));
+    }
+
+    function switchPage(page) {
+      document.getElementById("managePage").classList.toggle("hidden", page !== "manage");
+      document.getElementById("viewPage").classList.toggle("hidden", page !== "view");
+      if (page === "manage") renderManage();
+      else renderView();
+    }
+
+    function addTask() {
+      const title = document.getElementById("taskInput").value.trim();
+      if (!title) return alert("请输入任务名！");
+      tasks.push({ id: Date.now(), title, triggerType: "none", triggerValue: "", completed: false });
+      document.getElementById("taskInput").value = "";
+      save(); renderManage();
+    }
+
+    function bulkAdd() {
+      const lines = document.getElementById("bulkInput").value.trim().split("\n").map(x => x.trim()).filter(x => x);
+      lines.forEach(title => {
+        tasks.push({ id: Date.now() + Math.floor(Math.random() * 1000), title, triggerType: "none", triggerValue: "", completed: false });
+      });
+      document.getElementById("bulkInput").value = "";
+      save(); renderManage();
+    }
+
+    function deleteTask(taskId) {
+      tasks = tasks.filter(t => t.id !== taskId);
+      save(); renderManage(); renderView();
+    }
+
+    function renderManage() {
+      const container = document.getElementById("taskList");
+      container.innerHTML = "";
+      tasks.forEach(task => {
+        const div = document.createElement("div");
+        div.className = "p-2 border rounded bg-gray-50";
+
+        const title = document.createElement("div");
+        title.textContent = `${task.completed ? "✅" : "❌"} ${task.title}`;
+        div.appendChild(title);
+
+        const select = document.createElement("select");
+        select.className = "border p-1 rounded mt-1";
+        ["none", "time", "dependency"].forEach(t => {
+          const opt = document.createElement("option");
+          opt.value = t;
+          opt.textContent = { none: "无触发", time: "固定时间", dependency: "依赖任务" }[t];
+          if (task.triggerType === t) opt.selected = true;
+          select.appendChild(opt);
+        });
+        select.onchange = () => {
+          task.triggerType = select.value;
+          task.triggerValue = "";
+          save(); renderManage();
+        };
+        div.appendChild(select);
+
+        if (task.triggerType === "time") {
+          const input = document.createElement("input");
+          input.type = "time";
+          input.className = "ml-2 p-1 border rounded";
+          input.value = task.triggerValue;
+          input.onchange = () => {
+            task.triggerValue = input.value;
+            save();
+          };
+          div.appendChild(input);
+        } else if (task.triggerType === "dependency") {
+          const selectDep = document.createElement("select");
+          selectDep.className = "ml-2 p-1 border rounded";
+          tasks.forEach(t => {
+            const opt = document.createElement("option");
+            opt.value = t.id;
+            opt.textContent = t.title;
+            if (t.id == task.triggerValue) opt.selected = true;
+            selectDep.appendChild(opt);
+          });
+          selectDep.onchange = () => {
+            task.triggerValue = selectDep.value;
+            save();
+          };
+          div.appendChild(selectDep);
+        }
+
+        const doneBtn = document.createElement("button");
+        doneBtn.className = "ml-4 text-sm text-white bg-green-500 px-2 py-1 rounded hover:bg-green-600";
+        doneBtn.textContent = task.completed ? "设为未完成" : "标记完成";
+        doneBtn.onclick = () => {
+          task.completed = !task.completed;
+          save(); renderManage();
+        };
+        div.appendChild(doneBtn);
+
+        const delBtn = document.createElement("button");
+        delBtn.className = "ml-2 text-sm text-white bg-red-500 px-2 py-1 rounded hover:bg-red-600";
+        delBtn.textContent = "🗑 删除";
+        delBtn.onclick = () => {
+          if (confirm("确认删除此任务？")) {
+            deleteTask(task.id);
+          }
+        };
+        div.appendChild(delBtn);
+
+        container.appendChild(div);
+      });
+    }
+
+    function renderView() {
+      const container = document.getElementById("taskViewList");
+      const completedContainer = document.getElementById("completedTaskList");
+      container.innerHTML = "";
+      completedContainer.innerHTML = "";
+
+      const now = new Date();
+      const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+      tasks.forEach(task => {
+        if (!task.completed) {
+          const div = document.createElement("div");
+          div.className = "p-2 border rounded bg-white flex justify-between items-center";
+          const leftSpan = document.createElement("span");
+          leftSpan.textContent = task.title;
+          div.appendChild(leftSpan);
+
+          let canComplete = false;
+          let info = "";
+
+          if (task.triggerType === "none") {
+            canComplete = true;
+          } else if (task.triggerType === "time") {
+            if (task.triggerValue) {
+              const [targetH, targetM] = task.triggerValue.split(":").map(Number);
+              const targetMinutes = targetH * 60 + targetM;
+              if (nowMinutes >= targetMinutes) {
+                canComplete = true;
+              }
+              info = `⏰ 时间触发：${task.triggerValue}（${canComplete ? "✅ 已到" : "⏳ 未到"}）`;
+            } else {
+              info = "⏰ 时间触发：未设置";
+            }
+          } else if (task.triggerType === "dependency") {
+            const dep = tasks.find(t => t.id == task.triggerValue);
+            if (dep && dep.completed) {
+              canComplete = true;
+              info = `🔗 依赖任务：${dep.title}（✅ 已完成）`;
+            } else {
+              info = `🔗 依赖任务：${dep ? dep.title + "（未完成）" : "未设置"}`;
+            }
+          }
+
+          if (canComplete) {
+            const btn = document.createElement("button");
+            btn.textContent = "完成";
+            btn.className = "bg-green-500 text-white px-2 py-1 rounded hover:bg-green-600";
+            btn.onclick = () => {
+              task.completed = true;
+              save();
+              renderView();
+              renderManage();
+            };
+            div.appendChild(btn);
+          }
+
+          if (info) {
+            const infoSpan = document.createElement("span");
+            infoSpan.className = "text-gray-500 text-sm ml-4";
+            infoSpan.textContent = info;
+            div.appendChild(infoSpan);
+          }
+
+          container.appendChild(div);
+        } else {
+          const div = document.createElement("div");
+          div.className = "p-2 border rounded bg-gray-50 flex justify-between items-center";
+          const label = document.createElement("span");
+          label.innerHTML = `✅ <strong>${task.title}</strong>`;
+          div.appendChild(label);
+
+          const delBtn = document.createElement("button");
+          delBtn.textContent = "🗑 删除";
+          delBtn.className = "bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600";
+          delBtn.onclick = () => {
+            if (confirm("确认删除此任务？")) {
+              deleteTask(task.id);
+            }
+          };
+          div.appendChild(delBtn);
+
+          completedContainer.appendChild(div);
+        }
+      });
+    }
+
+    switchPage("manage");
+  </script>
+</body>
+</html>
