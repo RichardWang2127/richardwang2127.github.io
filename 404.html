@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="zh" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <link rel="icon" type="image/png" href="/assets/favicon-96x96.png" sizes="96x96" />
+    <link rel="shortcut icon" href="/assets/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="03A01 黄鱼" />
+    <title>404 页面未找到 - 03A01黄鱼</title>
+    <style>
+        :root {
+            /* 港铁线路主题色 */
+            --mtr-east-rail: #53b7e8;
+            --mtr-kwun-tong: #1a9431;
+            --mtr-tsuen-wan: #ff0000;
+            --mtr-island: #0860a8;
+            --mtr-tung-chung: #fe7f1d;
+            --mtr-tko: #6b208b;
+            --mtr-tnl: #9a3b26;
+            --mtr-disney: #f550a6;
+            --mtr-south-island: #b5bd00;
+            --mtr-airport: #1c7670;
+
+            /* 样式配色 */
+            --bg-color-light: #f7f7f7;
+            --text-color-light: #333;
+            --bg-color-dark: #1a1a1a;
+            --text-color-dark: #e0e0e0;
+            --card-color-light: #ffffff;
+            --card-color-dark: #2a2a2a;
+            --btn-bg-light: var(--mtr-east-rail);
+            --btn-bg-dark: #005b88;
+            --btn-hover-light: #3ca3d8;
+            --btn-hover-dark: #4ec2f3;
+            --progress-color: var(--mtr-east-rail);
+            --icon-size: 20px;
+        }
+
+        [data-theme="light"] {
+            --bg-color: var(--bg-color-light);
+            --text-color: var(--text-color-light);
+            --card-color: var(--card-color-light);
+            --btn-bg: var(--btn-bg-light);
+            --btn-hover: var(--btn-hover-light);
+            --h1-color: var(--mtr-east-rail);
+            --number-simple: var(--mtr-east-rail);
+            --number-accident: var(--mtr-tsuen-wan);
+            --shadow-simple: rgba(83, 183, 232, 0.7);
+            --shadow-accident: rgba(255, 0, 0, 0.7);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: var(--bg-color-dark);
+            --text-color: var(--text-color-dark);
+            --card-color: var(--card-color-dark);
+            --btn-bg: var(--btn-bg-dark);
+            --btn-hover: var(--btn-hover-dark);
+            --h1-color: var(--mtr-tung-chung);
+            --number-simple: var(--mtr-tung-chung);
+            --number-accident: #ff0022;
+            --shadow-simple: rgba(254, 127, 29, 0.7);
+            --shadow-accident: rgba(255, 0, 34, 0.7);
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+            background-image: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.05), transparent 40%),
+                radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.05), transparent 40%);
+            background-size: cover;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 柚子社风格 */
+        :root {
+            --yuzu-mint: #D3E9B5;
+            --yuzu-cream: #FFF7A4;
+            --yuzu-pink: #FFB6C1;
+            --yuzu-lavender: #E6E6FA;
+            --yuzu-sky: #B5D3FF;
+            --yuzu-dark-green: #8BA88A;
+            --yuzu-dark-yellow: #D4B85E;
+            --yuzu-dark-pink: #D88A9B;
+            --yuzu-dark-purple: #B0A8D9;
+            --yuzu-dark-blue: #8AA8D8;
+            --bg-light: #FDFDF6;
+            --card-light: rgba(255, 255, 255, 0.95);
+            --bg-dark: #2A2A3A;
+            --card-dark: rgba(42, 42, 58, 0.95);
+        }
+
+        body.yuzusoft {
+            font-family: 'M PLUS Rounded 1c', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-light);
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(211, 233, 181, 0.15), transparent 40%),
+                radial-gradient(circle at 90% 30%, rgba(255, 247, 164, 0.15), transparent 40%),
+                radial-gradient(circle at 50% 80%, rgba(255, 182, 193, 0.1), transparent 40%);
+            color: #000000;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] body.yuzusoft {
+            background-color: var(--bg-dark);
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(139, 168, 138, 0.15), transparent 40%),
+                radial-gradient(circle at 90% 30%, rgba(212, 184, 94, 0.15), transparent 40%),
+                radial-gradient(circle at 50% 80%, rgba(216, 138, 155, 0.1), transparent 40%);
+            color: #FFFFFF;
+        }
+
+        /* 柚子社卡片 */
+        .yuzu-card {
+            background: var(--card-light);
+            border-radius: 20px;
+            padding: 35px;
+            margin: 20px;
+            border: 2px solid var(--yuzu-mint);
+            box-shadow:
+                0 8px 32px rgba(211, 233, 181, 0.15),
+                0 2px 8px rgba(211, 233, 181, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        [data-theme="dark"] .yuzu-card {
+            background: var(--card-dark);
+            border-color: var(--yuzu-dark-green);
+            box-shadow:
+                0 8px 32px rgba(139, 168, 138, 0.15),
+                0 2px 8px rgba(139, 168, 138, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .yuzu-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--yuzu-pink);
+            box-shadow:
+                0 12px 40px rgba(255, 182, 193, 0.2),
+                0 4px 12px rgba(255, 182, 193, 0.15);
+        }
+
+        /* 柚子社标题 */
+        .yuzu-title {
+            background: linear-gradient(135deg, var(--yuzu-dark-green), var(--yuzu-dark-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            margin-bottom: 15px;
+            font-size: 2.5rem;
+        }
+
+        [data-theme="dark"] .yuzu-title {
+            background: linear-gradient(135deg, var(--yuzu-mint), var(--yuzu-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        /* 404数字 */
+        .error-code {
+            font-family: 'Cascadia Code', 'Consolas', monospace, sans-serif;
+            font-size: 6rem;
+            font-weight: bold;
+            margin: 20px 0;
+            background: linear-gradient(135deg, var(--mtr-tsuen-wan), var(--mtr-tung-chung));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 0, 0, 0.3);
+        }
+
+        [data-theme="dark"] .error-code {
+            background: linear-gradient(135deg, #ff4400, #ffaa00);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 25px rgba(255, 68, 0, 0.5);
+        }
+
+        /* 副标题 */
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            color: var(--yuzu-dark-green);
+            opacity: 0.9;
+        }
+
+        [data-theme="dark"] .subtitle {
+            color: var(--yuzu-mint);
+        }
+
+        /* 描述文字 */
+        .description {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        /* 按钮样式 */
+        .yuzu-button {
+            background: var(--mtr-tsuen-wan);
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-decoration: none;
+            margin-top: 10px;
+        }
+
+        .yuzu-button:hover {
+            background: #ff3333;
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(255, 0, 0, 0.3);
+        }
+
+        .yuzu-button.secondary {
+            background: var(--mtr-east-rail);
+        }
+
+        .yuzu-button.secondary:hover {
+            background: var(--mtr-east-rail);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 20px rgba(83, 183, 232, 0.3);
+        }
+
+        [data-theme="dark"] .yuzu-button.secondary {
+            background: var(--btn-bg-dark);
+        }
+
+        [data-theme="dark"] .yuzu-button.secondary:hover {
+            background: var(--btn-hover-dark);
+        }
+
+        /* 按钮容器 */
+        .button-group {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 25px;
+        }
+
+        /* 主题切换按钮 */
+        #themeToggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            background-color: var(--card-color);
+            border: 2px solid var(--text-color);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+
+        #themeToggle:hover {
+            transform: rotate(30deg);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .yuzu-card {
+                padding: 25px;
+                margin: 15px;
+                max-width: 90%;
+            }
+
+            .error-code {
+                font-size: 4.5rem;
+            }
+
+            .yuzu-title {
+                font-size: 2rem;
+            }
+
+            .subtitle {
+                font-size: 1.3rem;
+            }
+
+            .button-group {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .yuzu-button {
+                width: 100%;
+                max-width: 250px;
+            }
+
+            #themeToggle {
+                top: 15px;
+                right: 15px;
+                width: 40px;
+                height: 40px;
+                font-size: 18px;
+            }
+        }
+
+        @media (max-width: 375px) {
+            .error-code {
+                font-size: 3.5rem;
+            }
+
+            .yuzu-title {
+                font-size: 1.8rem;
+            }
+
+            .yuzu-card {
+                padding: 20px;
+            }
+
+            .yuzu-button {
+                padding: 14px 0px;
+            }
+        }
+
+        /* 错误信息 */
+        .error-details {
+            background: rgba(var(--mtr-tsuen-wan-rgb, 255, 0, 0), 0.1);
+            border-left: 4px solid var(--mtr-tsuen-wan);
+            padding: 12px 16px;
+            margin: 20px 0;
+            border-radius: 8px;
+            font-family: 'Cascadia Code', 'Consolas', monospace;
+            font-size: 0.9rem;
+            text-align: left;
+            word-break: break-all;
+        }
+
+        [data-theme="dark"] .error-details {
+            background: rgba(255, 68, 0, 0.15);
+            border-left-color: #ff4400;
+        }
+    </style>
+</head>
+
+<body class="yuzusoft">
+    <button id="themeToggle" onclick="toggleTheme()">🌓</button>
+
+    <div class="yuzu-card">
+        <div class="error-code">404</div>
+        <h1 class="yuzu-title">03A01黄鱼</h1>
+        <h2 class="subtitle">Ciallo～(∠・ω&lt; )⌒☆</h2>
+        <p class="description">
+            内容不存在。
+        </p>
+
+        <div class="error-details" id="errorDetails">
+            <!-- JavaScript 会在这里显示错误路径 -->
+        </div>
+
+        <div class="button-group">
+            <a href="/" class="yuzu-button">
+                🏠 返回主页
+            </a>
+        </div>
+
+        <!-- <p style="margin-top: 0px; font-size: 0.9rem; opacity: 0.7;">
+            <br>
+            如果你认为这是一个错误，请联系 <a href="mailto:admin@075038.xyz" style="color: var(--mtr-east-rail);">admin@075038.xyz</a>
+        </p> -->
+    </div>
+
+    <script>
+        // 主题初始化
+        function initializeTheme() {
+            const html = document.documentElement;
+
+            try {
+                const savedTheme = localStorage.getItem("preferred-theme");
+
+                if (savedTheme) {
+                    if (savedTheme === "light" || savedTheme === "dark") {
+                        html.setAttribute("data-theme", savedTheme);
+                        console.log(`✅ 使用保存的主题: ${savedTheme}`);
+                    } else {
+                        console.warn(`⚠️ 无效主题值: "${savedTheme}"，使用深色主题`);
+                        html.setAttribute("data-theme", "dark");
+                        localStorage.setItem("preferred-theme", "dark");
+                    }
+                } else {
+                    console.log("🔄 首次访问，使用深色主题");
+                    html.setAttribute("data-theme", "dark");
+                    localStorage.setItem("preferred-theme", "dark");
+                }
+            } catch (e) {
+                console.error("❌ localStorage 访问失败:", e);
+                html.setAttribute("data-theme", "dark");
+            }
+        }
+
+        // 主题切换
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute("data-theme") === "dark";
+            const newTheme = isDark ? "light" : "dark";
+
+            html.setAttribute("data-theme", newTheme);
+
+            try {
+                localStorage.setItem("preferred-theme", newTheme);
+                console.log(`🔄 主题切换为: ${newTheme}`);
+            } catch (e) {
+                console.error("❌ 无法保存主题设置:", e);
+            }
+        }
+
+        // 返回上一页
+        function goBack() {
+            if (window.history.length > 1) {
+                window.history.back();
+            } else {
+                window.location.href = '/';
+            }
+        }
+
+        // 显示当前错误路径
+        function showErrorPath() {
+            const errorDetails = document.getElementById('errorDetails');
+            const currentPath = window.location.pathname;
+
+            if (errorDetails) {
+                errorDetails.innerHTML = `
+                    <strong>请求路径:</strong><br>
+                    <code>${currentPath}</code>
+                `;
+            }
+        }
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeTheme();
+            showErrorPath();
+
+            // 添加键盘快捷键
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') {
+                    goBack();
+                } else if (e.key === 'Home' || (e.ctrlKey && e.key === 'h')) {
+                    window.location.href = '/';
+                }
+            });
+
+            console.log(`🚨 404错误: ${window.location.pathname}`);
+        });
+    </script>
+</body>
+
+</html>
