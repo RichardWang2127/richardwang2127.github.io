@@ -1186,17 +1186,6 @@
             animation: spin 1s linear infinite;
         }
 
-        /* @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        } */
-
-
         /* 重试中状态 */
         .retrying {
             display: flex;
@@ -1431,18 +1420,6 @@
             }
         }
 
-        /* 旋转动画 - 统一速度和轨迹 */
-        /* @keyframes spin {
-            0% {
-                transform: rotate(0deg) !important;
-            }
-
-            100% {
-                transform: rotate(360deg) !important;
-            }
-        } */
-
-        /* 把这个统一的旋转动画放在 CSS 最底部，确保覆盖所有冲突 */
         @keyframes spin {
             0% {
                 transform: rotate(0deg);
@@ -1454,19 +1431,6 @@
                 -webkit-transform: rotate(360deg);
             }
         }
-
-        /* 在CSS文件顶部或现有的spin动画之后添加这个强制定义 */
-        /* @keyframes spin {
-            0% {
-                transform: rotate(0deg) !important;
-                -webkit-transform: rotate(0deg) !important;
-            }
-
-            100% {
-                transform: rotate(360deg) !important;
-                -webkit-transform: rotate(360deg) !important;
-            }
-        } */
 
         /* 确保 .loading-spinner 正确应用动画 */
         .loading-spinner {
