@@ -293,7 +293,9 @@
             .yuzu-card {
                 padding: 25px;
                 margin: 15px;
-                max-width: 90%;
+                max-width: calc(100vw - 30px);
+                box-sizing: border-box;
+                width: auto;
             }
 
             .error-code {
@@ -306,16 +308,25 @@
 
             .subtitle {
                 font-size: 1.3rem;
+                margin-bottom: 20px;
             }
 
             .button-group {
                 flex-direction: column;
-                align-items: center;
+                align-items: stretch;
+                gap: 12px;
+                width: 100%;
+                margin-top: 20px;
             }
 
             .yuzu-button {
                 width: 100%;
-                max-width: 250px;
+                max-width: none;
+                padding: 14px 16px;
+                box-sizing: border-box;
+                margin-top: 0;
+                min-height: 44px;
+                font-size: 1.05rem;
             }
 
             #themeToggle {
@@ -325,23 +336,94 @@
                 height: 40px;
                 font-size: 18px;
             }
+
+            .description {
+                font-size: 1.05rem;
+                margin-bottom: 25px;
+            }
         }
 
         @media (max-width: 375px) {
+            .yuzu-card {
+                padding: 20px 15px;
+                margin: 10px;
+                max-width: calc(100vw - 20px);
+            }
+
             .error-code {
                 font-size: 3.5rem;
+                margin: 15px 0;
             }
 
             .yuzu-title {
                 font-size: 1.8rem;
+                margin-bottom: 10px;
             }
 
-            .yuzu-card {
-                padding: 20px;
+            .subtitle {
+                font-size: 1.2rem;
+                margin-bottom: 15px;
             }
 
             .yuzu-button {
-                padding: 14px 0px;
+                padding: 12px 14px;
+                font-size: 1rem;
+            }
+
+            .description {
+                font-size: 1rem;
+                margin-bottom: 20px;
+            }
+
+            .error-details {
+                padding: 10px 12px;
+                font-size: 0.85rem;
+                margin: 15px 0;
+            }
+        }
+
+        /* 针对非常小的屏幕（如iPhone SE） */
+        @media (max-width: 320px) {
+            .error-code {
+                font-size: 3rem;
+            }
+
+            .yuzu-title {
+                font-size: 1.6rem;
+            }
+
+            .subtitle {
+                font-size: 1.1rem;
+            }
+
+            .yuzu-button {
+                font-size: 0.95rem;
+                padding: 10px 12px;
+            }
+
+            .yuzu-card {
+                padding: 18px 12px;
+            }
+        }
+
+        /* 确保在横向模式下的显示 */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .yuzu-card {
+                max-height: 85vh;
+                overflow-y: auto;
+                margin: 10px auto;
+                padding: 20px;
+            }
+
+            .error-code {
+                font-size: 3rem;
+                margin: 10px 0;
+            }
+        }
+
+        @media (min-width: 769px) {
+            .yuzu-card {
+                min-width: 500px;
             }
         }
 
