@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="zh" data-theme="light">
+<html lang="zh" data-theme="dark">
 
 <head>
     <script>
@@ -65,6 +65,10 @@
             --btn-bg: var(--btn-bg-light);
             --btn-hover: var(--btn-hover-light);
             --h1-color: var(--mtr-east-rail);
+            --number-simple: var(--mtr-east-rail);
+            --number-accident: var(--mtr-tsuen-wan);
+            --shadow-simple: rgba(83, 183, 232, 0.7);
+            --shadow-accident: rgba(255, 0, 0, 0.7);
         }
 
         [data-theme="dark"] {
@@ -74,6 +78,10 @@
             --btn-bg: var(--btn-bg-dark);
             --btn-hover: var(--btn-hover-dark);
             --h1-color: var(--mtr-tung-chung);
+            --number-simple: var(--mtr-tung-chung);
+            --number-accident: #ff0022;
+            --shadow-simple: rgba(254, 127, 29, 0.7);
+            --shadow-accident: rgba(255, 0, 34, 0.7);
         }
 
         body {
@@ -381,12 +389,14 @@
 
         .number {
             font-family: 'Cascadia Code', 'Consolas', monospace, sans-serif;
-            color: var(--h1-color);
+            color: var(--number-simple);
+            text-shadow: 0 0 8px var(--shadow-simple);
         }
 
         .number-accident {
             font-family: 'Cascadia Code', 'Consolas', monospace, sans-serif;
-            color: var(--mtr-tsuen-wan);
+            color: var(--number-accident);
+            text-shadow: 0 0 8px var(--shadow-accident);
         }
 
         /* 主题切换按钮 */
@@ -567,23 +577,27 @@
         [data-theme="light"] #outputBox a {
             color: var(--contact-light-main);
             /* 白主题主色 */
+            text-shadow: 0 0 8px rgba(8, 94, 255, 0.7)
         }
 
         [data-theme="dark"] #outputBox a {
             color: var(--contact-dark-main);
             /* 黑主题黄色 */
+            text-shadow: 0 0 8px rgba(255, 247, 164, 0.7)
         }
 
         [data-theme="light"] #outputBox a span {
             color: var(--contact-light-text);
             /* 白主题文字黑 */
             font-weight: bold;
+            text-shadow: none;
         }
 
         [data-theme="dark"] #outputBox a span {
             color: var(--contact-dark-text);
             /* 黑主题文字白 */
             font-weight: bold;
+            text-shadow: none;
         }
 
         /* 移动端表格容器 - 大框样式，按钮无边框 */
@@ -1452,6 +1466,37 @@
         .loading-spinner {
             animation: spin 1s linear infinite !important;
             -webkit-animation: spin 1s linear infinite !important;
+        }
+
+        /* === 导航栏平滑滚动 === */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* 目标元素的滚动边距 */
+        .yuzu-card {
+            scroll-margin-top: 80px;
+        }
+
+        /* 桌面端 */
+        @media (min-width: 769px) {
+            .yuzu-card {
+                scroll-margin-top: 70px;
+            }
+        }
+
+        /* 移动端 */
+        @media (max-width: 768px) {
+            .yuzu-card {
+                scroll-margin-top: 60px;
+            }
+        }
+
+        /* 超小屏幕 */
+        @media (max-width: 375px) {
+            .yuzu-card {
+                scroll-margin-top: 50px;
+            }
         }
     </style>
 </head>
@@ -2725,6 +2770,58 @@
             clearTimeout(window.entryTimeout); // 清除原有自动触发的超时
         });
 
+        // 主题初始化函数
+        function initializeTheme() {
+            const html = document.documentElement;
+
+            try {
+                // 尝试从 localStorage 读取主题设置
+                const savedTheme = localStorage.getItem("preferred-theme");
+
+                if (savedTheme) {
+                    // 验证保存的主题是否合法
+                    if (savedTheme === "light" || savedTheme === "dark") {
+                        html.setAttribute("data-theme", savedTheme);
+                        console.log(`✅ 使用保存的主题: ${savedTheme}`);
+                    } else {
+                        // 不合法，使用深色主题并更新存储
+                        console.warn(`⚠️ 存储的主题值不合法: "${savedTheme}"，使用深色主题`);
+                        html.setAttribute("data-theme", "dark");
+                        localStorage.setItem("preferred-theme", "dark");
+                    }
+                } else {
+                    // 没有保存过主题，使用深色主题并存储
+                    console.log("🔄 首次访问，使用深色主题");
+                    html.setAttribute("data-theme", "dark");
+                    localStorage.setItem("preferred-theme", "dark");
+                }
+            } catch (e) {
+                // localStorage 访问失败时使用深色主题
+                console.error("❌ localStorage 访问失败，使用深色主题:", e);
+                html.setAttribute("data-theme", "dark");
+            }
+        }
+
+        // 修改 toggleTheme 函数
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute("data-theme") === "dark";
+            const newTheme = isDark ? "light" : "dark";
+
+            html.setAttribute("data-theme", newTheme);
+
+            try {
+                localStorage.setItem("preferred-theme", newTheme);
+                console.log(`🔄 主题切换为: ${newTheme}`);
+            } catch (e) {
+                console.error("❌ 无法保存主题设置到 localStorage:", e);
+            }
+        }
+
+        // 在 DOM 加载完成后初始化主题
+        document.addEventListener('DOMContentLoaded', function () {
+            initializeTheme();
+        });
     </script>
 </body>
 
