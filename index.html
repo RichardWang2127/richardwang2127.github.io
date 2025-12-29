@@ -2316,6 +2316,85 @@
             });
         })();
 
+        function isFromOwnSite() {
+            const referrer = document.referrer;
+            if (!referrer) return false;
+
+            // 定义本站的所有可能域名
+            const ownDomains = [
+                window.location.hostname,
+                'ciallo0721.org',
+                '075038.xyz',
+                'sp1900.netlify.app',
+            ];
+
+            // 检查referrer是否包含本站域名
+            for (const domain of ownDomains) {
+                if (referrer.includes(domain)) {
+                    console.log(`✅ Referrer包含本站域名: ${domain}`);
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // 直接显示主内容，跳过欢迎页
+        function showMainContentDirectly() {
+            console.log('🚀 从本站跳转回来，直接显示主内容');
+
+            // 1. 隐藏欢迎页
+            const welcomePage = document.getElementById('welcomePage');
+            if (welcomePage) {
+                welcomePage.style.display = 'none';
+            }
+
+            // 2. 显示主内容
+            const mainContent = document.getElementById('mainContent');
+            if (mainContent) {
+                mainContent.classList.remove('initial-hide');
+                setTimeout(() => {
+                    mainContent.classList.add('show');
+                }, 10);
+
+                // 3. 启用滚动
+                siteScrollEnabled = true;
+                document.body.style.overflow = 'auto';
+
+                // 4. 加载图库
+                setTimeout(() => {
+                    if (typeof loadGalleryImages === 'function') {
+                        loadGalleryImages();
+                    }
+                }, 100);
+
+                // 5. 恢复音乐状态（如果之前正在播放）
+                try {
+                    const musicState = localStorage.getItem("musicState") || "playing";
+                    if (musicState === "playing") {
+                        const bgMusic = document.getElementById("backgroundMusic");
+                        if (bgMusic) {
+                            // 延迟一点播放，确保DOM已准备好
+                            setTimeout(() => {
+                                bgMusic.muted = false;
+                                bgMusic.volume = 0.5;
+                                bgMusic.play().catch(e => {
+                                    console.log('音乐自动播放失败（可能需要用户交互）:', e);
+                                });
+                            }, 300);
+                        }
+                    }
+                } catch (e) {
+                    console.log('恢复音乐状态失败:', e);
+                }
+
+                // 6. 标记已进入
+                entered = true;
+
+                console.log('✅ 主内容已直接显示');
+            }
+        }
+
         // 强制进入网站的备用函数
         function forceSiteEntry() {
             if (entered) return;
@@ -2821,6 +2900,18 @@
         // 在 DOM 加载完成后初始化主题
         document.addEventListener('DOMContentLoaded', function () {
             initializeTheme();
+        });
+
+        document.addEventListener('DOMContentLoaded', function (){
+            // 检查是否从本站跳转回来
+            if (isFromOwnSite()) {
+                showMainContentDirectly();
+                return;
+            }
+
+            // 如果不是从本站跳转回来，则正常显示欢迎页
+            console.log('首次访问或从外部访问，显示欢迎页');
+            // 这里不需要做任何事，欢迎页会默认显示
         });
     </script>
 </body>
