@@ -2510,6 +2510,7 @@
             window.__siteEntered = true;
             console.log("enterSite called at", Date.now(), "ms");
 
+            var isDevMode = window.location.hostname.includes('127.0.0.1') || window.location.hostname.includes('localhost');
             if (isDevMode) {
                 console.log('🚀 开发者模式：enterSite 函数被跳过');
                 return;
@@ -2785,6 +2786,7 @@
             if (!entered) {
                 return;
             }
+            var isDevMode = window.location.hostname.includes('127.0.0.1') || window.location.hostname.includes('localhost');
             if (isDevMode) return;
             let savedMusicState = "playing";
             // 一律自动播放
