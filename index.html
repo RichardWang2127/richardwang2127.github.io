@@ -1729,7 +1729,7 @@
 
     <script>
         // 开发者模式检测
-        const isDevMode = window.location.hostname.includes('127.0.0.1') ||
+        var isDevMode = window.location.hostname.includes('127.0.0.1') ||
             window.location.hostname.includes('localhost');
 
         if (isDevMode) {
@@ -2284,6 +2284,7 @@
         (function () {
             'use strict';
 
+            var isDevMode = window.location.hostname.includes('127.0.0.1') || window.location.hostname.includes('localhost');
             window.addEventListener('DOMContentLoaded', function () {
                 if (isDevMode) {
                     console.log('🚀 开发者模式：跳过所有音频相关初始化');
