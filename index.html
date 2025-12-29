@@ -1732,6 +1732,7 @@
             const referrer = document.referrer;
             if (!referrer) return false;
 
+            console.log(`Referrer为: ${referrer}`);
             // 定义本站的所有可能域名
             const ownDomains = [
                 window.location.hostname,
