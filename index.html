@@ -1729,7 +1729,7 @@
 
     <script>
         // 开发者模式检测
-        var isDevMode = window.location.hostname.includes('127.0.0.1') ||
+        const isDevMode = window.location.hostname.includes('127.0.0.1') ||
             window.location.hostname.includes('localhost');
 
         if (isDevMode) {
@@ -1777,13 +1777,13 @@
                 }
             });
         }
-        if (isFromOwnSite()) {
+        else if (isFromOwnSite()) {
+            // 从本站跳转回来，直接显示主内容
             showMainContentDirectly();
-            return;
+        } else {
+            // 如果不是从本站跳转回来，则正常显示欢迎页
+            console.log('首次访问或从外部访问，显示欢迎页');
         }
-
-        // 如果不是从本站跳转回来，则正常显示欢迎页
-        console.log('首次访问或从外部访问，显示欢迎页');
     </script>
     <script>
         // 音频加载超时配置
@@ -2284,7 +2284,6 @@
         (function () {
             'use strict';
 
-            var isDevMode = window.location.hostname.includes('127.0.0.1') || window.location.hostname.includes('localhost');
             window.addEventListener('DOMContentLoaded', function () {
                 if (isDevMode) {
                     console.log('🚀 开发者模式：跳过所有音频相关初始化');
@@ -2510,7 +2509,6 @@
             window.__siteEntered = true;
             console.log("enterSite called at", Date.now(), "ms");
 
-            var isDevMode = window.location.hostname.includes('127.0.0.1') || window.location.hostname.includes('localhost');
             if (isDevMode) {
                 console.log('🚀 开发者模式：enterSite 函数被跳过');
                 return;
@@ -2786,7 +2784,6 @@
             if (!entered) {
                 return;
             }
-            var isDevMode = window.location.hostname.includes('127.0.0.1') || window.location.hostname.includes('localhost');
             if (isDevMode) return;
             let savedMusicState = "playing";
             // 一律自动播放
