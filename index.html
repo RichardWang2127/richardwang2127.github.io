@@ -18,6 +18,45 @@
                 });
             });
         })();
+
+        // ==================== 主题立即设置（避免闪烁） ====================
+        (function () {
+            'use strict';
+
+            // 立即设置主题，避免FOUC
+            function setThemeImmediately() {
+                const html = document.documentElement;
+
+                try {
+                    // 尝试从 localStorage 读取主题设置
+                    const savedTheme = localStorage.getItem("preferred-theme");
+
+                    if (savedTheme) {
+                        // 验证保存的主题是否合法
+                        if (savedTheme === "light" || savedTheme === "dark") {
+                            html.setAttribute("data-theme", savedTheme);
+                            console.log(`🎨 立即应用保存的主题: ${savedTheme}`);
+                        } else {
+                            // 不合法，使用深色主题并更新存储
+                            console.warn(`⚠️ 存储的主题值不合法: "${savedTheme}"，使用深色主题`);
+                            html.setAttribute("data-theme", "dark");
+                            localStorage.setItem("preferred-theme", "dark");
+                        }
+                    } else {
+                        // 没有保存过主题，使用深色主题
+                        console.log("🎨 首次访问，使用深色主题");
+                        html.setAttribute("data-theme", "dark");
+                    }
+                } catch (e) {
+                    // localStorage 访问失败时使用深色主题
+                    console.error("❌ localStorage 访问失败，使用深色主题:", e);
+                    html.setAttribute("data-theme", "dark");
+                }
+            }
+
+            // 立即执行，不等待 DOMContentLoaded
+            setThemeImmediately();
+        })();
     </script>
 
     <meta charset="UTF-8" />
@@ -1738,6 +1777,13 @@
                 }
             });
         }
+        if (isFromOwnSite()) {
+            showMainContentDirectly();
+            return;
+        }
+
+        // 如果不是从本站跳转回来，则正常显示欢迎页
+        console.log('首次访问或从外部访问，显示欢迎页');
     </script>
     <script>
         // 音频加载超时配置
@@ -2850,36 +2896,36 @@
         });
 
         // 主题初始化函数
-        function initializeTheme() {
-            const html = document.documentElement;
+        // function initializeTheme() {
+        //     const html = document.documentElement;
 
-            try {
-                // 尝试从 localStorage 读取主题设置
-                const savedTheme = localStorage.getItem("preferred-theme");
+        //     try {
+        //         // 尝试从 localStorage 读取主题设置
+        //         const savedTheme = localStorage.getItem("preferred-theme");
 
-                if (savedTheme) {
-                    // 验证保存的主题是否合法
-                    if (savedTheme === "light" || savedTheme === "dark") {
-                        html.setAttribute("data-theme", savedTheme);
-                        console.log(`✅ 使用保存的主题: ${savedTheme}`);
-                    } else {
-                        // 不合法，使用深色主题并更新存储
-                        console.warn(`⚠️ 存储的主题值不合法: "${savedTheme}"，使用深色主题`);
-                        html.setAttribute("data-theme", "dark");
-                        localStorage.setItem("preferred-theme", "dark");
-                    }
-                } else {
-                    // 没有保存过主题，使用深色主题并存储
-                    console.log("🔄 首次访问，使用深色主题");
-                    html.setAttribute("data-theme", "dark");
-                    localStorage.setItem("preferred-theme", "dark");
-                }
-            } catch (e) {
-                // localStorage 访问失败时使用深色主题
-                console.error("❌ localStorage 访问失败，使用深色主题:", e);
-                html.setAttribute("data-theme", "dark");
-            }
-        }
+        //         if (savedTheme) {
+        //             // 验证保存的主题是否合法
+        //             if (savedTheme === "light" || savedTheme === "dark") {
+        //                 html.setAttribute("data-theme", savedTheme);
+        //                 console.log(`✅ 使用保存的主题: ${savedTheme}`);
+        //             } else {
+        //                 // 不合法，使用深色主题并更新存储
+        //                 console.warn(`⚠️ 存储的主题值不合法: "${savedTheme}"，使用深色主题`);
+        //                 html.setAttribute("data-theme", "dark");
+        //                 localStorage.setItem("preferred-theme", "dark");
+        //             }
+        //         } else {
+        //             // 没有保存过主题，使用深色主题并存储
+        //             console.log("🔄 首次访问，使用深色主题");
+        //             html.setAttribute("data-theme", "dark");
+        //             localStorage.setItem("preferred-theme", "dark");
+        //         }
+        //     } catch (e) {
+        //         // localStorage 访问失败时使用深色主题
+        //         console.error("❌ localStorage 访问失败，使用深色主题:", e);
+        //         html.setAttribute("data-theme", "dark");
+        //     }
+        // }
 
         // 修改 toggleTheme 函数
         function toggleTheme() {
@@ -2898,21 +2944,9 @@
         }
 
         // 在 DOM 加载完成后初始化主题
-        document.addEventListener('DOMContentLoaded', function () {
-            initializeTheme();
-        });
-
-        document.addEventListener('DOMContentLoaded', function (){
-            // 检查是否从本站跳转回来
-            if (isFromOwnSite()) {
-                showMainContentDirectly();
-                return;
-            }
-
-            // 如果不是从本站跳转回来，则正常显示欢迎页
-            console.log('首次访问或从外部访问，显示欢迎页');
-            // 这里不需要做任何事，欢迎页会默认显示
-        });
+        // document.addEventListener('DOMContentLoaded', function () {
+        //     initializeTheme();
+        // });
     </script>
 </body>
 
