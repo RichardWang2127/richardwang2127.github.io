@@ -4,636 +4,143 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>IGCSE真题导航器</title>
+	<title>跳转中... - IGCSE真题导航</title>
 	<style>
 		* {
-			box-sizing: border-box;
 			margin: 0;
 			padding: 0;
-			font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+			box-sizing: border-box;
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
 		}
 
 		body {
-			background-color: #f5f7fa;
-			color: #333;
-			line-height: 1.6;
-			padding: 20px;
-			max-width: 1200px;
-			margin: 0 auto;
+			background-color: #f8f8f8;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			min-height: 100vh;
 		}
 
 		.container {
+			max-width: 500px;
+			width: 100%;
 			background-color: white;
-			border-radius: 10px;
-			box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
-			padding: 30px;
-			margin-top: 20px;
-		}
-
-		header {
-			text-align: center;
-			margin-bottom: 30px;
-			padding-bottom: 20px;
-			border-bottom: 1px solid #eaeaea;
-		}
-
-		h1 {
-			color: #2c3e50;
-			margin-bottom: 10px;
-			font-size: 2.5rem;
-		}
-
-		.subtitle {
-			color: #7f8c8d;
-			font-size: 1.1rem;
-		}
-
-		.mode-selector {
-			display: flex;
-			justify-content: center;
-			margin-bottom: 30px;
-			border-bottom: 1px solid #eaeaea;
-			padding-bottom: 20px;
-		}
-
-		.mode-btn {
-			padding: 12px 30px;
-			background-color: #ecf0f1;
-			border: none;
-			border-radius: 5px 5px 0 0;
-			margin: 0 5px;
-			cursor: pointer;
-			font-weight: 600;
-			color: #7f8c8d;
-			transition: all 0.3s;
-		}
-
-		.mode-btn.active {
-			background-color: #3498db;
-			color: white;
-		}
-
-		.mode-btn:hover:not(.active) {
-			background-color: #d5dbdb;
-		}
-
-		.input-mode {
-			display: none;
-			padding: 25px;
 			border-radius: 8px;
-			background-color: #f9f9f9;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+			padding: 40px 30px;
+			text-align: center;
 		}
 
-		.input-mode.active {
-			display: block;
-			animation: fadeIn 0.5s;
+		.loading {
+			margin: 20px 0;
 		}
 
-		@keyframes fadeIn {
-			from {
-				opacity: 0;
+		.spinner {
+			width: 40px;
+			height: 40px;
+			border: 3px solid #f0f0f0;
+			border-top: 3px solid #ff4400;
+			border-radius: 50%;
+			animation: spin 1s linear infinite;
+			margin: 0 auto 20px;
+		}
+
+		@keyframes spin {
+			0% {
+				transform: rotate(0deg);
 			}
 
-			to {
-				opacity: 1;
+			100% {
+				transform: rotate(360deg);
 			}
 		}
 
-		.form-group {
+		.message {
+			color: #666;
+			font-size: 16px;
+			line-height: 1.5;
+			margin-bottom: 15px;
+		}
+
+		.countdown {
+			font-size: 16px;
+			color: #ff4400;
+			font-weight: 500;
 			margin-bottom: 20px;
 		}
 
-		label {
-			display: block;
-			margin-bottom: 8px;
-			font-weight: 600;
-			color: #2c3e50;
-		}
-
-		input,
-		select {
-			width: 100%;
-			padding: 12px 15px;
-			border: 1px solid #ddd;
-			border-radius: 5px;
-			font-size: 16px;
-			transition: border-color 0.3s;
-		}
-
-		input:focus,
-		select:focus {
-			outline: none;
-			border-color: #3498db;
-			box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
-		}
-
-		.format-example {
-			background-color: #f0f7ff;
-			padding: 12px;
-			border-radius: 5px;
-			margin-top: 10px;
-			font-family: monospace;
-			font-size: 0.9rem;
-			color: #2c3e50;
-			border-left: 4px solid #3498db;
-		}
-
-		.btn-group {
-			display: flex;
-			gap: 15px;
-			margin-top: 25px;
-		}
-
-		button {
-			padding: 14px 25px;
-			border: none;
-			border-radius: 5px;
-			cursor: pointer;
-			font-weight: 600;
-			font-size: 16px;
-			transition: all 0.3s;
-			flex: 1;
-		}
-
-		.primary-btn {
-			background-color: #3498db;
-			color: white;
-		}
-
-		.primary-btn:hover {
-			background-color: #2980b9;
-		}
-
-		.secondary-btn {
-			background-color: #ecf0f1;
-			color: #2c3e50;
-		}
-
-		.secondary-btn:hover {
-			background-color: #d5dbdb;
-		}
-
-		.result-section {
-			margin-top: 30px;
-			padding: 20px;
-			border-radius: 8px;
-			background-color: #f9f9f9;
-			display: none;
-		}
-
-		.result-section.active {
-			display: block;
-			animation: fadeIn 0.5s;
-		}
-
-		.result-title {
-			color: #2c3e50;
-			margin-bottom: 15px;
-			font-size: 1.3rem;
-		}
-
-		.result-url {
-			background-color: white;
-			padding: 15px;
-			border-radius: 5px;
-			border: 1px solid #ddd;
-			margin-bottom: 15px;
-			font-family: monospace;
-			word-break: break-all;
-			font-size: 0.95rem;
-		}
-
-		.link-buttons {
-			display: flex;
-			gap: 15px;
+		.manual-link {
 			margin-top: 20px;
 		}
 
-		.link-btn {
-			padding: 12px 20px;
+		.manual-link a {
+			display: inline-block;
+			background-color: #ff4400;
+			color: white;
 			text-decoration: none;
-			border-radius: 5px;
-			font-weight: 600;
-			display: inline-flex;
-			align-items: center;
-			justify-content: center;
-			transition: all 0.3s;
+			padding: 10px 20px;
+			border-radius: 4px;
+			font-weight: 500;
+			font-size: 14px;
+			transition: background-color 0.2s;
 		}
 
-		.papa-btn {
-			background-color: #e74c3c;
-			color: white;
+		.manual-link a:hover {
+			background-color: #e63c00;
 		}
 
-		.bestexam-btn {
-			background-color: #2ecc71;
-			color: white;
-		}
-
-		.link-btn:hover {
-			opacity: 0.9;
-			transform: translateY(-2px);
-		}
-
-		.error-message {
-			color: #e74c3c;
-			background-color: #fde8e8;
+		.error {
+			color: #e53935;
+			font-weight: 500;
+			margin: 20px 0;
 			padding: 12px;
-			border-radius: 5px;
-			margin-top: 10px;
-			display: none;
-		}
-
-		.error-message.active {
-			display: block;
-		}
-
-		.info-box {
-			background-color: #f0f7ff;
-			padding: 15px;
-			border-radius: 5px;
-			margin-top: 20px;
-			border-left: 4px solid #3498db;
-		}
-
-		footer {
-			text-align: center;
-			margin-top: 40px;
-			color: #7f8c8d;
-			font-size: 0.9rem;
-		}
-
-		@media (max-width: 768px) {
-			.container {
-				padding: 20px;
-			}
-
-			h1 {
-				font-size: 2rem;
-			}
-
-			.btn-group,
-			.link-buttons {
-				flex-direction: column;
-			}
+			background-color: #ffebee;
+			border-radius: 4px;
+			font-size: 14px;
 		}
 	</style>
 </head>
 
 <body>
 	<div class="container">
-		<header>
-			<h1>IGCSE真题导航器</h1>
-			<p class="subtitle">快速定位IGCSE历年真题PDF文件 - 支持两种输入格式</p>
-		</header>
-
-		<div class="mode-selector">
-			<button class="mode-btn active" data-mode="single">格式一: 代码格式</button>
-			<button class="mode-btn" data-mode="multi">格式二: 多项输入</button>
+		<div id="loading" class="loading">
+			<div class="spinner"></div>
+			<p class="message" id="status-message">正在处理请求...</p>
+			<div class="countdown" id="countdown">请稍等...</div>
 		</div>
 
-		<!-- 模式一: 单行代码格式 -->
-		<div id="single-mode" class="input-mode active">
-			<div class="form-group">
-				<label for="single-code">输入完整代码 (例如: 0580/41/M/J/21)</label>
-				<input type="text" id="single-code" placeholder="科目/试卷/季节1/季节2/年份">
-				<div class="format-example">
-					格式: subject/paper/mon1/mon2/year<br>
-					示例: 0580/41/M/J/21 或 0625/22/O/N/19<br>
-					说明: subject(4位), paper(2位), mon1/mon2(大写字母), year(2位)
-				</div>
-			</div>
-			<!-- 添加试卷类型选择 -->
-			<div class="form-group">
-				<label for="single-paper-type">试卷类型</label>
-				<select id="single-paper-type">
-					<option value="qp">试题 (Question Paper) - qp</option>
-					<option value="ms">答案 (Mark Scheme) - ms</option>
-				</select>
-			</div>
-		</div>
-
-		<!-- 模式二: 多项输入格式 -->
-		<div id="multi-mode" class="input-mode">
-			<div class="form-group">
-				<label for="subject-code">科目代码</label>
-				<select id="subject-code">
-					<option value="">请选择科目代码</option>
-					<!-- 科目选项将通过JavaScript动态添加 -->
-				</select>
-			</div>
-
-			<div class="form-group">
-				<label for="paper-number">试卷编号</label>
-				<input type="text" id="paper-number" placeholder="例如: 41 或 22">
-				<div class="format-example">
-					格式: 2位数字，例如: 41, 22, 12 等
-				</div>
-			</div>
-
-			<div class="form-group">
-				<label for="year">年份</label>
-				<input type="text" id="year" placeholder="例如: 21 或 19">
-				<div class="format-example">
-					格式: 2位数字，例如: 21 (表示2021), 19 (表示2019) 等
-				</div>
-			</div>
-
-			<div class="form-group">
-				<label for="season">考季</label>
-				<select id="season">
-					<option value="w">冬季 (Winter) - w</option>
-					<option value="s">夏季 (Summer) - s</option>
-					<option value="m">三月 (March) - m</option>
-				</select>
-				<div class="format-example">
-					选择考试季节: w(冬季), s(夏季), m(三月)
-				</div>
-			</div>
-
-			<div class="form-group">
-				<label for="paper-type">试卷类型</label>
-				<select id="paper-type">
-					<option value="qp">试题 (Question Paper) - qp</option>
-					<option value="ms">答案 (Mark Scheme) - ms</option>
-				</select>
-			</div>
-		</div>
-
-		<!-- 错误信息显示 -->
-		<div id="error-message" class="error-message"></div>
-
-		<!-- 按钮区域 -->
-		<div class="btn-group">
-			<button id="generate-btn" class="primary-btn">生成真题链接</button>
-			<button id="clear-btn" class="secondary-btn">清空输入</button>
-		</div>
-
-		<!-- 结果区域 -->
-		<div id="result-section" class="result-section">
-			<h3 class="result-title">生成的真题链接:</h3>
-			<div id="result-url" class="result-url"></div>
-			<div class="link-buttons">
-				<a id="papa-link" class="link-btn papa-btn" target="_blank">前往 PapaCambridge</a>
-				<a id="bestexam-link" class="link-btn bestexam-btn" target="_blank">前往 BestExamHelp</a>
-			</div>
-		</div>
-
-		<!-- 信息提示框 -->
-		<div class="info-box">
-			<p><strong>使用说明:</strong></p>
-			<p>1. 格式一: 直接输入完整代码，如 0580/41/M/J/21</p>
-			<p>2. 格式二: 分别选择/输入科目代码、试卷编号、年份、考季和试卷类型</p>
-			<p>3. 点击"生成真题链接"后，会自动生成两个网站的链接，点击即可访问</p>
+		<div class="manual-link" id="manual-link" style="display:none;">
+			<a id="redirect-link" href="#">点击手动跳转</a>
 		</div>
 	</div>
 
-	<footer>
-		<p>IGCSE真题导航器 &copy; 2023 | 数据来源: PapaCambridge 和 BestExamHelp</p>
-	</footer>
-
 	<script>
-		// 科目代码与名称映射
-		const subjectMap = [
-			{ code: "0580", name: "Mathematics (数学)" },
-			{ code: "0625", name: "Physics (物理)" },
-			{ code: "0620", name: "Chemistry (化学)" },
-			{ code: "0610", name: "Biology (生物)" },
-			{ code: "0500", name: "First Language English (英语第一语言)" },
-			{ code: "0510", name: "English as a Second Language (英语第二语言)" },
-			{ code: "0455", name: "Economics (经济)" },
-			{ code: "0460", name: "Geography (地理)" },
-			{ code: "0470", name: "History (历史)" },
-			{ code: "0417", name: "Information and Communication Technology (信息通信技术)" },
-			{ code: "0478", name: "Computer Science (计算机科学)" },
-			{ code: "0452", name: "Accounting (会计)" },
-			{ code: "0450", name: "Business Studies (商业研究)" },
-			{ code: "0495", name: "Sociology (社会学)" },
-			{ code: "0400", name: "Art and Design (艺术与设计)" }
-		];
+		document.addEventListener('DOMContentLoaded', function () {
+			const targetUrl = "https://ans.ciallo0721.org/static/ms-share/igcse/special-guide.html";
 
-		// DOM元素
-		const modeBtns = document.querySelectorAll('.mode-btn');
-		const singleMode = document.getElementById('single-mode');
-		const multiMode = document.getElementById('multi-mode');
-		const singleCodeInput = document.getElementById('single-code');
-		const subjectCodeSelect = document.getElementById('subject-code');
-		const paperNumberInput = document.getElementById('paper-number');
-		const yearInput = document.getElementById('year');
-		const seasonSelect = document.getElementById('season');
-		const paperTypeSelect = document.getElementById('paper-type');
-		const generateBtn = document.getElementById('generate-btn');
-		const clearBtn = document.getElementById('clear-btn');
-		const errorMessage = document.getElementById('error-message');
-		const resultSection = document.getElementById('result-section');
-		const resultUrl = document.getElementById('result-url');
-		const papaLink = document.getElementById('papa-link');
-		const bestexamLink = document.getElementById('bestexam-link');
-		const singlePaperTypeSelect = document.getElementById('single-paper-type');
+			let countdown = 3; // 倒计时秒数
+			const countdownElement = document.getElementById('countdown');
+			countdownElement.textContent = `${countdown}秒后自动跳转`;
 
-		// 初始化科目选择下拉菜单
-		function initSubjectSelect() {
-			subjectMap.forEach(subject => {
-				const option = document.createElement('option');
-				option.value = subject.code;
-				option.textContent = `${subject.code} - ${subject.name}`;
-				subjectCodeSelect.appendChild(option);
-			});
-		}
+			// 更新状态信息
+			document.getElementById('status-message').textContent = "正在跳转到目标页面...";
 
-		// 切换输入模式
-		modeBtns.forEach(btn => {
-			btn.addEventListener('click', () => {
-				// 更新活动按钮
-				modeBtns.forEach(b => b.classList.remove('active'));
-				btn.classList.add('active');
+			// 设置手动跳转链接
+			const manualLink = document.getElementById('manual-link');
+			const redirectLink = document.getElementById('redirect-link');
+			redirectLink.href = targetUrl;
+			manualLink.style.display = 'block';
 
-				// 显示对应的输入模式
-				const mode = btn.getAttribute('data-mode');
-				singleMode.classList.toggle('active', mode === 'single');
-				multiMode.classList.toggle('active', mode === 'multi');
+			// 倒计时
+			const countdownInterval = setInterval(() => {
+				countdown--;
+				countdownElement.textContent = `${countdown}秒后自动跳转`;
 
-				// 清空错误和结果
-				clearError();
-				hideResult();
-			});
-		});
-
-		// 清空输入
-		clearBtn.addEventListener('click', () => {
-			singleCodeInput.value = '';
-			singlePaperTypeSelect.value = 'qp';
-			subjectCodeSelect.value = '';
-			paperNumberInput.value = '';
-			yearInput.value = '';
-			seasonSelect.value = 'w';
-			paperTypeSelect.value = 'qp';
-			clearError();
-			hideResult();
-		});
-
-		// 生成链接
-		generateBtn.addEventListener('click', generateLinks);
-
-		// 解析单行代码格式
-		function parseSingleCode(code) {
-			// 移除空格
-			code = code.trim();
-
-			// 验证格式: subject/paper/mon1/mon2/year
-			const pattern = /^(\d{4})\/(\d{2})\/([A-Z])\/([A-Z])\/(\d{2})$/;
-			const match = code.match(pattern);
-
-			if (!match) {
-				showError('代码格式不正确。请使用格式: 科目/试卷/季节1/季节2/年份，例如: 0580/41/M/J/21');
-				return null;
-			}
-
-			const [, subject, paper, mon1, mon2, year] = match;
-
-			// 确定季节代码
-			let season;
-			if (mon1 === 'M' && mon2 === 'J') season = 's'; // M/J 表示夏季
-			else if (mon1 === 'O' && mon2 === 'N') season = 'w'; // O/N 表示冬季
-			else if (mon1 === 'F' && mon2 === 'M') season = 'm'; // F/M 表示三月
-			else {
-				showError('季节代码不正确。请使用 M/J (夏季), O/N (冬季) 或 F/M (三月)');
-				return null;
-			}
-
-			// 验证科目代码是否存在
-			const subjectExists = subjectMap.some(sub => sub.code === subject);
-			if (!subjectExists) {
-				showError(`科目代码 ${subject} 不存在。请检查输入。`);
-				return null;
-			}
-
-			const paperType = singlePaperTypeSelect.value;
-
-			return {
-				subject,
-				paper,
-				year,
-				season,
-				// 默认为试题类型
-				paperType
-			};
-		}
-
-		// 验证多项输入
-		function validateMultiInput() {
-			const subject = subjectCodeSelect.value;
-			const paper = paperNumberInput.value.trim();
-			const year = yearInput.value.trim();
-			const season = seasonSelect.value;
-			const paperType = paperTypeSelect.value;
-
-			// 验证科目
-			if (!subject) {
-				showError('请选择科目代码。');
-				return null;
-			}
-
-			// 验证试卷编号
-			if (!paper || !/^\d{2}$/.test(paper)) {
-				showError('试卷编号必须是2位数字。');
-				return null;
-			}
-
-			// 验证年份
-			if (!year || !/^\d{2}$/.test(year)) {
-				showError('年份必须是2位数字。');
-				return null;
-			}
-
-			return { subject, paper, year, season, paperType };
-		}
-
-		// 生成链接
-		function generateLinks() {
-			clearError();
-			hideResult();
-
-			let data;
-
-			// 获取当前活动模式
-			const activeMode = document.querySelector('.mode-btn.active').getAttribute('data-mode');
-
-			if (activeMode === 'single') {
-				const code = singleCodeInput.value;
-				if (!code) {
-					showError('请输入代码。');
-					return;
+				if (countdown <= 0) {
+					clearInterval(countdownInterval);
+					window.location.href = targetUrl;
 				}
-
-				data = parseSingleCode(code);
-			} else {
-				data = validateMultiInput();
-			}
-
-			if (!data) return;
-
-			// 生成文件名
-			const { subject, paper, year, season, paperType } = data;
-			const fileName = `${subject}_${season}${year}_${paperType}_${paper}.pdf`;
-
-			// 生成链接
-			const papaUrl = `https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/${fileName}`;
-
-			// 对于BestExamHelp，需要科目名称
-			const subjectInfo = subjectMap.find(sub => sub.code === subject);
-			const subjectName = subjectInfo ? subjectInfo.name.split('(')[0].trim().toLowerCase().replace(/\s+/g, '-') : subject.toLowerCase();
-			const bestexamUrl = `https://bestexamhelp.com/exam/cambridge-igcse/${subjectName}-${subject}/${20}${year}/${fileName}`;
-
-			// 显示结果
-			resultUrl.textContent = `文件名: ${fileName}`;
-			papaLink.href = papaUrl;
-			bestexamLink.href = bestexamUrl;
-
-			resultSection.classList.add('active');
-
-			// 自动滚动到结果区域
-			resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-		}
-
-		// 显示错误信息
-		function showError(message) {
-			errorMessage.textContent = message;
-			errorMessage.classList.add('active');
-
-			// 自动滚动到错误信息
-			errorMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-		}
-
-		// 清除错误信息
-		function clearError() {
-			errorMessage.textContent = '';
-			errorMessage.classList.remove('active');
-		}
-
-		// 隐藏结果区域
-		function hideResult() {
-			resultSection.classList.remove('active');
-		}
-
-		// 初始化
-		document.addEventListener('DOMContentLoaded', () => {
-			initSubjectSelect();
-
-			// 设置当前年份为默认值
-			const currentYear = new Date().getFullYear();
-			const shortYear = currentYear.toString().slice(-2);
-			yearInput.value = shortYear;
-
-			// 添加键盘快捷键支持
-			document.addEventListener('keydown', (e) => {
-				if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
-					generateLinks();
-				}
-			});
-
-			// 示例代码 (用于测试)
-			// singleCodeInput.value = "0580/41/M/J/21";
+			}, 1000);
 		});
 	</script>
 </body>
