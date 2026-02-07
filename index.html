@@ -2371,6 +2371,7 @@
                         const loadingText = document.querySelector('.loading-text');
                         if (loadingText) {
                             loadingText.setAttribute('data-percent', `${percent}%`);
+                            console.log(e.loaded, e.total);
                         }
                     }
                 };
