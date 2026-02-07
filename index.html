@@ -1667,6 +1667,8 @@
 
                 <!-- 倒计时 -->
                 <div class="yuzu-card">
+                    <strong>📅 <span id="this-year"></span> <span id="cur-year-days" class="number"></span></strong>
+                    <br>
                     <strong>📅 纸质报销凭证停用已 <span id="railway-paper" class="number"></span></strong>
                     <br>
                     <strong>📅 7·23铁路事故发生已 <span id="0723-accident" class="number-accident"></span></strong>
@@ -3030,7 +3032,7 @@
         }
 
         // 更新自定义日期的显示
-        function updateRailway(customDateInput, element_id) {
+        function updateDays(customDateInput, element_id) {
             // 检查并修正日期格式
             if (customDateInput.includes("T24:00:00")) {
                 customDateInput = customDateInput.replace("T24:00:00", "T00:00:00");
@@ -3060,8 +3062,16 @@
         }
 
         function updateCustom() {
-            updateRailway("2025-10-01T00:00:00+08:00", "railway-paper"); // 传入日期和时间
-            updateRailway("2011-07-23T20:30:05+08:00", "0723-accident"); // 传入日期和时间
+            updateDays("2025-10-01T00:00:00+08:00", "railway-paper");
+            updateDays("2011-07-23T20:30:05+08:00", "0723-accident");
+            let curY = new Date().getFullYear(); // current year
+            daysRemThisY = updateDays(`${curY + 1}-01-01T00:00:00+08:00`, "cur-year-days");
+            try {
+                document.getElementById("this-year").innerHTML = `距离 ${curY} 年结束还有`;
+            }
+            catch (e) {
+                console.error("Error in updating year.");
+            }
         }
 
         // 可自定义每隔一定时间进行更新
