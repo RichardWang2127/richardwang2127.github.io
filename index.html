@@ -2382,7 +2382,7 @@
                             total = round(total, 2);
                             const unit = UNITS[unit_index];
                             loadingText.setAttribute('data-percent', `${percent}% (${loaded}${unit}/${total}${unit})`);
-                            console.log(e.loaded, e.total);
+                            console.log(`${loaded}${unit}/${total}${unit}`);
                         }
                     }
                 };
