@@ -2375,7 +2375,7 @@
                         const loadingText = document.querySelector('.loading-text');
                         if (loadingText) {
                             const UNITS = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"];  // G/T/P/EiB are impossible here ...
-                            let unit_index = 0, next_unit_val = 6 * 1024;
+                            let unit_index = 0, next_unit_val = 1 * 1024;
                             let loaded = e.loaded, total = e.total;
                             while (total >= next_unit_val && unit_index < UNITS.length - 1) {
                                 loaded /= 1024;
