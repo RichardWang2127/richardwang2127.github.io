@@ -2370,7 +2370,16 @@
                         // 更新loading-text元素的data-percent属性
                         const loadingText = document.querySelector('.loading-text');
                         if (loadingText) {
-                            loadingText.setAttribute('data-percent', `${percent}%`);
+                            const UNITS = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"];  // G/T/P/EiB are impossible here ...
+                            let unit_index = 0, next_unit_val = 6 * 1024;
+                            let loaded = e.loaded, total = e.total;
+                            while (total >= next_unit_val && unit_index < UNITS.length - 1) {
+                                loaded /= 1024;
+                                total /= 1024;
+                                unit_index++;
+                            }
+                            const unit = UNITS[unit_index];
+                            loadingText.setAttribute('data-percent', `${percent}% (${loaded}${unit}/${total}${unit})`);
                             console.log(e.loaded, e.total);
                         }
                     }
