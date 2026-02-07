@@ -2378,6 +2378,8 @@
                                 total /= 1024;
                                 unit_index++;
                             }
+                            loaded = round(loaded, 2);
+                            total = round(total, 2);
                             const unit = UNITS[unit_index];
                             loadingText.setAttribute('data-percent', `${percent}% (${loaded}${unit}/${total}${unit})`);
                             console.log(e.loaded, e.total);
