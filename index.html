@@ -69,6 +69,8 @@
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png" />
     <meta name="apple-mobile-web-app-title" content="02A01 西瓜" />
     <link rel="manifest" href="/assets/site.webmanifest" />
+    <link rel="preload" href="/resources/ciallo.mp3" as="audio">
+    <link rel="preload" href="/resources/music.mp3" as="audio">
     <title>03A01黄鱼 - Ciallo～(∠・ω&lt; )⌒☆ </title>
     <style>
         :root {
@@ -156,15 +158,10 @@
             --bg-dark: #2A2A3A;
             --card-dark: rgba(42, 42, 58, 0.95);
 
-            /* 联系我区域颜色 - 自定义修改 */
             --contact-light-main: #085EFF;
-            /* 白主题主色 */
             --contact-light-text: #000000;
-            /* 白主题文字黑 */
             --contact-dark-main: #FFF7A4;
-            /* 黑主题黄色 */
             --contact-dark-text: #FFFFFF;
-            /* 黑主题文字白 */
         }
 
         html,
@@ -1574,12 +1571,10 @@
 </head>
 
 <body class="yuzusoft">
-    <!-- 在 <body> 标签开头新增欢迎页容器 -->
     <div id="welcomePage"
         style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999;">
         <h1 class="yuzu-title" style="font-size: 48px; margin-bottom: -30px;">03A01 黄鱼</h1>
         <h1 class="yuzu-title" style="font-size: 35px; margin-bottom: 50px; margin-top: 0;">Ciallo～(∠・ω&lt; )⌒☆ </h1>
-        <!-- 修改后的按钮（新增spinner，默认隐藏按钮、显示spinner） -->
         <div id="enterButtonContainer" style="display: flex; flex-direction: column; align-items: center; gap: 10px;">
             <!-- 转圈spinner（默认显示） -->
             <div id="enterSpinner" class="loading-spinner" style="display: block;"></div>
@@ -1591,21 +1586,12 @@
         </div>
     </div>
 
-    <!-- <button id="enterButton" class="initial-hide" onclick="enterSite()">🚇 进入</button> -->
-    <!-- <div id="loader">🚇 地铁门正在打开...</div> -->
-    <!-- <div class="subway-doors" id="subwayDoors">
-        <div class="subway-door left"></div>
-        <div class="subway-door right"></div>
-    </div> -->
-
     <div id="doorText" class="yuzu-card">
         <span class="line1" style="font-size: 38px;">03A01 黄鱼</span>
         <span class="line1" style="font-size: 23px;">Ciallo～(∠・ω&lt; )⌒☆</span>
         <span class="line3">Welcome to ciallo0721.org</span>
     </div>
 
-
-    <!-- 跳转确认弹窗 -->
     <div id="domainRedirectPopup" class="popup">
         <div class="popup-content">
             <p id="domainRedirectPopupText">建议访问新域名ciallo0721.org，是否跳转？</p>
@@ -1618,12 +1604,10 @@
             <button id="themeToggle" onclick="toggleTheme()">🌓</button>
             <button id="musicToggle" onclick="toggleMusic()">🎶</button>
 
-            <!-- 顶部悬浮导航栏 - 常驻顶部 -->
             <div id="navbar" class="yuzu-nav">
-                <a href="#appBox">首页</a>
                 <a href="#progressBoard">项目进度</a>
                 <a href="#outputBox">关于我</a>
-                <!-- <a href="#gallery">图库</a> -->
+                <a href="#gallery">图片区</a>
             </div>
 
             <div class="container">
@@ -1717,7 +1701,7 @@
                 </div>
 
                 <!-- 图库 -->
-                <div class="yuzu-card">
+                <div class="yuzu-card" id="gallery">
                     © 03A01 黄鱼 (自摄-2025)
                     <div id="galleryContent" class="gallery"></div>
                 </div>
