@@ -544,7 +544,7 @@
             { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_0156.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_0156.jpg" },
             { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_0158.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_0158.jpg" },
             { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_8078.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_8078.jpg" },
-            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/SHMETRO-old-03A01-ZhongShanParkSta-wmd.jpg", full: "https://ans.ciallo0721.org/static/ps/full/SHMETRO-old-03A01-ZhongShanParkSta-wmd.jpg"},
+            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/SHMETRO-old-03A01-ZhongShanParkSta-wmd.jpg", full: "https://ans.ciallo0721.org/static/ps/full/SHMETRO-old-03A01-ZhongShanParkSta-wmd.jpg" },
         ];
 
         // ===== 全局变量 =====
@@ -854,9 +854,22 @@
                 xhr.onprogress = (e) => {
                     if (e.lengthComputable) {
                         const percent = Math.round((e.loaded / e.total) * 100);
+                        // 更新loading-text元素的data-percent属性
                         const loadingText = document.querySelector('.loading-text');
                         if (loadingText) {
-                            loadingText.setAttribute('data-percent', `${percent}%`);
+                            const UNITS = ["B", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB"];  // G/T/P/EiB are impossible here ...
+                            let unit_index = 0, next_unit_val = 1 * 1024;
+                            let loaded = e.loaded, total = e.total;
+                            while (total >= next_unit_val && unit_index < UNITS.length - 1) {
+                                loaded /= 1024;
+                                total /= 1024;
+                                unit_index++;
+                            }
+                            loaded = loaded.toFixed(2);
+                            total = total.toFixed(2);
+                            const unit = UNITS[unit_index];
+                            loadingText.setAttribute('data-percent', `${percent}% (${loaded}${unit}/${total}${unit})`);
+                            console.log(`${loaded}${unit}/${total}${unit}`);
                         }
                     }
                 };
