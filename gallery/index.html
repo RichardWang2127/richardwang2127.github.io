@@ -690,6 +690,10 @@
             /* 黑主题黄色 */
             text-shadow: 0 0 8px rgba(255, 247, 164, 0.7)
         }
+
+        .monospaced {
+            font-family: Consolas, monospace;
+        }
     </style>
     <div id="navbar" class="yuzu-nav">
         <a href="/">技术：03A01 黄鱼</a>
@@ -716,37 +720,52 @@
             <h2>此页面来自社区贡献者</h2>
             投稿：请发送邮件到<a href="mailto:ciallo0721.org@outlook.com">ciallo0721.org@outlook.com</a><br>
             如果您想要在页面上署上您的版权信息，请在邮件内备注(允许使用化名等)。
+            <h2>移动数据使用量说明</h2>
+            加载缩略图预计<span style="font-weight: 1000;">总</span>花费为 <a class="monospaced">&lt; 1 MiB</a><br>
+            加载<span style="font-weight: 1000;">每张</span>大图预计花费为 <a class="monospaced">20 ~ 400 KiB</a>
             <h2>版权说明</h2>
             本页面上的照片是 <strong style="font-weight: 1000; background-color: yellow; color: black;">有版权的</strong>。<br>
             <strong>允许个人二创与非商业使用的作者：</strong> 03A01 黄鱼, 🐨
             <br>
-            <strong>未表明的作者：</strong> HD Ningbo School, 电脑洗了没干
+            <strong>未表明的作者：</strong> HD Ningbo School, 电脑洗了没干, 匿名贡献者01, Yezi Zheng, Jimmy Khan
         </div>
         <div class="yuzu-card group">
             <h2>Y901H Yezi</h2>
             © 03A01 黄鱼 | 适用于以下图片。
-            <div class="gallery" id="group-yezi"></div>
+            <div class="gallery" id="group-yezi"></div><br>
+            © 匿名贡献者01 | 适用于以下图片。
+            <div class="gallery" id="group-yezi-noname01"></div><br>
+            © HD Ningbo School | 适用于以下图片。
+            <div class="gallery" id="group-yezi-hdscl"></div><br>
+            © 未知 (侵权请联系删除) | 适用于以下图片。
+            <div class="gallery" id="group-yezi-unknown"></div>
         </div>
         <div class="yuzu-card group">
             <h2>Y901H Max</h2>
             © 03A01 黄鱼 | 适用于以下图片。
             <div class="gallery" id="group-max"></div><br>
             © 🐨 | 适用于以下图片。
-            <div class="gallery" id="group-max-cha"></div>
+            <div class="gallery" id="group-max-hxcha"></div>
         </div>
         <div class="yuzu-card group">
             <h2>Y9 Candace</h2>
             © 03A01 黄鱼 | 适用于以下图片。
             <div class="gallery" id="group-candace"></div><br>
+            © 匿名贡献者01 | 适用于以下图片。
+            <div class="gallery" id="group-candace-noname01"></div><br>
+            © 🐨 | 适用于以下图片。
+            <div class="gallery" id="group-candace-hxcha"></div><br>
             © 未知 (侵权请联系删除) | 适用于以下图片。
             <div class="gallery" id="group-candace-unknown"></div>
         </div>
         <div class="yuzu-card group">
             <h2>Y9 Mehran Hamayoun Jimmy Khan</h2>
             © HD Ningbo School | 适用于以下图片。
-            <div class="gallery" id="group-jimmykhan-hd"></div><br>
+            <div class="gallery" id="group-jimmykhan-hdscl"></div><br>
             © 电脑洗了没干 | 适用于以下图片。
             <div class="gallery" id="group-jimmykhan-computer-watered"></div><br>
+            © Jimmy Khan | 适用于以下图片。
+            <div class="gallery" id="group-jimmykhan-jkmh"></div><br>
             © 未知 (侵权请联系删除) | 适用于以下图片。
             <div class="gallery" id="group-jimmykhan-unknown"></div>
         </div>
@@ -756,9 +775,20 @@
             <div class="gallery" id="group-della"></div>
         </div>
         <div class="yuzu-card group">
+            <h2>石国鹏 Michael Shi</h2>
+            © 🐨 | 适用于以下图片。
+            <div class="gallery" id="group-michaelshi-hxcha"></div><br>
+            © 匿名贡献者01 | 适用于以下图片。
+            <div class="gallery" id="group-michaelshi-noname01"></div>
+        </div>
+        <div class="yuzu-card group">
             <h2>老师合照</h2>
             © 03A01 黄鱼 | 适用于以下图片。
-            <div class="gallery" id="group-together"></div>
+            <div class="gallery" id="group-together"></div><br>
+            © Yezi Zheng | 适用于以下图片。
+            <div class="gallery" id="group-together-yezi"></div><br>
+            © HD Ningbo School | 适用于以下图片。
+            <div class="gallery" id="group-together-hdscl"></div>
         </div>
     </div>
 
@@ -785,7 +815,7 @@
             {
                 "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/25d691acd611e44d4b450f2b8de1fa43.jpg",
                 "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/25d691acd611e44d4b450f2b8de1fa43.jpg",
-                "group": "group-jimmykhan-hd"
+                "group": "group-jimmykhan-hdscl"
             },
             {
                 "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3266.jpg",
@@ -805,7 +835,7 @@
             {
                 "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/5f84d915b5465159d218fab45b2d2763.jpg",
                 "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/5f84d915b5465159d218fab45b2d2763.jpg",
-                "group": "group-max-cha"
+                "group": "group-max-hxcha"
             },
             {
                 "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_0397.jpg",
@@ -866,6 +896,81 @@
                 "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/75c3ae89602477346ec2516f499213a2.jpg",
                 "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/75c3ae89602477346ec2516f499213a2.jpg",
                 "group": "group-jimmykhan-computer-watered"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/noname01-candace-hfi-38586-cropped.png",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/noname01-candace-hfi-38586.png",
+                "group": "group-candace-noname01"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/noname01-michaelshi-hfi-cd78c-cropped.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/noname01-michaelshi-hfi-cd78c.jpg",
+                "group": "group-michaelshi-noname01"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/noname01-yezi-43136-cropped.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/noname01-yezi-43136.jpg",
+                "group": "group-yezi-noname01"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/hxcha-candace-hfi-13fc8-cropped.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/hxcha-candace-hfi-13fc8.jpg",
+                "group": "group-candace-hxcha"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/hxcha-candace-hfi-26b67-cropped.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/hxcha-candace-hfi-26b67.jpg",
+                "group": "group-candace-hxcha"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/hxcha-michaelshi-hfi-8b6f8.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/hxcha-michaelshi-hfi-8b6f8.jpg",
+                "group": "group-michaelshi-hxcha"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/unknown-jimmykhan-e7e41.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/unknown-jimmykhan-e7e41.jpg",
+                "group": "group-jimmykhan-unknown"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/yezi-together-a9a36.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/yezi-together-a9a36.jpg",
+                "group": "group-together-yezi"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/hdscl-yezi-201a2.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/hdscl-yezi-201a2.jpg",
+                "group": "group-yezi-hdscl"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/hdscl-together-adad9.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/hdscl-together-adad9.jpg",
+                "group": "group-together-hdscl"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/unknown-yezi-df759.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/unknown-yezi-df759.jpg",
+                "group": "group-yezi-unknown"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/hdscl-yezi-63c2e.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/hdscl-yezi-63c2e.jpg",
+                "group": "group-yezi-hdscl"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/hdscl-yezi-549d8.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/hdscl-yezi-549d8.jpg",
+                "group": "group-yezi-hdscl"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/jkmh-jimmykhan-23186.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/jkmh-jimmykhan-23186.jpg",
+                "group": "group-jimmykhan-jkmh"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/jkmh-jimmykhan-a3b1a.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/jkmh-jimmykhan-a3b1a.jpg",
+                "group": "group-jimmykhan-jkmh"
             }
         ]
         console.log(images);
