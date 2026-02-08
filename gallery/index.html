@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="zh" data-theme="dark"> <!-- 或 light，取决于初始主题 -->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图片画廊</title>
+    <style>
+        /* ===== 必需的基础 CSS 变量和 body 样式 (用于主题切换) ===== */
+        :root {
+            --bg-color-light: #f7f7f7;
+            --text-color-light: #333;
+            --bg-color-dark: #1a1a1a;
+            --text-color-dark: #e0e0e0;
+            --card-color-light: #ffffff;
+            --card-color-dark: #2a2a2a;
+            --yuzu-mint: #D3E9B5;
+            --yuzu-cream: #FFF7A4;
+            --yuzu-pink: #FFB6C1;
+            --yuzu-lavender: #E6E6FA;
+            --yuzu-sky: #B5D3FF;
+            --yuzu-dark-green: #8BA88A;
+            --yuzu-dark-yellow: #D4B85E;
+            --yuzu-dark-pink: #D88A9B;
+            --yuzu-dark-purple: #B0A8D9;
+            --yuzu-dark-blue: #8AA8D8;
+            --bg-light: #FDFDF6;
+            --card-light: rgba(255, 255, 255, 0.95);
+            --bg-dark: #2A2A3A;
+            --card-dark: rgba(42, 42, 58, 0.95);
+        }
+
+        [data-theme="light"] {
+            --bg-color: var(--bg-color-light);
+            --text-color: var(--text-color-light);
+            --card-color: var(--card-color-light);
+        }
+
+        [data-theme="dark"] {
+            --bg-color: var(--bg-color-dark);
+            --text-color: var(--text-color-dark);
+            --card-color: var(--card-color-dark);
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background 0.3s ease, color 0.3s ease;
+            background-image: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.05), transparent 40%),
+                radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.05), transparent 40%);
+            background-size: cover;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.yuzusoft {
+            font-family: 'M PLUS Rounded 1c', 'Hiragino Sans GB', 'Microsoft YaHei', sans-serif;
+            background-color: var(--bg-light);
+            background-image: radial-gradient(circle at 10% 20%, rgba(211, 233, 181, 0.15), transparent 40%),
+                radial-gradient(circle at 90% 30%, rgba(255, 247, 164, 0.15), transparent 40%),
+                radial-gradient(circle at 50% 80%, rgba(255, 182, 193, 0.1), transparent 40%);
+            color: #000000;
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] body.yuzusoft {
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 10% 20%, rgba(139, 168, 138, 0.15), transparent 40%),
+                radial-gradient(circle at 90% 30%, rgba(212, 184, 94, 0.15), transparent 40%),
+                radial-gradient(circle at 50% 80%, rgba(216, 138, 155, 0.1), transparent 40%);
+            color: #FFFFFF;
+        }
+
+        /* ===== Gallery CSS ===== */
+        .gallery {
+            margin-top: 15px;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            gap: 12px;
+        }
+
+        .gallery.hidden {
+            display: none;
+        }
+
+        .gallery-item {
+            aspect-ratio: 4 / 3;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            background: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.02);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+        }
+
+        .gallery-item img.loaded {
+            opacity: 1;
+        }
+
+        /* 条纹背景 */
+        .gallery-item.placeholder,
+        .gallery-item.error,
+        .gallery-item.retrying-state {
+            background: repeating-linear-gradient(45deg,
+                    rgba(0, 0, 0, 0.05),
+                    rgba(0, 0, 0, 0.05) 10px,
+                    transparent 10px,
+                    transparent 20px) !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* 错误状态 */
+        .gallery-item.error {
+            background: repeating-linear-gradient(45deg,
+                    rgba(255, 0, 0, 0.05),
+                    rgba(255, 0, 0, 0.05) 10px,
+                    rgba(255, 0, 0, 0.02) 10px,
+                    rgba(255, 0, 0, 0.02) 20px) !important;
+        }
+
+        /* 重试中状态 */
+        .gallery-item.retrying-state {
+            background: repeating-linear-gradient(45deg,
+                    rgba(0, 123, 255, 0.05),
+                    rgba(0, 123, 255, 0.05) 10px,
+                    rgba(0, 123, 255, 0.02) 10px,
+                    rgba(0, 123, 255, 0.02) 20px) !important;
+        }
+
+        /* 重试按钮容器 */
+        .retry-button {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            padding: 12px;
+            border-radius: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .retry-button:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .retry-text {
+            color: #666;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* SVG 尺寸和颜色 */
+        .retry-icon {
+            width: 28px;
+            height: 28px;
+            fill: none;
+            stroke: #666;
+            stroke-width: 2;
+        }
+
+        /* 如果想加旋转动画（重试中） */
+        .retrying .retry-icon {
+            animation: spin 1s linear infinite;
+        }
+
+        /* 重试中状态 */
+        .retrying {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .retrying-text {
+            color: #007bff;
+            font-size: 13px;
+            font-weight: 500;
+            white-space: nowrap;
+            /* 关键：禁止文字换行 */
+            text-align: center;
+            /* 文字居中 */
+            line-height: 1.2;
+            /* 行高统一 */
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .retrying-text::after {
+            content: attr(data-percent);
+            /* 通过 data-percent 属性显示百分比 */
+            font-size: 14px;
+            font-weight: bold;
+            color: #007bff;
+            font-family: 'Cascadia Code', 'Consolas', monospace;
+        }
+
+        /* 预览遮罩 */
+        .preview-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            overflow: hidden !important;
+            touch-action: none !important;
+            -webkit-overflow-scrolling: none !important;
+            overscroll-behavior: contain !important;
+            box-sizing: border-box;
+        }
+
+        /* 预览容器 - 强制居中，不受页面布局影响 */
+        .preview-container {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: auto;
+            height: auto;
+            max-width: calc(100vw - 40px);
+            max-height: calc(100vh - 40px);
+        }
+
+        /* 预览图片 */
+        #previewImage {
+            max-width: calc(100vw - 40px) !important;
+            max-height: calc(100vh - 40px) !important;
+            width: auto;
+            height: auto;
+            object-fit: contain !important;
+            border-radius: 6px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            background: #fff;
+            padding: 8px;
+            pointer-events: auto;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        /* 错误状态 */
+        .preview-error {
+            position: absolute;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            padding: 30px;
+            z-index: 1;
+        }
+
+        .preview-error span {
+            color: #ff3333;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .retry-preview-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+
+        .retry-preview-btn:hover {
+            background: #0056b3;
+        }
+
+        /* 关闭按钮 */
+        .preview-overlay span#closePreview {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            font-size: 36px;
+            color: #fff;
+            cursor: pointer;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.2s ease;
+            z-index: 10000;
+            background: rgba(0, 0, 0, 0.3);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .preview-overlay span#closePreview:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.1);
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* 加载动画 - 统一电脑/手机端样式 */
+        .spinner {
+            width: 26px !important;
+            height: 26px !important;
+            border: 3px solid rgba(0, 123, 255, 0.3) !important;
+            border-top-color: #007bff !important;
+            border-radius: 50% !important;
+            animation: spin 1s linear infinite !important;
+            margin: 0 auto !important;
+            /* 强制居中，防止偏移 */
+        }
+
+        /* 修改 .loading-spinner 的动画 */
+        .loading-spinner {
+            width: 40px !important;
+            height: 40px !important;
+            border: 3px solid rgba(0, 123, 255, 0.3) !important;
+            border-top-color: #007bff !important;
+            border-radius: 50% !important;
+            animation: spin 1s linear infinite !important;
+            -webkit-animation: spin 1s linear infinite !important;
+            animation-play-state: running !important;
+            will-change: transform;
+            animation-name: spin !important;
+            /* 强制指定动画名称 */
+        }
+
+        /* 给 spinner 增加浏览器前缀，确保兼容性 */
+        .spinner,
+        .loading-spinner {
+            animation: spin 1s linear infinite !important;
+            -webkit-animation: spin 1s linear infinite !important;
+        }
+
+        /* 加载文字 - 禁止换行，统一样式 */
+        .loading-text {
+            color: #007bff !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+            white-space: nowrap !important;
+            /* 关键：禁止文字换行 */
+            text-align: center !important;
+            /* 文字居中 */
+            line-height: 1.2 !important;
+            /* 行高统一 */
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .loading-text::after {
+            content: attr(data-percent);
+            /* 通过 data-percent 属性显示百分比 */
+            font-size: 14px;
+            font-weight: bold;
+            color: #007bff;
+            font-family: 'Cascadia Code', 'Consolas', monospace;
+        }
+
+        /* 预览加载容器 - 统一间距 */
+        .preview-loading {
+            position: absolute !important;
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 15px !important;
+            background: rgba(255, 255, 255, 0.9) !important;
+            border-radius: 10px !important;
+            padding: 30px !important;
+            z-index: 1 !important;
+            min-width: 120px !important;
+            width: auto !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+            transition: opacity 0.3s ease, visibility 0.3s ease !important;
+        }
+
+        /* 修改 .hidden 类对 .preview-loading 的特别处理 */
+        .preview-loading.hidden {
+            opacity: 0 !important;
+            visibility: hidden !important;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+                -webkit-transform: rotate(360deg);
+            }
+        }
+
+        /* ===== 柚子社卡片样式 (用于 Gallery 区域外层容器) ===== */
+        .yuzu-card {
+            background: var(--card-light);
+            border-radius: 20px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 2px solid var(--yuzu-mint);
+            box-shadow: 0 8px 32px rgba(211, 233, 181, 0.15),
+                0 2px 8px rgba(211, 233, 181, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] .yuzu-card {
+            background: var(--card-dark);
+            border-color: var(--yuzu-dark-green);
+            box-shadow: 0 8px 32px rgba(139, 168, 138, 0.15),
+                0 2px 8px rgba(139, 168, 138, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.05);
+        }
+
+        .yuzu-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--yuzu-pink);
+            box-shadow: 0 12px 40px rgba(255, 182, 193, 0.2),
+                0 4px 12px rgba(255, 182, 193, 0.15);
+        }
+
+        /* ===== 移动端适配 (如果需要) ===== */
+        @media (max-width: 768px) {
+            .yuzu-card {
+                padding: 15px;
+                margin: 8px 0 !important;
+                border-radius: 12px;
+            }
+
+            .gallery-item img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+            .loading-text::after,
+            .retrying-text::after {
+                font-size: 12px;
+            }
+
+            .spinner {
+                width: 20px !important;
+                height: 20px !important;
+                border-width: 2px !important;
+            }
+
+            .loading-spinner {
+                width: 30px !important;
+                height: 30px !important;
+            }
+
+            .loading-text,
+            .retrying-text {
+                font-size: 12px !important;
+            }
+
+            .preview-loading {
+                padding: 20px !important;
+                gap: 10px !important;
+            }
+        }
+    </style>
+
+    <!-- 如果需要主题切换按钮 -->
+    <button id="themeToggle" onclick="toggleTheme()"
+        style="position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; font-size: 18px; z-index: 1001; background-color: var(--card-color); border: 2px solid var(--text-color); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;">🌓</button>
+
+</head>
+
+<body class="yuzusoft">
+
+    <div class="container">
+        <h1 class="yuzu-title">图片画廊</h1> <!-- 你可以修改这个标题 -->
+        <div class="yuzu-card">
+            © 03A01 黄鱼 (自摄-2025) <!-- 版权信息 -->
+            <div id="galleryContent" class="gallery"></div>
+        </div>
+    </div>
+
+    <!-- 放大预览遮罩 -->
+    <div id="previewOverlay" class="preview-overlay hidden">
+        <span id="closePreview">×</span>
+        <div class="preview-container">
+            <div id="previewLoading" class="preview-loading hidden">
+                <div class="loading-spinner"></div>
+                <span class="loading-text">加载中...</span>
+            </div>
+            <div id="previewError" class="preview-error hidden">
+                <span>图片加载失败</span>
+                <button id="retryPreview" class="retry-preview-btn">重试</button>
+            </div>
+            <img id="previewImage" src="" alt="预览图片">
+        </div>
+    </div>
+
+    <script>
+        // ===== 图片数组 (替换为你自己的图片路径) =====
+        const images = [
+            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_8014.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_8014.jpg" },
+            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_8042.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_8042.jpg" },
+            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_8091.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_8091.jpg" },
+            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_8706.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_8706.jpg" },
+            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_7362.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_7362.jpg" },
+            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_0050.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_0050.jpg" },
+            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_0104.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_0104.jpg" },
+            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_0155.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_0155.jpg" },
+            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_0156.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_0156.jpg" },
+            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_0158.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_0158.jpg" },
+            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_8078.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_8078.jpg" },
+            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/SHMETRO-old-03A01-ZhongShanParkSta-wmd.jpg", full: "https://ans.ciallo0721.org/static/ps/full/SHMETRO-old-03A01-ZhongShanParkSta-wmd.jpg"},
+        ];
+
+        // ===== 全局变量 =====
+        let scrollPosition = 0;
+        let currentPreviewData = null;
+        let isClosing = false; // 防止重复关闭
+        let currentImageLoad = null;
+        let currentImageLoadTimeout = null;
+
+        // ===== 主题切换功能 (如果需要) =====
+        function toggleTheme() {
+            const html = document.documentElement;
+            const isDark = html.getAttribute("data-theme") === "dark";
+            const newTheme = isDark ? "light" : "dark";
+            html.setAttribute("data-theme", newTheme);
+            try {
+                localStorage.setItem("preferred-theme", newTheme);
+                console.log(`🔄 主题切换为: ${newTheme}`);
+            } catch (e) {
+                console.error("❌ 无法保存主题设置到 localStorage:", e);
+            }
+        }
+
+        // ===== 立即设置主题 (避免闪烁) =====
+        (function () {
+            'use strict';
+            function setThemeImmediately() {
+                const html = document.documentElement;
+                try {
+                    const savedTheme = localStorage.getItem("preferred-theme");
+                    if (savedTheme) {
+                        if (savedTheme === "light" || savedTheme === "dark") {
+                            html.setAttribute("data-theme", savedTheme);
+                            console.log(`🎨 立即应用保存的主题: ${savedTheme}`);
+                        } else {
+                            console.warn(`⚠️ 存储的主题值不合法: "${savedTheme}"，使用深色主题`);
+                            html.setAttribute("data-theme", "dark");
+                            localStorage.setItem("preferred-theme", "dark");
+                        }
+                    } else {
+                        console.log("🎨 首次访问，使用深色主题");
+                        html.setAttribute("data-theme", "dark");
+                    }
+                } catch (e) {
+                    console.error("❌ localStorage 访问失败，使用深色主题:", e);
+                    html.setAttribute("data-theme", "dark");
+                }
+            }
+            setThemeImmediately();
+        })();
+
+        // ===== 图库初始化和加载逻辑 =====
+        document.addEventListener("DOMContentLoaded", () => {
+            const gallery = document.getElementById("galleryContent");
+
+            // 创建图片项（只创建DOM，不加载图片）
+            images.forEach((data, index) => {
+                const item = document.createElement("div");
+                item.className = "gallery-item placeholder";
+                const img = document.createElement("img");
+                img.dataset.thumb = data.thumb; // 用data属性暂存地址
+                img.dataset.full = data.full;
+                img.alt = `图片 ${index + 1}`;
+                img.style.display = "none";
+                item.appendChild(img);
+                gallery.appendChild(item);
+
+                // 只创建错误元素，不加载图片
+                createErrorElements(img, data, index);
+            });
+
+            // 关闭预览事件
+            const closePreview = () => {
+                if (isClosing) return;
+                isClosing = true;
+                console.log('关闭预览，取消当前加载');
+
+                // 取消当前的图片加载请求
+                if (currentImageLoad) {
+                    currentImageLoad.onload = null;
+                    currentImageLoad.onerror = null;
+                    currentImageLoad.src = ''; // 中断加载
+                    currentImageLoad = null;
+                }
+                if (currentImageLoadTimeout) {
+                    clearTimeout(currentImageLoadTimeout);
+                    currentImageLoadTimeout = null;
+                }
+                if (window.currentXHR) {
+                    try {
+                        window.currentXHR.abort();
+                        window.currentXHR = null;
+                    } catch (e) {
+                        console.log('取消XHR请求出错:', e);
+                    }
+                }
+
+                const overlay = document.getElementById("previewOverlay");
+                overlay.classList.add("hidden");
+
+                // 立即重置所有预览状态
+                const previewImg = document.getElementById('previewImage');
+                const previewLoading = document.getElementById('previewLoading');
+                const previewError = document.getElementById('previewError');
+                if (previewImg) {
+                    previewImg.style.opacity = '0';
+                    previewImg.src = '';
+                    previewImg.style.display = 'none';
+                }
+                if (previewLoading) {
+                    previewLoading.classList.add('hidden');
+                    const spinner = previewLoading.querySelector('.loading-spinner');
+                    if (spinner) {
+                        spinner.style.animation = 'none';
+                        spinner.style.webkitAnimation = 'none';
+                    }
+                }
+                if (previewError) {
+                    previewError.classList.add('hidden');
+                }
+
+                setTimeout(() => {
+                    document.body.style.overflow = 'auto'; // 恢复滚动
+                    document.body.style.paddingRight = '';
+                    if (scrollPosition !== undefined) {
+                        window.scrollTo({ top: scrollPosition, behavior: 'auto' });
+                    }
+                    isClosing = false;
+                    currentPreviewData = null;
+                }, 100);
+            };
+
+            document.getElementById("closePreview").onclick = closePreview;
+            document.getElementById("previewOverlay").onclick = (e) => {
+                if (e.target.id === "previewOverlay") closePreview();
+            };
+            document.addEventListener("keydown", (e) => {
+                if (e.key === "Escape") {
+                    const overlay = document.getElementById("previewOverlay");
+                    if (!overlay.classList.contains("hidden")) closePreview();
+                }
+            });
+            document.getElementById('retryPreview').onclick = () => {
+                if (currentPreviewData) loadPreviewImage(currentPreviewData);
+            };
+
+            // 页面加载完成后开始加载图片
+            loadGalleryImages();
+        });
+
+        function createErrorElements(img, data, index) {
+            const parent = img.parentNode;
+
+            const errorDiv = document.createElement("div");
+            errorDiv.className = "error";
+            errorDiv.style.display = "none";
+            errorDiv.innerHTML = `<div class="retry-button" title="重新加载">
+                <svg class="retry-icon" viewBox="0 0 72 72" role="img" preserveAspectRatio="xMinYMin meet">
+                    <title>重试</title>
+                    <path d="M53.9,35.9h9c0,3.7-0.7,7.2-2.1,10.5s-3.3,6.1-5.8,8.5c-2.4,2.4-5.3,4.4-8.6,5.8s-6.7,2.1-10.4,2.1c-3.7,0-7.2-0.7-10.5-2.1s-6.1-3.3-8.5-5.8s-4.4-5.3-5.8-8.5s-2.1-6.7-2.1-10.5s0.7-7.2,2.1-10.5s3.3-6.1,5.8-8.5s5.3-4.4,8.6-5.8S32.3,9.1,36,9.1h5.3l-2.7-2.7L45,0.1l13.4,13.4L45,27.1l-6.4-6.4l2.6-2.6L36,18c-2.5,0-4.8,0.5-7,1.4s-4.1,2.2-5.7,3.8s-2.9,3.5-3.8,5.7c-0.9,2.2-1.4,4.5-1.4,7s0.5,4.8,1.4,7c0.9,2.2,2.2,4.1,3.8,5.7c1.6,1.6,3.5,2.9,5.7,3.8s4.5,1.4,7,1.4s4.8-0.5,7-1.4c2.2-0.9,4.1-2.2,5.7-3.8c1.6-1.6,2.9-3.5,3.8-5.7C53.4,40.7,53.9,38.4,53.9,35.9z"></path>
+                </svg>
+                <span class="retry-text">重试</span>
+            </div>`;
+
+            const retryingDiv = document.createElement("div");
+            retryingDiv.className = "retrying";
+            retryingDiv.style.display = "none";
+            retryingDiv.innerHTML = `<div class="spinner"></div><span class="retrying-text">加载中...</span>`;
+
+            parent.appendChild(errorDiv);
+            parent.appendChild(retryingDiv);
+
+            const retryButton = errorDiv.querySelector(".retry-button");
+            retryButton.onclick = e => {
+                e.stopPropagation();
+                loadImage(img, data, index, true); // 强制刷新
+            };
+
+            parent.onclick = () => {
+                if (img.classList.contains('loaded') && img.src) {
+                    openPreview(data);
+                }
+            };
+        }
+
+        function loadGalleryImages() {
+            const galleryItems = document.querySelectorAll('.gallery-item img');
+            galleryItems.forEach((img, index) => {
+                const data = { thumb: img.dataset.thumb, full: img.dataset.full };
+                loadImage(img, data, index);
+            });
+        }
+
+        function loadImage(img, data, index, forceRefresh = false) {
+            const parent = img.parentNode;
+            const errorDiv = parent.querySelector('.error');
+            const retryingDiv = parent.querySelector('.retrying');
+
+            errorDiv.style.display = "none";
+            retryingDiv.style.display = "flex";
+            parent.classList.add("retrying-state");
+            parent.classList.remove("error");
+
+            const newImg = new Image();
+            const imageSrc = forceRefresh ? `${data.thumb}?t=${Date.now()}` : data.thumb;
+
+            const timeout = setTimeout(() => {
+                if (!img.classList.contains('loaded')) {
+                    console.warn(`图片加载超时: ${data.thumb}`);
+                    if (newImg.onerror) newImg.onerror();
+                }
+            }, 15000);
+
+            newImg.onload = () => {
+                clearTimeout(timeout);
+                img.src = newImg.src;
+                img.style.display = "block";
+                img.classList.add('loaded');
+
+                retryingDiv.style.display = "none";
+                parent.classList.remove("placeholder", "error", "retrying-state");
+
+                img.style.opacity = '0';
+                setTimeout(() => {
+                    img.style.transition = 'opacity 0.3s ease';
+                    img.style.opacity = '1';
+                }, 10);
+            };
+
+            newImg.onerror = () => {
+                clearTimeout(timeout);
+                img.style.display = "none";
+                img.classList.remove('loaded');
+
+                retryingDiv.style.display = "none";
+                errorDiv.style.display = "flex";
+                parent.classList.remove("placeholder", "retrying-state");
+                parent.classList.add("error");
+            };
+
+            newImg.src = imageSrc;
+        }
+
+        function openPreview(data) {
+            console.log('打开预览，数据:', data);
+            scrollPosition = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+            currentPreviewData = data;
+            const overlay = document.getElementById("previewOverlay");
+            const previewImg = document.getElementById("previewImage");
+
+            previewImg.style.opacity = '0';
+            previewImg.src = '';
+            previewImg.style.display = 'none';
+
+            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+            document.body.style.overflow = 'hidden';
+            if (scrollbarWidth > 0) {
+                document.body.style.paddingRight = `${scrollbarWidth}px`;
+            }
+
+            overlay.classList.remove("hidden");
+            loadPreviewImage(data);
+        }
+
+        function loadPreviewImage(data) {
+            const previewImg = document.getElementById("previewImage");
+            const loadingEl = document.getElementById('previewLoading');
+            const errorEl = document.getElementById('previewError');
+
+            console.log('开始加载大图:', data.full);
+
+            if (currentImageLoad) {
+                currentImageLoad.onload = null;
+                currentImageLoad.onerror = null;
+                currentImageLoad.src = '';
+                currentImageLoad = null;
+            }
+            if (currentImageLoadTimeout) {
+                clearTimeout(currentImageLoadTimeout);
+                currentImageLoadTimeout = null;
+            }
+
+            previewImg.style.opacity = '0';
+            previewImg.src = '';
+            previewImg.style.display = 'none';
+
+            errorEl.classList.add('hidden');
+
+            loadingEl.innerHTML = `<div class="loading-spinner"></div><span class="loading-text" data-percent="0%">加载中...</span>`;
+            loadingEl.classList.remove('hidden');
+
+            const spinner = loadingEl.querySelector('.loading-spinner');
+            if (spinner) {
+                spinner.style.animation = 'spin 1s linear infinite';
+                spinner.style.webkitAnimation = 'spin 1s linear infinite';
+                spinner.style.animationName = 'spin';
+                spinner.style.webkitAnimationName = 'spin';
+                void spinner.offsetWidth;
+            }
+
+            const xhr = new XMLHttpRequest();
+            function loadWithXHR() {
+                window.currentXHR = new XMLHttpRequest();
+                const xhr = window.currentXHR;
+                xhr.open('GET', data.full, true);
+                xhr.responseType = 'blob';
+                xhr.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        const percent = Math.round((e.loaded / e.total) * 100);
+                        const loadingText = document.querySelector('.loading-text');
+                        if (loadingText) {
+                            loadingText.setAttribute('data-percent', `${percent}%`);
+                        }
+                    }
+                };
+                xhr.onload = () => {
+                    if (xhr.status === 200) {
+                        const blob = xhr.response;
+                        const url = URL.createObjectURL(blob);
+                        currentImageLoad = new Image();
+                        currentImageLoad.onload = () => {
+                            handleImageLoadSuccess();
+                            URL.revokeObjectURL(url);
+                            window.currentXHR = null;
+                        };
+                        currentImageLoad.onerror = () => {
+                            handleImageLoadError();
+                            URL.revokeObjectURL(url);
+                            window.currentXHR = null;
+                        };
+                        currentImageLoad.src = url;
+                    } else {
+                        loadWithImageElement();
+                    }
+                };
+                xhr.onerror = () => {
+                    loadWithImageElement();
+                };
+                xhr.ontimeout = () => {
+                    loadWithImageElement();
+                };
+                xhr.timeout = 15000;
+                xhr.send();
+            }
+
+            function loadWithImageElement() {
+                currentImageLoad = new Image();
+                currentImageLoadTimeout = setTimeout(() => {
+                    if (currentImageLoad) {
+                        console.log('图片加载超时');
+                        currentImageLoad.onload = null;
+                        currentImageLoad.onerror = null;
+                        handleImageLoadError();
+                    }
+                }, 20000);
+
+                currentImageLoad.onprogress = (e) => {
+                    if (e.lengthComputable) {
+                        const percent = Math.round((e.loaded / e.total) * 100);
+                        const loadingText = document.querySelector('.loading-text');
+                        if (loadingText) {
+                            loadingText.setAttribute('data-percent', `${percent}%`);
+                        }
+                    }
+                };
+
+                currentImageLoad.onload = handleImageLoadSuccess;
+                currentImageLoad.onerror = handleImageLoadError;
+                currentImageLoad.src = data.full || data.thumb;
+            }
+
+            function handleImageLoadSuccess() {
+                if (!currentImageLoad) return;
+                console.log('大图加载成功');
+                clearTimeout(currentImageLoadTimeout);
+                if (xhr) xhr.abort();
+
+                loadingEl.classList.add('hidden');
+
+                previewImg.src = currentImageLoad.src;
+                previewImg.style.display = 'block';
+                setTimeout(() => {
+                    previewImg.style.opacity = '1';
+                }, 10);
+                currentImageLoad = null;
+                currentImageLoadTimeout = null;
+            }
+
+            function handleImageLoadError() {
+                if (!currentImageLoad) return;
+                console.log('大图加载失败');
+                clearTimeout(currentImageLoadTimeout);
+                if (xhr) xhr.abort();
+
+                loadingEl.classList.add('hidden');
+
+                setTimeout(() => {
+                    errorEl.classList.remove('hidden');
+                    if (data.thumb !== data.full) {
+                        const thumbImg = new Image();
+                        thumbImg.onload = function () {
+                            if (!currentImageLoad) return;
+                            previewImg.src = this.src;
+                            previewImg.style.display = 'block';
+                            previewImg.style.opacity = '1';
+                            errorEl.classList.add('hidden');
+                        };
+                        thumbImg.onerror = function () { };
+                        thumbImg.src = data.thumb;
+                    }
+                }, 10);
+                currentImageLoad = null;
+                currentImageLoadTimeout = null;
+            }
+
+            try {
+                loadWithXHR();
+            } catch (e) {
+                console.log('XHR加载失败，回退到普通加载:', e);
+                loadWithImageElement();
+            }
+        }
+    </script>
+</body>
+
+</html>
