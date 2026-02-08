@@ -86,6 +86,10 @@
             --card-light: rgba(255, 255, 255, 0.95);
             --bg-dark: #2A2A3A;
             --card-dark: rgba(42, 42, 58, 0.95);
+            --contact-light-main: #085EFF;
+            --contact-light-text: #000000;
+            --contact-dark-main: #FFF7A4;
+            --contact-dark-text: #FFFFFF;
         }
 
         [data-theme="light"] {
@@ -556,6 +560,7 @@
         }
 
         .container {
+            margin-top: 100px;
             max-width: 900px;
             margin-left: auto;
             margin-right: auto;
@@ -568,12 +573,135 @@
             text-align: center;
             margin-top: 20px;
             margin-bottom: 25px;
+            background: linear-gradient(135deg, var(--yuzu-dark-green), var(--yuzu-dark-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        [data-theme="dark"] .yuzu-title {
+            background: linear-gradient(135deg, var(--yuzu-mint), var(--yuzu-pink));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        #navbar.yuzu-nav {
+            display: flex !important;
+            justify-content: center !important;
+            /* 水平居中 */
+            align-items: center !important;
+            /* 垂直居中 */
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-bottom: 3px solid var(--yuzu-mint);
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100% !important;
+            z-index: 1000 !important;
+            padding: 10px 0 !important;
+            height: auto !important;
+            box-sizing: border-box !important;
+        }
+
+
+        [data-theme="dark"] #navbar.yuzu-nav {
+            background: rgba(42, 42, 58, 0.95);
+            border-bottom-color: var(--yuzu-dark-green);
+        }
+
+        .yuzu-nav a {
+            color: var(--yuzu-dark-green);
+            padding: 10px 20px;
+            border-radius: 20px;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+            position: relative;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        [data-theme="dark"] .yuzu-nav a {
+            color: var(--yuzu-mint);
+        }
+
+        .yuzu-nav a:hover {
+            background: var(--yuzu-mint);
+            color: #5A5A6E;
+            transform: translateY(-2px);
+        }
+
+        [data-theme="dark"] .yuzu-nav a:hover {
+            background: var(--yuzu-dark-green);
+            color: #E0E0E8;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        #themeToggle,
+        #gotoTop {
+            position: fixed;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            z-index: 1001;
+            background-color: var(--card-color);
+            border: 2px solid var(--text-color);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        #themeToggle {
+            top: 20px;
+            right: 20px;
+        }
+
+        #gotoTop {
+            top: 70px;
+            right: 20px;
+        }
+
+        [data-theme="light"] #gotoTop {
+            color: #000000;
+        }
+
+        [data-theme="dark"] #gotoTop {
+            color: #FFFFFF;
+        }
+
+        [data-theme="light"] .yuzu-card a {
+            color: var(--contact-light-main);
+            /* 白主题主色 */
+            text-shadow: 0 0 8px rgba(8, 94, 255, 0.7)
+        }
+
+        [data-theme="dark"] .yuzu-card a {
+            color: var(--contact-dark-main);
+            /* 黑主题黄色 */
+            text-shadow: 0 0 8px rgba(255, 247, 164, 0.7)
         }
     </style>
+    <div id="navbar" class="yuzu-nav">
+        <a href="/">技术：03A01 黄鱼</a>
+        <!-- <a href="#">我要投稿</a> -->
+        <a>贡献：全社区</a>
+        <!-- <a href="#">页面顶部</a> -->
+        <!-- <a href="#">我要投稿</a> -->
+        <!-- <a href="#gallery"></a> -->
+    </div>
     <!-- 如果需要主题切换按钮 -->
-    <button id="themeToggle" onclick="toggleTheme()"
-        style="position: fixed; top: 20px; right: 20px; width: 40px; height: 40px; font-size: 18px; z-index: 1001; background-color: var(--card-color); border: 2px solid var(--text-color); border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; padding: 0;">🌓</button>
-
+    <button id="themeToggle" onclick="toggleTheme()">🌓</button>
+    <button id="gotoTop" onclick="window.location.href='#';">▲</button>
 </head>
 
 <body class="yuzusoft">
@@ -581,10 +709,18 @@
     <div class="container">
         <h1 class="yuzu-title">Y9图展</h1> <!-- 你可以修改这个标题 -->
         <!-- 定义分组 -->
-        <div class="yuzu-card">
+        <div class="yuzu-card" id="publish">
+            <h2>使用指南</h2>
+            <h3>----&gt; 点击图片可查看大图 &lt;----</h3>
+            请耐心等待图片加载(可能有点慢 QAQ)，感谢访问~~<br>
             <h2>此页面来自社区贡献者</h2>
-            如果您想要投稿，请发送邮件到<a href="mailto:ciallo0721.org@outlook.com">ciallo0721.org@outlook.com</a><br>
-            如果您想要在页面上署上您的版权信息，请在邮件内备注(允许使用化名或笔名)。
+            投稿：请发送邮件到<a href="mailto:ciallo0721.org@outlook.com">ciallo0721.org@outlook.com</a><br>
+            如果您想要在页面上署上您的版权信息，请在邮件内备注(允许使用化名等)。
+            <h2>版权说明</h2>
+            本页面上的照片是 <strong style="font-weight: 1000; background-color: yellow;">有版权的</strong>。<br>
+            <strong>允许个人二创与非商业使用的作者：</strong> 03A01 黄鱼, 🐨
+            <br>
+            <strong>未表明的作者：</strong> HD Ningbo School, 电脑洗了没干
         </div>
         <div class="yuzu-card group">
             <h2>Y901H Yezi</h2>
@@ -609,6 +745,8 @@
             <h2>Y9 Mehran Hamayoun Jimmy Khan</h2>
             © HD Ningbo School | 适用于以下图片。
             <div class="gallery" id="group-jimmykhan-hd"></div><br>
+            © 电脑洗了没干 | 适用于以下图片。
+            <div class="gallery" id="group-jimmykhan-unknown"></div><br>
             © 未知 (侵权请联系删除) | 适用于以下图片。
             <div class="gallery" id="group-jimmykhan-unknown"></div>
         </div>
@@ -616,6 +754,11 @@
             <h2>Y9 Della Cheng</h2>
             © 03A01 黄鱼 | 适用于以下图片。
             <div class="gallery" id="group-della"></div>
+        </div>
+        <div class="yuzu-card group">
+            <h2>老师合照</h2>
+            © 03A01 黄鱼 | 适用于以下图片。
+            <div class="gallery" id="group-together"></div>
         </div>
     </div>
 
@@ -650,16 +793,6 @@
                 "group": "group-yezi"
             },
             {
-                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3499.jpg",
-                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3499.jpg",
-                "group": "group-yezi"
-            },
-            {
-                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3513.jpg",
-                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3513.jpg",
-                "group": "group-yezi"
-            },
-            {
                 "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3558.jpg",
                 "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3558.jpg",
                 "group": "group-yezi"
@@ -678,21 +811,6 @@
                 "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_0397.jpg",
                 "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_0397.jpg",
                 "group": "group-max"
-            },
-            {
-                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3500.jpg",
-                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3500.jpg",
-                "group": "group-yezi"
-            },
-            {
-                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3526.jpg",
-                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3526.jpg",
-                "group": "group-yezi"
-            },
-            {
-                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3574.jpg",
-                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3574.jpg",
-                "group": "group-jimmykhan-hd"
             },
             {
                 "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_5642.jpg",
@@ -715,21 +833,6 @@
                 "group": "group-yezi"
             },
             {
-                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3501.jpg",
-                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3501.jpg",
-                "group": "group-yezi"
-            },
-            {
-                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3527.jpg",
-                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3527.jpg",
-                "group": "group-yezi"
-            },
-            {
-                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3575.jpg",
-                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3575.jpg",
-                "group": "group-jimmykhan-hd"
-            },
-            {
                 "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/b440d8d3f24c3413dd9a2cfaf727453b.png",
                 "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/b440d8d3f24c3413dd9a2cfaf727453b.png",
                 "group": "group-candace"
@@ -750,21 +853,22 @@
                 "group": "group-candace"
             },
             {
-                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3512.jpg",
-                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3512.jpg",
-                "group": "group-yezi"
-            },
-            {
-                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3534.jpg",
-                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3534.jpg",
-                "group": "group-yezi"
-            },
-            {
                 "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3577.jpg",
                 "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3577.jpg",
                 "group": "group-della"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/2e263c29b4f846ee1cf175b1d97fcaa7.jpg",
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/2e263c29b4f846ee1cf175b1d97fcaa7.jpg",
+                "group": "group-jimmykhan-computer-watered"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/75c3ae89602477346ec2516f499213a2.jpg",
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/75c3ae89602477346ec2516f499213a2.jpg",
+                "group": "group-jimmykhan-computer-watered"
             }
         ]
+        console.log(images);
 
         // ===== 全局变量 =====
         let scrollPosition = 0;
