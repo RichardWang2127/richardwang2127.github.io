@@ -2,6 +2,62 @@
 <html lang="zh" data-theme="dark"> <!-- 或 light，取决于初始主题 -->
 
 <head>
+    <script>
+        (function () {
+            'use strict';
+
+            // 降权 Cloudflare 分析脚本，防止占用首屏主线程
+            window.addEventListener('load', () => {
+                const cfScripts = document.querySelectorAll(
+                    'script[src*="cloudflareinsights.com"], script[src*="beacon.min.js"]'
+                );
+
+                cfScripts.forEach(script => {
+                    script.defer = true;
+                    script.async = true;
+                });
+            });
+        })();
+
+        // ==================== 主题立即设置（避免闪烁） ====================
+        (function () {
+            'use strict';
+
+            // 立即设置主题，避免FOUC
+            function setThemeImmediately() {
+                const html = document.documentElement;
+
+                try {
+                    // 尝试从 localStorage 读取主题设置
+                    const savedTheme = localStorage.getItem("preferred-theme");
+
+                    if (savedTheme) {
+                        // 验证保存的主题是否合法
+                        if (savedTheme === "light" || savedTheme === "dark") {
+                            html.setAttribute("data-theme", savedTheme);
+                            console.log(`🎨 立即应用保存的主题: ${savedTheme}`);
+                        } else {
+                            // 不合法，使用深色主题并更新存储
+                            console.warn(`⚠️ 存储的主题值不合法: "${savedTheme}"，使用深色主题`);
+                            html.setAttribute("data-theme", "dark");
+                            localStorage.setItem("preferred-theme", "dark");
+                        }
+                    } else {
+                        // 没有保存过主题，使用深色主题
+                        console.log("🎨 首次访问，使用深色主题");
+                        html.setAttribute("data-theme", "dark");
+                    }
+                } catch (e) {
+                    // localStorage 访问失败时使用深色主题
+                    console.error("❌ localStorage 访问失败，使用深色主题:", e);
+                    html.setAttribute("data-theme", "dark");
+                }
+            }
+
+            // 立即执行，不等待 DOMContentLoaded
+            setThemeImmediately();
+        })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>图片画廊</title>
@@ -508,9 +564,15 @@
 
     <div class="container">
         <h1 class="yuzu-title">图片画廊</h1> <!-- 你可以修改这个标题 -->
-        <div class="yuzu-card">
-            © 03A01 黄鱼 (自摄-2025) <!-- 版权信息 -->
-            <div id="galleryContent" class="gallery"></div>
+        <!-- 定义分组 -->
+        <div id="group1" class="yuzu-card group">
+            <h2>版权所有者：03A01 黄鱼</h2>
+            © 03A01 黄鱼 2025-2026 版权所有
+            <div class="gallery"></div>
+        </div>
+        <div id="group2" class="yuzu-card group">
+            <h2>分组2</h2>
+            <div class="gallery"></div>
         </div>
     </div>
 
@@ -533,19 +595,143 @@
     <script>
         // ===== 图片数组 (替换为你自己的图片路径) =====
         const images = [
-            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_8014.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_8014.jpg" },
-            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_8042.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_8042.jpg" },
-            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_8091.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_8091.jpg" },
-            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_8706.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_8706.jpg" },
-            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_7362.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_7362.jpg" },
-            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_0050.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_0050.jpg" },
-            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_0104.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_0104.jpg" },
-            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_0155.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_0155.jpg" },
-            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_0156.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_0156.jpg" },
-            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_0158.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_0158.jpg" },
-            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/IMG_8078.jpg", full: "https://ans.ciallo0721.org/static/ps/full/IMG_8078.jpg" },
-            { thumb: "https://ans.ciallo0721.org/static/ps/thumb/SHMETRO-old-03A01-ZhongShanParkSta-wmd.jpg", full: "https://ans.ciallo0721.org/static/ps/full/SHMETRO-old-03A01-ZhongShanParkSta-wmd.jpg" },
-        ];
+            // {}
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/25d691acd611e44d4b450f2b8de1fa43.JPG",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/25d691acd611e44d4b450f2b8de1fa43.JPG",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_0396.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_0396.jpg",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3266.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3266.jpg",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3499.JPG",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3499.JPG",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3513.JPG",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3513.JPG",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3558.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3558.jpg",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3883.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3883.jpg",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/5f84d915b5465159d218fab45b2d2763.JPG",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/5f84d915b5465159d218fab45b2d2763.JPG",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_0397.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_0397.jpg",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3274.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3274.jpg",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3500.JPG",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3500.JPG",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3526.JPG",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3526.JPG",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3574.JPG",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3574.JPG",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_5642.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_5642.jpg",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/6b88f3ab9ebe302738b031199c41e3e1.JPG",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/6b88f3ab9ebe302738b031199c41e3e1.JPG",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3093.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3093.jpg",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3279.JPG",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3279.JPG",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3501.JPG",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3501.JPG",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3527.JPG",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3527.JPG",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3575.JPG",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3575.JPG",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/b440d8d3f24c3413dd9a2cfaf727453b.png",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/b440d8d3f24c3413dd9a2cfaf727453b.png",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/8e1303fb21e2baf1cc99053c9ca14684.JPG",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/8e1303fb21e2baf1cc99053c9ca14684.JPG",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3259.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3259.jpg",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3387.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3387.jpg",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3512.JPG",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3512.JPG",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3534.JPG",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3534.JPG",
+                "group": "group1"
+            },
+            {
+                "thumb": "https://ans.ciallo0721.org/static/ps/hd-teachers/thumb/IMG_3577.jpg",
+                "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/IMG_3577.jpg",
+                "group": "group1"
+            }
+        ]
 
         // ===== 全局变量 =====
         let scrollPosition = 0;
@@ -598,24 +784,28 @@
 
         // ===== 图库初始化和加载逻辑 =====
         document.addEventListener("DOMContentLoaded", () => {
-            const gallery = document.getElementById("galleryContent");
+            const groups = document.querySelectorAll(".group");
+            groups.forEach(group => {
+                const groupName = group.getAttribute("id");
+                const gallery = group.querySelector(".gallery");
+                const groupImages = images.filter(img => img.group === groupName);
 
-            // 创建图片项（只创建DOM，不加载图片）
-            images.forEach((data, index) => {
-                const item = document.createElement("div");
-                item.className = "gallery-item placeholder";
-                const img = document.createElement("img");
-                img.dataset.thumb = data.thumb; // 用data属性暂存地址
-                img.dataset.full = data.full;
-                img.alt = `图片 ${index + 1}`;
-                img.style.display = "none";
-                item.appendChild(img);
-                gallery.appendChild(item);
+                // 创建图片项（只创建DOM，不加载图片）
+                groupImages.forEach((data, index) => {
+                    const item = document.createElement("div");
+                    item.className = "gallery-item placeholder";
+                    const img = document.createElement("img");
+                    img.dataset.thumb = data.thumb; // 用data属性暂存地址
+                    img.dataset.full = data.full;
+                    img.alt = `图片 ${index + 1}`;
+                    img.style.display = "none";
+                    item.appendChild(img);
+                    gallery.appendChild(item);
 
-                // 只创建错误元素，不加载图片
-                createErrorElements(img, data, index);
+                    // 只创建错误元素，不加载图片
+                    createErrorElements(img, data, index);
+                });
             });
-
             // 关闭预览事件
             const closePreview = () => {
                 if (isClosing) return;
@@ -690,8 +880,6 @@
             document.getElementById('retryPreview').onclick = () => {
                 if (currentPreviewData) loadPreviewImage(currentPreviewData);
             };
-
-            // 页面加载完成后开始加载图片
             loadGalleryImages();
         });
 
@@ -980,6 +1168,7 @@
                 loadWithImageElement();
             }
         }
+        document.body.style.overflow = "auto";
     </script>
 </body>
 
