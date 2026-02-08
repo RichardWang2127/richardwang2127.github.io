@@ -833,6 +833,7 @@
                     createErrorElements(img, data, index);
                 });
             });
+
             // 关闭预览事件
             const closePreview = () => {
                 if (isClosing) return;
@@ -875,6 +876,7 @@
                     previewLoading.classList.add('hidden');
                     const spinner = previewLoading.querySelector('.loading-spinner');
                     if (spinner) {
+                        // 停止动画以节省资源，但不是必须的
                         spinner.style.animation = 'none';
                         spinner.style.webkitAnimation = 'none';
                     }
@@ -883,15 +885,22 @@
                     previewError.classList.add('hidden');
                 }
 
-                setTimeout(() => {
-                    document.body.style.overflow = 'auto'; // 恢复滚动
-                    document.body.style.paddingRight = '';
+                // 使用 requestAnimationFrame 确保在下一帧渲染后再恢复页面状态
+                // 这可以有效避免因滚动条状态改变引起的布局抖动
+                requestAnimationFrame(() => {
+                    // 恢复页面滚动和之前的位置
+                    document.body.style.overflow = 'auto';
+                    document.body.style.paddingRight = ''; // 清除之前为隐藏滚动条而添加的 padding
                     if (scrollPosition !== undefined) {
-                        window.scrollTo({ top: scrollPosition, behavior: 'auto' });
+                        // 使用 smooth 滚动以获得更平滑的效果，可选
+                        // window.scrollTo({ top: scrollPosition, behavior: 'smooth' });
+                        // 或者直接跳转，通常足够快且不会造成感知上的延迟
+                        window.scrollTo(0, scrollPosition);
                     }
+                    // 重置标志位
                     isClosing = false;
                     currentPreviewData = null;
-                }, 100);
+                });
             };
 
             document.getElementById("closePreview").onclick = closePreview;
