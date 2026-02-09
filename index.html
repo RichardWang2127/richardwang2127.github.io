@@ -2385,7 +2385,7 @@
                             loaded = loaded.toFixed(2);
                             total = total.toFixed(2);
                             const unit = UNITS[unit_index];
-                            loadingText.setAttribute('data-percent', `${percent}% (${loaded}${unit}/${total}${unit})`);
+                            loadingText.setAttribute('data-percent', `${percent}%\n(${loaded}${unit}/${total}${unit})`);
                             console.log(`${loaded}${unit}/${total}${unit}`);
                         }
                     }
