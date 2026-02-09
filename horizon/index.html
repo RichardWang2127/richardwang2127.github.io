@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horizon | 宠物健康护理专家</title>
+    <!-- 仅保留国内可访问的Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4A9BFF;
+            --primary-dark: #3a7bcc;
+            --primary-light: rgba(74, 155, 255, 0.1);
+            --secondary: #FF9E5E;
+            --secondary-dark: #e88c4a;
+            --light: #F8FBFF;
+            --dark: #2C3E50;
+            --gray: #6C7A89;
+            --light-gray: #ECF0F1;
+            --green: #2ECC71;
+            --orange: #FF9E5E;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.08);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* 改用系统无衬线字体，适配中国大陆环境 */
+        body {
+            font-family: "Microsoft YaHei", "微软雅黑", "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: #fff;
+            overflow-x: hidden;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4 {
+            font-family: "Microsoft YaHei", "微软雅黑", "PingFang SC", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            font-weight: 600;
+            line-height: 1.3;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .btn {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 12px 28px;
+            border-radius: 50px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 16px;
+        }
+
+        .btn:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .btn-secondary {
+            background-color: var(--secondary);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--secondary-dark);
+            transform: translateY(-3px);
+            box-shadow: var(--shadow);
+        }
+
+        .section {
+            padding: 80px 0;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--dark);
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+        
+        /* 标题下划线装饰 */
+        .section-title h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+
+        .section-title p {
+            font-size: 1.1rem;
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* Header & Navigation - 优化导航栏样式和滚动效果 */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            transition: var(--transition);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .logo i {
+            margin-right: 10px;
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-left: 30px;
+        }
+
+        .nav-links a {
+            font-weight: 500;
+            color: var(--dark);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        /* 导航链接hover效果优化 */
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--dark);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .mobile-menu-btn:hover {
+            color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding-top: 140px;
+            padding-bottom: 80px;
+            background: linear-gradient(135deg, #f5f9ff 0%, #e8f2ff 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 增加背景装饰元素 */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 50%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%234A9BFF' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        .hero-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text {
+            flex: 1;
+            max-width: 600px;
+        }
+
+        .hero-text h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+            line-height: 1.2;
+        }
+
+        /* 突出关键词 */
+        .hero-text h1 span {
+            color: var(--primary);
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            color: var(--gray);
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .hero-image {
+            flex: 1;
+            text-align: center;
+            position: relative;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            transform: perspective(1000px) rotateY(-10deg);
+            transition: var(--transition);
+        }
+
+        /* .hero-image img:hover {
+            transform: perspective(1000px) rotateY(0deg);
+        } */
+
+        .hero-btns {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        /* Features Section */
+        .features {
+            background-color: var(--light);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border-top: 4px solid transparent;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-top-color: var(--primary);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 70px;
+            height: 70px;
+            background-color: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            transition: var(--transition);
+        }
+
+        .feature-card:hover .feature-icon {
+            background-color: var(--primary);
+        }
+
+        .feature-card:hover .feature-icon i {
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .feature-icon i {
+            font-size: 1.8rem;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .feature-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--dark);
+        }
+
+        .feature-card p {
+            color: var(--gray);
+            line-height: 1.7;
+        }
+
+        /* Product Section */
+        .product-detail {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 60px;
+            gap: 40px;
+        }
+
+        .product-detail.reverse {
+            flex-direction: row-reverse;
+        }
+
+        .product-image {
+            flex: 1;
+            text-align: center;
+        }
+
+        .product-image img {
+            max-width: 100%;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        /* .product-image img:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        } */
+
+        .product-info {
+            flex: 1;
+            padding: 0;
+        }
+
+        .product-info h3 {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: var(--dark);
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .product-info h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 3px;
+        }
+
+        .product-info p {
+            color: var(--gray);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .product-feature-list {
+            list-style: none;
+        }
+
+        .product-feature-list li {
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            transition: var(--transition);
+            padding: 5px 0;
+        }
+
+        .product-feature-list li:hover {
+            padding-left: 5px;
+        }
+
+        .product-feature-list i {
+            color: var(--green);
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        /* Dashboard Preview */
+        .dashboard-preview {
+            background-color: var(--light);
+            border-radius: 20px;
+            padding: 40px;
+            margin-top: 60px;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .dashboard-preview:hover {
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .dashboard-title h3 {
+            font-size: 1.8rem;
+            color: var(--dark);
+        }
+
+        .dashboard-title p {
+            color: var(--gray);
+            font-size: 0.9rem;
+        }
+
+        .pet-selector {
+            padding: 8px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--light-gray);
+            background-color: white;
+            transition: var(--transition);
+        }
+
+        .pet-selector select {
+            border: none;
+            background: transparent;
+            font-family: inherit;
+            color: var(--dark);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .pet-selector:hover {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(74, 155, 255, 0.1);
+        }
+
+        .dashboard-content {
+            display: grid;
+            /* grid-template-columns: 1fr 1fr; */
+            gap: 30px;
+        }
+
+        .chart-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+        }
+
+        .chart-container:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-title {
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--dark);
+            display: flex;
+            align-items: center;
+        }
+
+        .chart-title i {
+            color: var(--primary);
+            margin-right: 10px;
+        }
+
+        .chart-placeholder {
+            height: 200px;
+            background-color: var(--light-gray);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--gray);
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        /* .chart-placeholder:hover {
+            background-color: rgba(74, 155, 255, 0.05);
+        } */
+
+        .chart-placeholder i {
+            font-size: 3rem;
+            opacity: 0.3;
+            margin-bottom: 10px;
+        }
+
+        .data-summary {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .data-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+        }
+
+        /* .data-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-card:nth-child(1):hover {
+            border-left-color: var(--green);
+        }
+
+        .data-card:nth-child(2):hover {
+            border-left-color: var(--green);
+        }
+
+        .data-card:nth-child(3):hover {
+            border-left-color: var(--orange);
+        }
+
+        .data-card:nth-child(4):hover {
+            border-left-color: var(--green);
+        } */
+
+        .data-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 5px;
+        }
+
+        .data-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark);
+            transition: var(--transition);
+        }
+
+        .data-value.good {
+            color: var(--green);
+        }
+
+        .data-value.warning {
+            color: var(--orange);
+        }
+
+        /* .data-value:hover {
+            transform: scale(1.05);
+        } */
+
+        /* Target Users */
+        .target-users {
+            background-color: var(--light);
+        }
+
+        .users-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .user-card {
+            background-color: white;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .user-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .user-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: var(--primary-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .user-card:hover .user-avatar {
+            background-color: var(--primary);
+            transform: rotate(5deg);
+        }
+
+        .user-card:hover .user-avatar i {
+            color: white;
+            transform: scale(1.1);
+        }
+
+        .user-avatar i {
+            font-size: 3rem;
+            color: var(--primary);
+            transition: var(--transition);
+        }
+
+        .user-card h3 {
+            margin-bottom: 10px;
+            color: var(--dark);
+            font-size: 1.5rem;
+        }
+
+        .user-card p {
+            color: var(--gray);
+            line-height: 1.8;
+        }
+
+        /* CTA Section */
+        .cta {
+            text-align: center;
+            background: linear-gradient(135deg, #4A9BFF 0%, #3a7bcc 100%);
+            color: white;
+            padding: 80px 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* CTA背景装饰 */
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            z-index: 0;
+        }
+
+        .cta-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta p {
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto 40px;
+            opacity: 0.9;
+            line-height: 1.8;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            color: white;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--primary);
+            border-radius: 2px;
+        }
+
+        .footer-column p {
+            color: rgba(255, 255, 255, 0.7);
+            line-height: 1.8;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+            transition: var(--transition);
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            transition: var(--transition);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .hero-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .hero-text {
+                margin-bottom: 50px;
+            }
+            
+            .hero-btns {
+                justify-content: center;
+            }
+            
+            .product-detail, 
+            .product-detail.reverse {
+                flex-direction: column;
+            }
+            
+            .product-info {
+                padding: 30px 0 0 0;
+            }
+            
+            .dashboard-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            
+            .section-title h2 {
+                font-size: 2rem;
+            }
+            
+            .dashboard-preview {
+                padding: 20px;
+            }
+            
+            .data-summary {
+                grid-template-columns: 1fr;
+            }
+            
+            .navbar {
+                padding: 15px 0;
+            }
+            
+            .hero {
+                padding-top: 120px;
+            }
+            
+            .section {
+                padding: 60px 0;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .hero-text h1 {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                width: 100%;
+                text-align: center;
+            }
+            
+            .hero-btns {
+                gap: 10px;
+            }
+            
+            .section-title h2 {
+                font-size: 1.8rem;
+            }
+            
+            .product-info h3 {
+                font-size: 1.6rem;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header & Navigation -->
+    <header id="main-header">
+        <div class="container">
+            <nav class="navbar">
+                <a href="#" class="logo">
+                    <i class="fas fa-paw"></i>
+                    Horizon
+                </a>
+                <ul class="nav-links">
+                    <li><a href="#home">首页</a></li>
+                    <li><a href="#product">产品</a></li>
+                    <li><a href="#features">功能</a></li>
+                    <li><a href="#dashboard">健康监测</a></li>
+                    <li><a href="#target">目标用户</a></li>
+                    <li><a href="#contact">联系我们</a></li>
+                </ul>
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero section">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-text">
+                    <h1>便捷化、一体化解决<br><span>宠物毛发及皮肤问题</span></h1>
+                    <p>Horizon专注于宠物健康护理领域，通过创新的智能宠物梳毛刷和健康监测系统，为养宠家庭提供全面的毛发护理和皮肤健康解决方案。</p>
+                    <div class="hero-btns">
+                        <a href="#product" class="btn">探索产品</a>
+                        <a href="#dashboard" class="btn btn-secondary">体验监测系统</a>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <img src="https://images.unsplash.com/photo-1583337130417-3346a1be7dee?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                        alt="智能宠物梳毛刷">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Product Section -->
+    <section id="product" class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>Horizon智能宠物梳毛刷</h2>
+                <p>重新定义宠物毛发护理，一体化解决毛发及皮肤健康问题</p>
+            </div>
+
+            <div class="product-detail">
+                <!-- <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                        alt="可调节梳齿设计">
+                </div> -->
+                <div class="product-info">
+                    <h3>可调节梳齿设计</h3>
+                    <p>专为多品种宠物设计，支持手动调节梳齿高度与间距，适配短毛、中长毛、长毛等不同毛发类型。避免传统梳子拉扯毛发、损伤毛囊的问题，让梳毛过程更加舒适高效。</p>
+                    <ul class="product-feature-list">
+                        <li><i class="fas fa-check-circle"></i> 适配超过50种常见宠物品种</li>
+                        <li><i class="fas fa-check-circle"></i> 3档高度调节，5档密度调节</li>
+                        <li><i class="fas fa-check-circle"></i> 防拉扯设计，保护宠物毛囊健康</li>
+                        <li><i class="fas fa-check-circle"></i> 人体工学手柄，握持舒适</li>
+                    </ul>
+                </div>
+                <div class="product-info">
+                    <h3>护理+驱虫双重功效</h3>
+                    <p>梳毛过程中，梳齿缓慢释放温和的宠物专用精油，滋养毛发、减少毛躁、去除异味。同时添加安全非药物驱虫成分，日常梳毛即可实现驱虫效果，无需额外操作。</p>
+                    <ul class="product-feature-list">
+                        <li><i class="fas fa-check-circle"></i> 天然植物精油，安全无刺激</li>
+                        <li><i class="fas fa-check-circle"></i> 非药物驱虫成分，温和有效</li>
+                        <li><i class="fas fa-check-circle"></i> 单次梳毛可持续释放30分钟</li>
+                        <li><i class="fas fa-check-circle"></i> 精油补充装便捷更换</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- <div class="product-detail reverse">
+                <div class="product-image">
+                    <img src="https://images.unsplash.com/photo-1576201839709-6de0b2f80e99?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+                        alt="护理+驱虫双重功效">
+                </div>
+                <div class="product-info">
+                    <h3>护理+驱虫双重功效</h3>
+                    <p>梳毛过程中，梳齿缓慢释放温和的宠物专用精油，滋养毛发、减少毛躁、去除异味。同时添加安全非药物驱虫成分，日常梳毛即可实现驱虫效果，无需额外操作。</p>
+                    <ul class="product-feature-list">
+                        <li><i class="fas fa-check-circle"></i> 天然植物精油，安全无刺激</li>
+                        <li><i class="fas fa-check-circle"></i> 非药物驱虫成分，温和有效</li>
+                        <li><i class="fas fa-check-circle"></i> 单次梳毛可持续释放30分钟</li>
+                        <li><i class="fas fa-check-circle"></i> 精油补充装便捷更换</li>
+                    </ul>
+                </div>
+            </div> -->
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features section">
+        <div class="container">
+            <div class="section-title">
+                <h2>四大核心差异化功能</h2>
+                <p>多功能智能宠物梳毛刷，提供全面的毛发护理和皮肤健康监测解决方案</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-sliders-h"></i>
+                    </div>
+                    <h3>梳齿可调节</h3>
+                    <p>根据宠物毛发长短、毛发疏密，手动调节梳齿高度与间距，避免梳毛时拉扯宠物毛发、损伤毛囊</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-oil-can"></i>
+                    </div>
+                    <h3>内置精油+驱虫成分</h3>
+                    <p>梳毛过程中缓慢释放温和宠物专用精油，同时添加安全驱虫成分</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-stethoscope"></i>
+                    </div>
+                    <h3>皮肤病监测系统</h3>
+                    <p>梳毛头部内置微型监测模块，梳毛时可实时检测宠物皮肤状态</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>官网数据联动</h3>
+                    <p>监测数据同步至官方网站，用户可查看监测报告，获取皮肤问题应对建议</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dashboard Preview -->
+    <section id="dashboard" class="section">
+        <div class="container">
+            <div class="section-title">
+                <h2>宠物皮肤健康监测系统</h2>
+                <p>实时监测宠物皮肤状态，数据同步至官方网站，随时了解宠物健康状况</p>
+            </div>
+
+            <div class="dashboard-preview">
+                <div class="dashboard-header">
+                    <div class="dashboard-title">
+                        <h3>宠物皮肤健康报告</h3>
+                    </div>
+                    <div class="pet-selector">
+                        <select>
+                            <option>我的金毛犬 - 旺财</option>
+                            <option>我的布偶猫 - 米粒</option>
+                            <option>添加新宠物</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="dashboard-content">
+                    <!-- <div class="chart-container">
+                        <div class="chart-title">
+                            <i class="fas fa-chart-line"></i>
+                            皮肤健康趋势（最近30天）
+                        </div>
+                        <div class="chart-placeholder">
+                            <i class="fas fa-chart-line"></i>
+                            <div>皮肤健康指数趋势图表</div>
+                        </div>
+                    </div> -->
+
+                    <div>
+                        <div class="chart-container" style="margin-bottom: 20px;">
+                            <div class="chart-title">
+                                <i class="fas fa-heartbeat"></i>
+                                近期监测指标
+                            </div>
+                            <div class="data-summary">
+                                <div class="data-card">
+                                    <div class="data-label">皮屑指数</div>
+                                    <div class="data-value good">正常</div>
+                                </div>
+                                <div class="data-card">
+                                    <div class="data-label">皮肤红肿</div>
+                                    <div class="data-value good">无</div>
+                                </div>
+                                <div class="data-card">
+                                    <div class="data-label">油脂平衡</div>
+                                    <div class="data-value warning">轻微异常</div>
+                                </div>
+                                <div class="data-card">
+                                    <div class="data-label">毛发密度</div>
+                                    <div class="data-value good">良好</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="chart-container">
+                            <div class="chart-title">
+                                <i class="fas fa-lightbulb"></i>
+                                健康建议
+                            </div>
+                            <p>根据最近一次监测数据，您的宠物皮肤油脂分泌轻微异常，建议：</p>
+                            <ul class="product-feature-list">
+                                <li><i class="fas fa-check-circle"></i> 增加梳毛频率至每周3-4次</li>
+                                <li><i class="fas fa-check-circle"></i> 使用温和宠物专用沐浴露</li>
+                                <li><i class="fas fa-check-circle"></i> 饮食中适当添加Omega-3脂肪酸</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Target Users -->
+    <section id="target" class="target-users section">
+        <div class="container">
+            <div class="section-title">
+                <h2>精准服务养宠家庭</h2>
+                <p>Horizon初期以精准服务养宠家庭为目标，重点关注以下用户群体</p>
+            </div>
+
+            <div class="users-grid">
+                <div class="user-card">
+                    <div class="user-avatar">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3>新手养宠者</h3>
+                    <!-- <p>缺乏宠物护理经验，需要简单易用的解决方案，Horizon的一体化设计和智能监测系统帮助新手轻松应对宠物毛发和皮肤问题。</p> -->
+                </div>
+
+                <div class="user-card">
+                    <div class="user-avatar">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3>多宠物家庭</h3>
+                    <!-- <p>拥有多只不同品种的宠物，需要适配多种毛发类型的护理工具，Horizon可调节梳齿设计完美解决这一问题。</p> -->
+                </div>
+
+                <div class="user-card">
+                    <div class="user-avatar">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>注重宠物健康的家庭</h3>
+                    <!-- <p>重视宠物健康，愿意投资于预防性护理，Horizon的皮肤病监测系统帮助早期发现健康问题，避免严重后果。</p> -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta section">
+        <div class="container cta-content">
+            <h2>开启宠物健康护理新时代</h2>
+            <p>加入Horizon，体验"产品+网站+服务"的一体化宠物健康解决方案，为您的爱宠提供专业、便捷的毛发及皮肤护理。</p>
+            <a href="#contact" class="btn btn-secondary">立即咨询</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>Horizon</h3>
+                    <!-- <p>聚焦宠物健康护理领域，以"便捷化、一体化解决宠物毛发及皮肤问题"为核心定位，打造差异化宠物护理产品标杆。</p> -->
+                    <div style="margin-top: 20px;">
+                        <a href="#" class="btn" style="margin-right: 10px;">官网商城</a>
+                        <br><br>
+                        <a href="#" class="btn" style="background-color: #333; color: white;">用户登录</a>
+                    </div>
+                </div>
+
+                <div class="footer-column">
+                    <h3>产品与服务</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">智能宠物梳毛刷</a></li>
+                        <li><a href="#">皮肤健康监测系统</a></li>
+                        <li><a href="#">官方网站功能</a></li>
+                        <li><a href="#">用户支持服务</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>关于我们</h3>
+                    <ul class="footer-links">
+                        <li><a href="#">公司理念</a></li>
+                        <li><a href="#">核心团队</a></li>
+                        <li><a href="#">发展路线图</a></li>
+                        <li><a href="#">加入我们</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-column">
+                    <h3>联系我们</h3>
+                    <ul class="footer-links">
+                        <li><i class="fas fa-envelope" style="margin-right: 10px;"></i><a href="mailto:horizon@ciallo0721.org">horizon@ciallo0721.org</a></li>
+                        <!-- <li><i class="fas fa-phone" style="margin-right: 10px;"></i> 400-123-4567</li> -->
+                        <!-- <li><i class="fas fa-map-marker-alt" style="margin-right: 10px;"></i> 上海市宠物科技园区创新大厦</li> -->
+                    </ul>
+                </div>
+            </div>
+
+            <div class="copyright">
+                <p>&copy; 2026 Horizon | Tech Support: <a style="color: #FBD603;" href="https://ciallo0721.org/">03A01 黄鱼</a></p>
+                <!-- <p style="margin-top: 10px;">打造"产品+网站+服务"的轻资产初创模式，专注于宠物梳毛刷的研发、生产与线上销售</p> -->
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 交互效果优化
+        document.addEventListener('DOMContentLoaded', function () {
+            // 导航栏滚动效果
+            const header = document.getElementById('main-header');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    header.style.padding = '10px 0';
+                    header.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.1)';
+                } else {
+                    header.style.padding = '20px 0';
+                    header.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.05)';
+                }
+            });
+            
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // 移动端菜单切换优化
+            const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
+            const navLinks = document.querySelector('.nav-links');
+            const menuIcon = mobileMenuBtn.querySelector('i');
+
+            mobileMenuBtn.addEventListener('click', function () {
+                if (navLinks.style.display === 'flex') {
+                    navLinks.style.display = 'none';
+                    menuIcon.classList.replace('fa-times', 'fa-bars');
+                } else {
+                    navLinks.style.display = 'flex';
+                    navLinks.style.flexDirection = 'column';
+                    navLinks.style.position = 'absolute';
+                    navLinks.style.top = '100%';
+                    navLinks.style.left = '0';
+                    navLinks.style.width = '100%';
+                    navLinks.style.backgroundColor = 'white';
+                    navLinks.style.padding = '20px';
+                    navLinks.style.boxShadow = '0 10px 20px rgba(0,0,0,0.1)';
+                    navLinks.style.zIndex = '999';
+
+                    navLinks.querySelectorAll('li').forEach(item => {
+                        item.style.margin = '10px 0';
+                    });
+                    
+                    menuIcon.classList.replace('fa-bars', 'fa-times');
+                }
+            });
+
+            // 窗口调整大小时重置导航
+            window.addEventListener('resize', function () {
+                if (window.innerWidth > 768) {
+                    navLinks.style.display = 'flex';
+                    navLinks.style.flexDirection = 'row';
+                    navLinks.style.position = 'static';
+                    navLinks.style.backgroundColor = 'transparent';
+                    navLinks.style.padding = '0';
+                    navLinks.style.boxShadow = 'none';
+                    
+                    navLinks.querySelectorAll('li').forEach(item => {
+                        item.style.margin = '0 0 0 30px';
+                    });
+                    
+                    menuIcon.classList.replace('fa-times', 'fa-bars');
+                } else {
+                    navLinks.style.display = 'none';
+                }
+            });
+
+            // 数据更新模拟（演示用）
+            setInterval(() => {
+                const dataValues = document.querySelectorAll('.data-value');
+                if (dataValues.length > 0) {
+                    const randomIndex = Math.floor(Math.random() * dataValues.length);
+                    const valueElement = dataValues[randomIndex];
+
+                    if (valueElement.classList.contains('good')) {
+                        valueElement.classList.remove('good');
+                        valueElement.classList.add('warning');
+                        valueElement.textContent = Math.random() > 0.5 ? '轻微异常' : '需关注';
+                    } else {
+                        valueElement.classList.remove('warning');
+                        valueElement.classList.add('good');
+                        valueElement.textContent = Math.random() > 0.5 ? '正常' : '良好';
+                    }
+                }
+            }, 5000);
+            
+            // 图片懒加载优化
+            const images = document.querySelectorAll('img');
+            const imgObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.style.opacity = '1';
+                        imgObserver.unobserve(img);
+                    }
+                });
+            });
+            
+            images.forEach(img => {
+                img.style.opacity = '0';
+                img.style.transition = 'opacity 0.5s ease';
+                imgObserver.observe(img);
+            });
+        });
+    </script>
+</body>
+
+</html>
