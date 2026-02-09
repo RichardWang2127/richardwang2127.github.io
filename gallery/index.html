@@ -644,8 +644,7 @@
             scroll-behavior: smooth;
         }
 
-        #themeToggle,
-        #gotoTop {
+        #themeToggle {
             position: fixed;
             width: 40px;
             height: 40px;
@@ -659,16 +658,34 @@
             align-items: center;
             justify-content: center;
             padding: 0;
-        }
-
-        #themeToggle {
-            top: 20px;
+            top: 80px;
             right: 20px;
         }
 
         #gotoTop {
-            top: 70px;
+            position: fixed;
+            bottom: 20px;
             right: 20px;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            z-index: 1001;
+            background-color: var(--card-color);
+            border: 2px solid var(--text-color);
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        #gotoTop.visible {
+            opacity: 1;
+            visibility: visible;
         }
 
         [data-theme="light"] #gotoTop {
@@ -694,6 +711,23 @@
         .monospaced {
             font-family: Consolas, monospace;
         }
+
+        .yuzu-bounce {
+            animation: gentleBounce 2s infinite ease-in-out;
+            transform-origin: center;
+        }
+
+        @keyframes gentleBounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-3px);
+            }
+        }
     </style>
     <div id="navbar" class="yuzu-nav">
         <a href="/">技术：03A01 黄鱼</a>
@@ -705,7 +739,17 @@
     </div>
     <!-- 如果需要主题切换按钮 -->
     <button id="themeToggle" onclick="toggleTheme()">🌓</button>
-    <button id="gotoTop" onclick="window.location.href='#';">▲</button>
+    <button id="gotoTop" onclick="window.location.href='#';">
+        <svg viewBox="0 0 24 24" width="24" height="24">
+            <defs>
+                <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" style="stop-color:#FFB6C1;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#D3E9B5;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <path d="M12 2L2 12h5v10h10V12h5z" fill="url(#grad1)" />
+        </svg>
+    </button>
 </head>
 
 <body class="yuzusoft">
@@ -982,7 +1026,7 @@
                 "full": "https://ans.ciallo0721.org/static/ps/hd-teachers/full/hdscl-yezi-2c9e5.jpg",
                 "group": "group-yezi-hdscl"
             },
-            
+
         ]
         console.log(images);
 
@@ -1142,6 +1186,59 @@
                 if (currentPreviewData) loadPreviewImage(currentPreviewData);
             };
             loadGalleryImages();
+            // ===== 返回顶部按钮显示/隐藏逻辑 =====
+            (function () {
+                'use strict';
+
+                // 获取返回顶部按钮
+                const gotoTopBtn = document.getElementById('gotoTop');
+
+                // 如果没有找到按钮，直接返回
+                if (!gotoTopBtn) return;
+
+                // 显示按钮的滚动阈值（距离顶部的像素数）
+                const SCROLL_THRESHOLD = 400;
+
+                // 防抖处理，优化性能
+                let scrollTimeout;
+                function handleScroll() {
+                    // 清除之前的定时器
+                    if (scrollTimeout) {
+                        cancelAnimationFrame(scrollTimeout);
+                    }
+
+                    // 使用requestAnimationFrame优化滚动性能
+                    scrollTimeout = requestAnimationFrame(() => {
+                        const scrollTop = window.pageYOffset ||
+                            document.documentElement.scrollTop ||
+                            document.body.scrollTop || 0;
+
+                        // 判断是否超过阈值
+                        if (scrollTop > SCROLL_THRESHOLD) {
+                            gotoTopBtn.classList.add('visible');
+                        } else {
+                            gotoTopBtn.classList.remove('visible');
+                        }
+                    });
+                }
+
+                // 初始化检查一次
+                handleScroll();
+
+                // 监听滚动事件
+                window.addEventListener('scroll', handleScroll, { passive: true });
+
+                // 平滑滚动到顶部功能
+                gotoTopBtn.onclick = function (e) {
+                    e.preventDefault();
+
+                    // 平滑滚动到顶部
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                };
+            })();
         });
 
         function createErrorElements(img, data, index) {
