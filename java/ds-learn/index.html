@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="zh" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Java 学习笔记 · 03A01黄鱼</title>
+    <style>
+        /* ===== 基础重置 & 主题变量 ===== */
+        :root {
+            --bg-light: #fdfcf9;
+            --bg-dark: #1e1e2e;
+            --text-light: #2c3e50;
+            --text-dark: #e0e0e0;
+            --card-light: rgba(255, 255, 255, 0.9);
+            --card-dark: rgba(35, 35, 45, 0.95);
+            --border-light: #d4b48c;
+            --border-dark: #5f5f7a;
+            --code-bg-light: #f0f0f0;
+            --code-bg-dark: #2a2a3a;
+            --primary: #e67e22;
+            --accent: #16a085;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="light"] {
+            --bg: var(--bg-light);
+            --text: var(--text-light);
+            --card: var(--card-light);
+            --border: var(--border-light);
+            --code-bg: var(--code-bg-light);
+        }
+
+        [data-theme="dark"] {
+            --bg: var(--bg-dark);
+            --text: var(--text-dark);
+            --card: var(--card-dark);
+            --border: var(--border-dark);
+            --code-bg: var(--code-bg-dark);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.7;
+            transition: background 0.3s, color 0.2s;
+            padding: 0 12px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px 20px 40px;
+        }
+
+        /* 主题切换按钮 */
+        #themeToggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--card);
+            border: 2px solid var(--border);
+            color: var(--text);
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 999;
+            backdrop-filter: blur(4px);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        #themeToggle:hover {
+            transform: scale(1.1);
+            background: var(--primary);
+            color: white;
+        }
+
+        /* 导航栏 */
+        .yuzu-nav {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+            background: var(--card);
+            padding: 14px 20px;
+            border-radius: 60px;
+            margin-bottom: 30px;
+            border: 2px solid var(--border);
+            backdrop-filter: blur(8px);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 15px;
+            z-index: 100;
+        }
+
+        .yuzu-nav a {
+            color: var(--text);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 6px 16px;
+            border-radius: 30px;
+            transition: 0.2s;
+            background: transparent;
+        }
+
+        .yuzu-nav a:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* 卡片样式 */
+        .yuzu-card {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 28px;
+            padding: 30px 30px;
+            margin: 30px 0;
+            backdrop-filter: blur(6px);
+            box-shadow: var(--shadow);
+            transition: 0.3s;
+            scroll-margin-top: 80px;
+        }
+
+        .yuzu-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        h1.yuzu-title {
+            font-size: 2.8rem;
+            text-align: center;
+            background: linear-gradient(135deg, #e67e22, #16a085);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 0 0 10px;
+            font-weight: 700;
+        }
+
+        h2 {
+            font-size: 2rem;
+            border-left: 8px solid var(--primary);
+            padding-left: 20px;
+            margin: 30px 0 20px;
+            color: var(--primary);
+        }
+
+        h3 {
+            font-size: 1.6rem;
+            margin: 20px 0 10px;
+            color: var(--accent);
+        }
+
+        pre {
+            background: var(--code-bg);
+            border-radius: 16px;
+            padding: 20px;
+            overflow-x: auto;
+            font-family: 'Fira Code', 'Cascadia Code', monospace;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            border: 1px solid var(--border);
+            margin: 20px 0;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            background: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 6px;
+            font-size: 0.9em;
+        }
+
+        .badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 8px;
+        }
+
+        hr {
+            border: none;
+            border-top: 2px dashed var(--border);
+            margin: 40px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--code-bg);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border);
+            text-align: left;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            font-weight: 600;
+        }
+
+        .note {
+            background: rgba(230, 126, 34, 0.1);
+            border-left: 6px solid var(--primary);
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin: 20px 0;
+        }
+
+        .inline-code {
+            background: var(--code-bg);
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            border: 1px solid var(--border);
+        }
+
+        /* 手机优化 */
+        @media (max-width: 680px) {
+            .container {
+                padding: 10px;
+            }
+
+            h1.yuzu-title {
+                font-size: 2rem;
+            }
+
+            .yuzu-card {
+                padding: 20px;
+            }
+
+            pre {
+                padding: 12px;
+                font-size: 0.85rem;
+            }
+
+            .yuzu-nav {
+                gap: 8px;
+                padding: 10px;
+                border-radius: 40px;
+            }
+
+            .yuzu-nav a {
+                padding: 4px 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <button id="themeToggle" onclick="toggleTheme()">🌓</button>
+    <div class="container">
+        <h1 class="yuzu-title">☕ Java 从入门到核心 · 学习笔记</h1>
+        <div class="yuzu-nav">
+            <a href="#lesson3">3.选择</a>
+            <a href="#lesson4">4.循环</a>
+            <a href="#lesson5">5.二重循环</a>
+            <a href="#lesson6">6.一维数组</a>
+            <a href="#lesson7">7.二维数组</a>
+            <a href="#lesson8">8.类与对象</a>
+            <a href="#lesson9">9.方法</a>
+            <a href="#lesson10">10.封装</a>
+            <a href="#lesson11">11.继承</a>
+            <a href="#lesson12">12.多态</a>
+            <a href="#lesson13">13.接口</a>
+            <a href="#lesson14">14.异常</a>
+            <a href="#lesson15">15.集合</a>
+            <a href="#lesson16">16.实用类</a>
+        </div>
+        <!-- 第三课时 -->
+        <section id="lesson3" class="yuzu-card">
+            <h2>📘 第三课时：选择结构</h2>
+            <p><span class="badge">if</span><span class="badge">switch</span></p>
+            <h3>🔹 if 结构 (与C++类似)</h3>
+            <pre><code>// 单分支
+int age = 20;
+if (age >= 18) {
+    System.out.println("成年人");
+}
+
+// 双分支
+int score = 85;
+if (score >= 60) {
+    System.out.println("及格");
+} else {
+    System.out.println("不及格");
+}
+
+// 多分支
+int grade = 85;
+if (grade >= 90) {
+    System.out.println("优秀");
+} else if (grade >= 80) {
+    System.out.println("良好");
+} else if (grade >= 60) {
+    System.out.println("及格");
+} else {
+    System.out.println("不及格");
+}</code></pre>
+            <div class="note">⚠️ Java中条件表达式必须为 <code>boolean</code>，<code>if(1)</code> 编译错误！</div>
+            <h3>🔸 switch 传统写法</h3>
+            <pre><code>int week = 3;
+switch (week) {
+    case 1: System.out.println("星期一"); break;
+    case 2: System.out.println("星期二"); break;
+    case 3: System.out.println("星期三"); break;
+    default: System.out.println("无效数字");
+}
+
+// 穿透特性 (无break)
+char season = '夏';
+switch (season) {
+    case '春':
+    case '夏':
+    case '秋': System.out.println("适合旅游"); break;
+    case '冬': System.out.println("适合宅家");
+}</code></pre>
+            <h3>✨ Java 12+ 箭头语法</h3>
+            <pre><code>int week = 3;
+String day = switch (week) {
+    case 1 -> "星期一";
+    case 2 -> "星期二";
+    case 3 -> "星期三";
+    default -> "无效";
+};
+System.out.println(day); // 星期三</code></pre>
+        </section>
+        <!-- 第四课时 -->
+        <section id="lesson4" class="yuzu-card">
+            <h2>📘 第四课时：循环结构</h2>
+            <h3>while / do-while / for</h3>
+            <pre><code>// while 打印1~5
+int i = 1;
+while (i <= 5) {
+    System.out.println(i);
+    i++;
+}
+
+// do-while 至少执行一次
+int j = 1;
+do {
+    System.out.println(j);
+    j++;
+} while (j <= 5);   // ⚠️ 分号
+
+// for 1~100求和
+int sum = 0;
+for (int k = 1; k <= 100; k++) {
+    sum += k;
+}
+System.out.println("1+...+100 = " + sum); // 5050</code></pre>
+            <h3>break / continue</h3>
+            <pre><code>// 跳过3的倍数，到8停止
+for (int i = 1; i <= 10; i++) {
+    if (i % 3 == 0) continue;
+    if (i == 8) break;
+    System.out.println(i); // 1,2,4,5,7
+}</code></pre>
+        </section>
+        <!-- 第五课时 -->
+        <section id="lesson5" class="yuzu-card">
+            <h2>📘 第五课时：二重循环</h2>
+            <h3>九九乘法表 & 直角三角形</h3>
+            <pre><code>// 乘法表
+for (int i = 1; i <= 9; i++) {
+    for (int j = 1; j <= i; j++) {
+        System.out.print(j + "×" + i + "=" + (i*j) + "\t");
+    }
+    System.out.println();
+}
+
+// 打印直角三角形
+int rows = 4;
+for (int i = 1; i <= rows; i++) {
+    for (int j = 1; j <= i; j++) {
+        System.out.print("*");
+    }
+    System.out.println();
+}</code></pre>
+            <h3>带标签的 break</h3>
+            <pre><code>outer:
+for (int i = 0; i < 5; i++) {
+    for (int j = 0; j < 5; j++) {
+        if (j == 2) break outer; // 跳出外层
+        System.out.println("i=" + i + ", j=" + j);
+    }
+}</code></pre>
+        </section>
+        <!-- 第六课时 -->
+        <section id="lesson6" class="yuzu-card">
+            <h2>📘 第六课时：一维数组</h2>
+            <pre><code>// 声明与初始化
+int[] arr1 = new int[5];          // 默认0
+int[] arr2 = {1,2,3,4,5};         // 静态初始化
+
+// 遍历
+int[] scores = {85,92,78,90,88};
+for (int i = 0; i < scores.length; i++) {
+    System.out.println(scores[i]);
+}
+for (int score : scores) {        // 增强for
+    System.out.println(score);
+}
+
+// 求最大值
+int[] numbers = {23,45,12,67,34,89};
+int max = numbers[0];
+for (int i = 1; i < numbers.length; i++) {
+    if (numbers[i] > max) max = numbers[i];
+}
+System.out.println("最大值：" + max);</code></pre>
+            <div class="note">📌 数组默认值：整数0，浮点0.0，布尔false，引用null。</div>
+        </section>
+        <!-- 第七课时 -->
+        <section id="lesson7" class="yuzu-card">
+            <h2>📘 第七课时：二维数组</h2>
+            <pre><code>// 定义与初始化
+int[][] matrix = {
+    {1,2,3},
+    {4,5,6},
+    {7,8,9}
+};
+
+// 遍历
+for (int i = 0; i < matrix.length; i++) {
+    for (int j = 0; j < matrix[i].length; j++) {
+        System.out.print(matrix[i][j] + " ");
+    }
+    System.out.println();
+}
+
+// 不规则数组（杨辉三角）
+int rows = 5;
+int[][] yangHui = new int[rows][];
+for (int i = 0; i < rows; i++) {
+    yangHui[i] = new int[i+1];
+    yangHui[i][0] = yangHui[i][i] = 1;
+    for (int j = 1; j < i; j++) {
+        yangHui[i][j] = yangHui[i-1][j-1] + yangHui[i-1][j];
+    }
+}</code></pre>
+        </section>
+        <!-- 第八课时 -->
+        <section id="lesson8" class="yuzu-card">
+            <h2>📘 第八课时：类与对象</h2>
+            <pre><code>// 定义一个学生类
+public class Student {
+    String name;
+    int age;
+    String studentId;
+
+    public void study() {
+        System.out.println(name + "正在学习");
+    }
+
+    public void sayHello() {
+        System.out.println("大家好，我是" + name);
+    }
+}
+
+// 创建对象
+Student stu = new Student();
+stu.name = "张三";
+stu.age = 20;
+stu.study();</code></pre>
+        </section>
+        <!-- 第九课时 -->
+        <section id="lesson9" class="yuzu-card">
+            <h2>📘 第九课时：类的方法</h2>
+            <h3>方法定义/重载/构造/this</h3>
+            <pre><code>// 方法重载
+public class Printer {
+    public void print(int num) { }
+    public void print(String str) { }
+    public void print(String str, int times) { }
+}
+
+// 构造方法 & this
+public class Person {
+    String name;
+    int age;
+    public Person() {
+        this("匿名", 18);  // 调用另一个构造器
+    }
+    public Person(String name, int age) {
+        this.name = name;
+        this.age = age;
+    }
+}
+
+// 值传递 (引用类型修改内容)
+public void changeArray(int[] arr) {
+    if (arr != null) arr[0] = 100;  // 原数组改变
+}</code></pre>
+        </section>
+        <!-- 第十课时 -->
+        <section id="lesson10" class="yuzu-card">
+            <h2>📘 第十课时：抽象和封装</h2>
+            <h3>访问修饰符 / getter/setter</h3>
+            <pre><code>public class Student {
+    private String name;
+    private int age;
+
+    public String getName() { return name; }
+    public void setName(String name) {
+        if (name != null && !name.trim().isEmpty())
+            this.name = name;
+    }
+
+    public int getAge() { return age; }
+    public void setAge(int age) {
+        if (age >= 0 && age <= 150) this.age = age;
+    }
+}</code></pre>
+            <table>
+                <tr>
+                    <th>修饰符</th>
+                    <th>本类</th>
+                    <th>同包</th>
+                    <th>子类</th>
+                    <th>任意</th>
+                </tr>
+                <tr>
+                    <td>private</td>
+                    <td>✅</td>
+                    <td>❌</td>
+                    <td>❌</td>
+                    <td>❌</td>
+                </tr>
+                <tr>
+                    <td>默认</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                    <td>❌</td>
+                    <td>❌</td>
+                </tr>
+                <tr>
+                    <td>protected</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                    <td>❌</td>
+                </tr>
+                <tr>
+                    <td>public</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                    <td>✅</td>
+                </tr>
+            </table>
+        </section>
+        <!-- 第十一课时 -->
+        <section id="lesson11" class="yuzu-card">
+            <h2>📘 第十一课时：类的继承</h2>
+            <pre><code>// 父类
+class Animal {
+    protected String name;
+    public void eat() { System.out.println(name + "吃东西"); }
+}
+
+// 子类
+class Dog extends Animal {
+    public void bark() { System.out.println(name + "汪汪叫"); }
+
+    @Override
+    public void eat() { System.out.println(name + "啃骨头"); }
+}
+
+// 构造器链
+public Dog(String name) {
+    super(name);   // 必须第一行
+}
+
+// super 访问父类成员
+super.eat();</code></pre>
+        </section>
+        <!-- 第十二课时 -->
+        <section id="lesson12" class="yuzu-card">
+            <h2>📘 第十二课时：多态</h2>
+            <pre><code>// 父类引用指向子类对象
+Animal a = new Dog("旺财");
+a.eat();               // 调用Dog的eat
+
+// 向下转型
+if (a instanceof Dog) {
+    Dog d = (Dog) a;
+    d.bark();
+}
+
+// 多态应用
+public void feed(Animal animal) {
+    animal.eat();      // 动态绑定
+}</code></pre>
+        </section>
+        <!-- 第十三课时 -->
+        <section id="lesson13" class="yuzu-card">
+            <h2>📘 第十三课时：接口</h2>
+            <pre><code>interface Flyable {
+    int MAX_HEIGHT = 10000;   // public static final
+    void fly();               // public abstract
+    default void show() { System.out.println("飞行器"); }
+    static void info() { System.out.println("接口静态方法"); }
+}
+
+interface Eatable { void eat(); }
+
+class Bird implements Flyable, Eatable {
+    public void fly() { System.out.println("鸟儿飞"); }
+    public void eat() { System.out.println("鸟儿吃"); }
+}</code></pre>
+        </section>
+        <!-- 第十四课时 -->
+        <section id="lesson14" class="yuzu-card">
+            <h2>📘 第十四课时：异常</h2>
+            <pre><code>try {
+    int[] arr = new int[5];
+    arr[10] = 100;
+} catch (ArrayIndexOutOfBoundsException e) {
+    System.out.println("索引越界:" + e);
+} catch (Exception e) {   // 父类放最后
+    e.printStackTrace();
+} finally {
+    System.out.println("总会执行");
+}
+
+// throws 声明异常
+void readFile() throws IOException { ... }
+
+// throw 手动抛出
+throw new IllegalArgumentException("参数错误");
+
+// 自定义异常
+class MyException extends Exception {
+    public MyException(String msg) { super(msg); }
+}</code></pre>
+        </section>
+        <!-- 第十五课时 -->
+        <section id="lesson15" class="yuzu-card">
+            <h2>📘 第十五课时：集合框架</h2>
+            <h3>ArrayList / HashSet / HashMap</h3>
+            <pre><code>// List
+List&lt;String&gt; list = new ArrayList&lt;&gt;();
+list.add("Java"); list.add("Python");
+for (String s : list) System.out.println(s);
+
+// Set  (去重)
+Set&lt;Integer&gt; set = new HashSet&lt;&gt;();
+set.add(10); set.add(10);  // 只有一个10
+
+// Map
+Map&lt;String, Integer&gt; map = new HashMap&lt;&gt;();
+map.put("张三", 85);
+System.out.println(map.get("张三"));  // 85
+
+// 遍历
+for (Map.Entry&lt;String,Integer&gt; e : map.entrySet()) {
+    System.out.println(e.getKey() + ":" + e.getValue());
+}</code></pre>
+        </section>
+        <!-- 第十六课时 -->
+        <section id="lesson16" class="yuzu-card">
+            <h2>📘 第十六课时：实用类 (String, StringBuilder...)</h2>
+            <pre><code>// String 不可变
+String s = "  Hello  ";
+System.out.println(s.trim());         // "Hello"
+System.out.println(s.substring(2,5)); // "ell"
+
+// StringBuilder 可变, 单线程高效
+StringBuilder sb = new StringBuilder("Hello");
+sb.append(" World").insert(5, " Java");
+System.out.println(sb);  // Hello Java World
+
+// Math
+Math.max(10,20); Math.min(5,8); Math.random();
+
+// Arrays
+int[] arr = {3,1,4};
+Arrays.sort(arr);
+System.out.println(Arrays.toString(arr)); // [1,3,4]</code></pre>
+            <div class="note">💡 StringBuffer 线程安全，StringBuilder 更快。</div>
+        </section>
+        <hr>
+        <p style="text-align: center; opacity: 0.7;">✎ 记录于 2026 · 黄鱼 整理 · Java 从入门到核心</p>
+    </div>
+    <script>
+        function toggleTheme() {
+            const html = document.documentElement;
+            const current = html.getAttribute("data-theme");
+            const next = current === "dark" ? "light" : "dark";
+            html.setAttribute("data-theme", next);
+            try { localStorage.setItem("preferred-theme", next); } catch (e) { }
+        }
+
+        // 初始化主题
+        (function () {
+            const html = document.documentElement;
+            let saved = "dark";
+            try { saved = localStorage.getItem("preferred-theme") || "dark"; } catch (e) { }
+            html.setAttribute("data-theme", saved);
+        })();
+    </script>
+</body>
+
+</html>
