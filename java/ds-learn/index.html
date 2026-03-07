@@ -92,6 +92,33 @@
             color: white;
         }
 
+        #placeToggle {
+            position: fixed;
+            top: 75px;
+            right: 20px;
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--card);
+            border: 2px solid var(--border);
+            color: var(--text);
+            font-size: 22px;
+            cursor: pointer;
+            z-index: 999;
+            backdrop-filter: blur(4px);
+            box-shadow: var(--shadow);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+        }
+
+        #placeToggle:hover {
+            transform: scale(1.1);
+            background: var(--primary);
+            color: white;
+        }
+
         /* 导航栏 */
         .yuzu-nav {
             display: flex;
@@ -105,9 +132,10 @@
             border: 2px solid var(--border);
             backdrop-filter: blur(8px);
             box-shadow: var(--shadow);
-            position: sticky;
+            /* position: sticky; */
             top: 15px;
             z-index: 100;
+            font-size: 17px;
         }
 
         .yuzu-nav a {
@@ -155,16 +183,16 @@
         }
 
         h2 {
-            font-size: 2rem;
+            font-size: 1.7rem;
             border-left: 8px solid var(--primary);
             padding-left: 20px;
-            margin: 30px 0 20px;
+            margin: 0 0 15px;
             color: var(--primary);
         }
 
         h3 {
-            font-size: 1.6rem;
-            margin: 20px 0 10px;
+            font-size: 1.2rem;
+            margin: 10px 0;
             color: var(--accent);
         }
 
@@ -187,6 +215,21 @@
             padding: 2px 6px;
             border-radius: 6px;
             font-size: 0.9em;
+        }
+
+        /* 代码区字体调整 */
+        pre,
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'Consolas', monospace !important;
+            font-size: 0.7rem !important;
+            /* 调小字体 */
+            line-height: 1.4 !important;
+            /* 调小行距 */
+        }
+
+        pre {
+            padding: 16px !important;
+            /* 适当减小内边距 */
         }
 
         .badge {
@@ -213,6 +256,8 @@
             background: var(--code-bg);
             border-radius: 16px;
             overflow: hidden;
+            font-size: 18px;
+            line-height: 1.3;
         }
 
         th,
@@ -234,6 +279,7 @@
             padding: 15px 20px;
             border-radius: 12px;
             margin: 20px 0;
+            font-size: 0.85rem;
         }
 
         .inline-code {
@@ -280,8 +326,9 @@
 
 <body>
     <button id="themeToggle" onclick="toggleTheme()">🌓</button>
+    <button id="placeToggle" onclick="window.location.href=('#');">↑</button>
     <div class="container">
-        <h1 class="yuzu-title">☕ Java 从入门到核心 · 学习笔记</h1>
+        <h1 class="yuzu-title">Java 学习笔记</h1>
         <div class="yuzu-nav">
             <a href="#lesson3">3.选择</a>
             <a href="#lesson4">4.循环</a>
@@ -297,6 +344,8 @@
             <a href="#lesson14">14.异常</a>
             <a href="#lesson15">15.集合</a>
             <a href="#lesson16">16.实用类</a>
+            <a href="#lesson16">16.实用类</a>
+            <a href="https://www.jyshare.com/compile/10/">Java在线</a>
         </div>
         <!-- 第三课时 -->
         <section id="lesson3" class="yuzu-card">
@@ -712,7 +761,7 @@ System.out.println(Arrays.toString(arr)); // [1,3,4]</code></pre>
             <div class="note">💡 StringBuffer 线程安全，StringBuilder 更快。</div>
         </section>
         <hr>
-        <p style="text-align: center; opacity: 0.7;">✎ 记录于 2026 · 黄鱼 整理 · Java 从入门到核心</p>
+        <p style="text-align: center; opacity: 0.7;">✎ 记录于 2026 · 03A01 黄鱼 | DeepSeek 整理</p>
     </div>
     <script>
         function toggleTheme() {
