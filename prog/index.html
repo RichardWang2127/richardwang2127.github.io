@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>周区间进度 · 双区段百分比</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+        body {
+            background: linear-gradient(145deg, #f0f4fa 0%, #d9e2ef 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+        .card {
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 40px -10px rgba(0,20,40,0.25), inset 0 0 0 1px rgba(255,255,255,0.6);
+            padding: 2.2rem 2rem;
+            max-width: 600px;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 500;
+            letter-spacing: -0.01em;
+            margin-top: 0;
+            margin-bottom: 0.5rem;
+            color: #0b1e32;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        h1 span {
+            background: #1e3b5c;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: 500;
+            padding: 0.2rem 0.8rem;
+            border-radius: 30px;
+            opacity: 0.9;
+        }
+        .subhead {
+            color: #2c3f5c;
+            margin-bottom: 2rem;
+            font-size: 1rem;
+            border-left: 4px solid #4f7aa6;
+            padding-left: 1rem;
+            background: rgba(79,122,166,0.06);
+            border-radius: 0 8px 8px 0;
+        }
+        .interval-badge {
+            background: white;
+            border-radius: 60px;
+            padding: 0.6rem 1.4rem;
+            font-weight: 500;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+            display: inline-block;
+            margin-bottom: 1.6rem;
+            border: 1px solid rgba(79,122,166,0.3);
+            font-size: 1.2rem;
+        }
+        .interval-badge .weekday {
+            color: #1e3b5c;
+        }
+        .interval-badge .time {
+            font-family: 'JetBrains Mono', monospace;
+            background: #eef3f9;
+            padding: 0.2rem 0.6rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            margin: 0 0.2rem;
+        }
+        .progress-container {
+            background: white;
+            border-radius: 2rem;
+            padding: 1.8rem 1.8rem 2rem;
+            box-shadow: inset 0 1px 4px rgba(0,0,0,0.02), 0 12px 18px -10px rgba(26, 48, 73, 0.2);
+            margin-bottom: 1.8rem;
+        }
+        .label-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 0.6rem;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .label-row .name {
+            font-weight: 600;
+            color: #153454;
+            font-size: 1.2rem;
+        }
+        .label-row .percent {
+            font-size: 2.2rem;
+            font-weight: 600;
+            font-family: 'Inter', 'JetBrains Mono', monospace;
+            color: #0a2a44;
+            line-height: 1.2;
+        }
+        .progress-bar-bg {
+            background: #dbe4ed;
+            height: 28px;
+            border-radius: 30px;
+            overflow: hidden;
+            margin: 0.8rem 0 0.2rem;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4b7bac, #2c6192);
+            border-radius: 30px;
+            transition: width 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
+            box-shadow: 0 0 10px #5d8fc0;
+        }
+        .info-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.4rem;
+            background: rgba(255,255,255,0.5);
+            border-radius: 1.8rem;
+            padding: 1.6rem 1.6rem;
+            backdrop-filter: blur(4px);
+            margin-top: 1rem;
+        }
+        .info-item {
+            flex: 1 1 180px;
+        }
+        .info-item .label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            color: #365977;
+            font-weight: 500;
+        }
+        .info-item .value {
+            font-size: 1.35rem;
+            font-weight: 550;
+            color: #102c44;
+            font-family: monospace;
+            word-break: break-word;
+        }
+        .note {
+            font-size: 0.9rem;
+            color: #3d5670;
+            margin-top: 1.8rem;
+            border-top: 1px dashed rgba(79,122,166,0.3);
+            padding-top: 1.3rem;
+            text-align: center;
+        }
+        .note strong {
+            background: #e3ebf5;
+            padding: 0.15rem 0.6rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .outside-message {
+            background: #1e364e;
+            color: white;
+            border-radius: 2rem;
+            padding: 0.8rem 1.5rem;
+            text-align: center;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+        footer {
+            font-size: 0.8rem;
+            color: #4f6180;
+            margin-top: 1.2rem;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="card" id="app">
+        <h1>
+            📅 周区间进度计
+            <span>双区段</span>
+        </h1>
+        <div class="subhead">
+            主区间 · 周日 20:00  → 周五 15:00 <br style="display: none;"> 
+            次区间 · 周五 15:00  → 周日 20:00
+        </div>
+
+        <!-- 动态显示当前落在哪个区间 -->
+        <div class="interval-badge" id="intervalLabel">
+            <!-- 由js填充: 当前区间说明 -->
+        </div>
+
+        <!-- 主要进度显示区域 -->
+        <div class="progress-container" id="mainProgressContainer">
+            <div class="label-row">
+                <span class="name" id="segmentName">加载中...</span>
+                <span class="percent" id="percentDisplay">0.00%</span>
+            </div>
+            <div class="progress-bar-bg">
+                <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
+            </div>
+            <!-- 额外时间信息 (实时) -->
+            <div style="display: flex; justify-content: space-between; margin-top: 10px; color: #2c4b6e; font-size: 0.9rem;">
+                <span id="currentTimeLabel"></span>
+                <span id="rangeBoundaries"></span>
+            </div>
+        </div>
+
+        <!-- 详细数据网格 (辅助理解) -->
+        <div class="info-grid">
+            <div class="info-item">
+                <div class="label">📌 当前时段</div>
+                <div class="value" id="currentSegmentDetail">---</div>
+            </div>
+            <div class="info-item">
+                <div class="label">⏳ 已过 / 总时长</div>
+                <div class="value" id="elapsedTotal">-- / --</div>
+            </div>
+            <div class="info-item">
+                <div class="label">🕒 现在时刻</div>
+                <div class="value" id="nowTime">---</div>
+            </div>
+            <div class="info-item">
+                <div class="label">📆 周基准</div>
+                <div class="value" id="weekReference">周xx 20:00</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        (function() {
+            // --- 常量定义: 区间边界（基于一周的分钟偏移量，从周日 00:00 开始计算）
+            // 一周共 7 * 24 * 60 = 10080 分钟
+            const MINUTES_PER_WEEK = 7 * 24 * 60;
+
+            // 周日 20:00 相对周日00:00的分钟数 = 20*60 = 1200
+            const SUNDAY_20_00 = 20 * 60;  // 1200分钟
+            // 周五 15:00 相对周日00:00的分钟数 = 4天 * 24h + 15h = (4*24+15)*60 = (96+15)*60 = 111*60 = 6660分钟
+            const FRIDAY_15_00 = 4 * 24 * 60 + 15 * 60;  // 4天=5760分钟? 等一下重新算: 周五是一周的第5天? 周日=0, 周一=1, 周二=2, 周三=3, 周四=4, 周五=5, 周六=6.
+            // 更准确: 周日(第0天)20:00 = 0*24*60 + 20*60 = 1200 ✔
+            // 周五(第5天)15:00 = 5*24*60 + 15*60 = 5*1440 + 900 = 7200 + 900 = 8100? 不对, 5*1440=7200, +900=8100. 但我直觉周五15:00应该是(4天+15h)?? 
+            // 注意: 从周日0:00到周五0:00是5天整? 不对——周日0:00到周一0:00是1天, 到周二0:00=2天, 到周三0:00=3天, 到周四0:00=4天, 到周五0:00=5天。所以周五0:00 = 5*1440 = 7200分钟。周五15:00再加900 = 8100分钟。
+            // 验证: 周日20:00=1200, 周五15:00=8100, 区间长度 = 8100-1200 = 6900分钟 (4天19小时) 大致合理。
+            const FRIDAY_15_00_CORRECT = 5 * 24 * 60 + 15 * 60;  // 7200 + 900 = 8100
+            // 周日20:00保持不变
+            const SUNDAY_20_00_FIX = 20 * 60; // 1200
+
+            // 为了清晰, 重新赋值
+            const A_START = SUNDAY_20_00_FIX;      // 主区间起点: 周日20:00 (1200)
+            const A_END = FRIDAY_15_00_CORRECT;    // 主区间终点: 周五15:00 (8100)
+            // 次区间: 周五15:00 (8100) 到 下周日20:00 (即下一周的周日20:00 = 10080 + 1200? 实际上周期边界我们采用卷绕模式)
+            // 因为周日20:00已经是下一个循环的起点，但次区间终点应为周日20:00（但那个周日是下一周的周日20:00）。
+            // 为了处理方便，将时间轴视为环形[0,10080)。对于任意时刻，计算它相对于当前区间起点的偏移。
+            // 次区间 B 为 [A_END, A_START + MINUTES_PER_WEEK)  即 [8100, 1200+10080=11280) 但11280超出范围，所以实际在[8100, 10080) U [0,1200) 是跨周部分。
+            
+            // 工具: 获取当前时间对应的本周分钟偏移 (从当周周日00:00开始)
+            function getCurrentWeekMinutes() {
+                const now = new Date();
+                // 星期几 (0 = 周日, 1 = 周一, ..., 6 = 周六) 和 getDay() 一致
+                const dayOfWeek = now.getDay(); // 0 (周日) 到 6
+                const hours = now.getHours();
+                const minutes = now.getMinutes();
+                const seconds = now.getSeconds(); // 用秒更精确, 百分比平滑
+                const totalMinutes = dayOfWeek * 24 * 60 + hours * 60 + minutes + seconds / 60;
+                return totalMinutes; // 浮点数, 包含秒的小数
+            }
+
+            // 判断当前分钟偏移属于哪个区间, 并返回区间类型, 起点, 终点 (终点>起点, 处理卷绕)
+            function getCurrentIntervalInfo(weekMinutes) {
+                // 主区间: 周日20:00 ~ 周五15:00  (不跨周, A_START=1200, A_END=8100)
+                if (weekMinutes >= A_START && weekMinutes < A_END) {
+                    return {
+                        type: 'MAIN',
+                        start: A_START,
+                        end: A_END,
+                        label: '主区间 · 周日20:00 → 周五15:00',
+                        shortName: '主区间 (周日晚至周五下午)'
+                    };
+                } 
+                // 次区间: 周五15:00 ~ 周日20:00 (跨周: [A_END, 10080) ∪ [0, A_START) )
+                else {
+                    // 次区间有两种子情况, 但统一返回逻辑起点和终点 (考虑卷绕)
+                    // 我们返回一个虚拟的线性化区间, 通过判断当前是在后半周还是周日之前
+                    if (weekMinutes >= A_END) {
+                        // 情况 A: [8100, 10080) 周五15:00到周六结束
+                        return {
+                            type: 'SECONDARY',
+                            start: A_END,
+                            end: A_START + MINUTES_PER_WEEK, // 11280 (虚拟终点)
+                            actualEnd: A_START,
+                            label: '次区间 · 周五15:00 → 周日20:00 (跨周)',
+                            shortName: '次区间 (周五下午至周日晚上)'
+                        };
+                    } else {
+                        // 情况 B: [0, 1200) 周日凌晨到周日20:00前
+                        return {
+                            type: 'SECONDARY',
+                            start: A_END - MINUTES_PER_WEEK, // 8100-10080 = -1980 (虚拟起点)
+                            end: A_START,                     // 1200
+                            actualStart: A_END,
+                            label: '次区间 · 周五15:00 → 周日20:00 (跨周)',
+                            shortName: '次区间 (周五下午至周日晚上)'
+                        };
+                    }
+                }
+            }
+
+            // 给定区间信息 (含start, end) 和当前分钟, 计算已过时间占总长的比例 (0~1)
+            function computePercentage(intervalInfo, currentMinutes) {
+                let { start, end } = intervalInfo;
+                // 处理可能卷绕时, 对于type=SECONDARY, 我们使用线性化后的start/end
+                // 但当前分钟需要映射到线性化坐标: 如果start为负, 则当前分钟需要加一周
+                let linearCurrent = currentMinutes;
+                if (start < 0) {
+                    linearCurrent = currentMinutes + MINUTES_PER_WEEK;
+                }
+                // 对于没有卷绕但end > MINUTES_PER_WEEK? 若end超过一周, 也做映射
+                if (end > MINUTES_PER_WEEK && currentMinutes < A_START) {
+                    // 当前在周日凌晨~20:00之间, 对应次区间后半段
+                    linearCurrent = currentMinutes + MINUTES_PER_WEEK;
+                }
+
+                const totalLength = end - start; // 总是正数
+                if (totalLength <= 0) return 0; // 安全保护
+
+                let elapsed = linearCurrent - start;
+                // 夹紧 [0, totalLength]
+                elapsed = Math.min(Math.max(elapsed, 0), totalLength);
+                return elapsed / totalLength;
+            }
+
+            // 辅助: 格式化分钟偏移为 "周X HH:MM"
+            function formatWeekdayTime(minutesInWeek) {
+                // 规范化到 [0, 10080)
+                let m = ((minutesInWeek % MINUTES_PER_WEEK) + MINUTES_PER_WEEK) % MINUTES_PER_WEEK;
+                const day = Math.floor(m / (24*60));
+                const hour = Math.floor((m % (24*60)) / 60);
+                const minute = Math.floor(m % 60);
+                const days = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+                return `${days[day]} ${hour.toString().padStart(2,'0')}:${minute.toString().padStart(2,'0')}`;
+            }
+
+            // 主更新函数
+            function updateProgress() {
+                const now = new Date();
+                const weekMinutes = getCurrentWeekMinutes();
+
+                // 获取区间信息
+                const intervalInfo = getCurrentIntervalInfo(weekMinutes);
+                
+                // 计算百分比
+                const percent = computePercentage(intervalInfo, weekMinutes);
+                const percentFixed = (percent * 100).toFixed(2);
+
+                // 更新界面元素
+                document.getElementById('segmentName').innerText = intervalInfo.shortName;
+                document.getElementById('percentDisplay').innerText = percentFixed + '%';
+                document.getElementById('progressFill').style.width = percentFixed + '%';
+
+                // 显示当前区间标签 (顶部徽章)
+                const intervalLabelEl = document.getElementById('intervalLabel');
+                if (intervalInfo.type === 'MAIN') {
+                    intervalLabelEl.innerHTML = `<span class="weekday">📌 当前位于 主区间</span> <span class="time">周日20:00 → 周五15:00</span>`;
+                } else {
+                    intervalLabelEl.innerHTML = `<span class="weekday">📌 当前位于 次区间</span> <span class="time">周五15:00 → 周日20:00</span>`;
+                }
+
+                // 当前时刻字符串
+                const timeStr = now.toLocaleTimeString('zh-CN', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                const dateStr = now.toLocaleDateString('zh-CN', { weekday: 'short', month: 'numeric', day: 'numeric' }).replace('星期', '周');
+                document.getElementById('nowTime').innerText = `${dateStr} ${timeStr}`;
+
+                // 当前区间详情
+                document.getElementById('currentSegmentDetail').innerText = intervalInfo.shortName;
+
+                // 已过 / 总时长 (大概小时)
+                let totalHours, elapsedHours;
+                if (intervalInfo.type === 'MAIN') {
+                    totalHours = (A_END - A_START) / 60;
+                    elapsedHours = (weekMinutes - A_START) / 60;
+                    if (elapsedHours < 0) elapsedHours = 0;
+                    if (elapsedHours > totalHours) elapsedHours = totalHours;
+                } else {
+                    // 次区间总长度 (一周 - 主区间长度)
+                    const mainLen = A_END - A_START; // 6900分钟
+                    const secondaryLen = MINUTES_PER_WEEK - mainLen; // 3180分钟 ≈ 53小时
+                    totalHours = secondaryLen / 60;
+
+                    // 计算次区间已过时间: 比较复杂, 用computePercentage返回的比例乘总长度
+                    const elapsedMins = percent * secondaryLen;
+                    elapsedHours = elapsedMins / 60;
+                }
+                document.getElementById('elapsedTotal').innerText = `${elapsedHours.toFixed(1)}h / ${totalHours.toFixed(1)}h`;
+
+                // 当前时间标签
+                document.getElementById('currentTimeLabel').innerHTML = `⏱️ 当前周偏移: <strong>${weekMinutes.toFixed(2)} 分钟</strong> (从周日00:00起)`;
+
+                // 边界提示
+                const mainStartStr = formatWeekdayTime(A_START);
+                const mainEndStr = formatWeekdayTime(A_END);
+                document.getElementById('rangeBoundaries').innerHTML = `📅 主边界 ${mainStartStr}  ~ ${mainEndStr}`;
+
+                // 周参考 (本周日起点)
+                const thisSunday = new Date(now);
+                thisSunday.setDate(now.getDate() - now.getDay()); // 回到周日
+                thisSunday.setHours(0,0,0,0);
+                document.getElementById('weekReference').innerText = formatWeekdayTime(A_START) + ' 起';
+            }
+
+            // 初始化并每秒刷新
+            updateProgress();
+            setInterval(updateProgress, 500); // 0.5秒刷新更流畅
+        })();
+    </script>
+</body>
+</html>
