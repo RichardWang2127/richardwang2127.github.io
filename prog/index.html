@@ -270,7 +270,7 @@
                     hour: '2-digit',
                     minute: '2-digit',
                     second: '2-digit',
-                    fractionalSecondDigits: 3  // 显示毫秒
+                    // fractionalSecondDigits: 0  // 显示毫秒
                 });
                 const dateStr = now.toLocaleDateString('zh-CN', { weekday: 'short', month: 'numeric', day: 'numeric' }).replace('星期', '周');
                 document.getElementById('nowTime').innerText = `${dateStr} ${timeStr}`;
