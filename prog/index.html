@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,7 @@
             box-sizing: border-box;
             font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
         }
+
         body {
             background: linear-gradient(145deg, #f0f4fa 0%, #d9e2ef 100%);
             min-height: 100vh;
@@ -18,17 +20,19 @@
             align-items: center;
             padding: 1rem;
         }
+
         .card {
-            background: rgba(255,255,255,0.7);
+            background: rgba(255, 255, 255, 0.7);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
             border-radius: 2.5rem;
-            box-shadow: 0 25px 40px -10px rgba(0,20,40,0.25), inset 0 0 0 1px rgba(255,255,255,0.6);
+            box-shadow: 0 25px 40px -10px rgba(0, 20, 40, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
             padding: 2.2rem 2rem;
             max-width: 600px;
             width: 100%;
             transition: all 0.2s ease;
         }
+
         h1 {
             font-size: 1.8rem;
             font-weight: 500;
@@ -40,13 +44,15 @@
             align-items: center;
             gap: 0.5rem;
         }
+
         .progress-container {
             background: white;
             border-radius: 2rem;
             padding: 1.8rem 1.8rem 2rem;
-            box-shadow: inset 0 1px 4px rgba(0,0,0,0.02), 0 12px 18px -10px rgba(26, 48, 73, 0.2);
+            box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.02), 0 12px 18px -10px rgba(26, 48, 73, 0.2);
             margin-bottom: 1.8rem;
         }
+
         .label-row {
             display: flex;
             justify-content: space-between;
@@ -55,11 +61,13 @@
             flex-wrap: wrap;
             gap: 8px;
         }
+
         .label-row .name {
             font-weight: 600;
             color: #153454;
             font-size: 1.2rem;
         }
+
         .label-row .percent {
             font-size: 2.2rem;
             font-weight: 600;
@@ -67,14 +75,16 @@
             color: #0a2a44;
             line-height: 1.2;
         }
+
         .progress-bar-bg {
             background: #dbe4ed;
             height: 28px;
             border-radius: 30px;
             overflow: hidden;
             margin: 0.8rem 0 0.2rem;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .progress-fill {
             height: 100%;
             width: 0%;
@@ -83,36 +93,46 @@
             transition: width 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
             box-shadow: 0 0 10px #5d8fc0;
         }
+
+        /* 重新定义 info-grid 为纵向排列 */
         .info-grid {
             display: flex;
-            flex-wrap: wrap;
-            gap: 1.4rem;
-            background: rgba(255,255,255,0.5);
+            flex-direction: column;
+            gap: 1rem;
+            background: rgba(255, 255, 255, 0.5);
             border-radius: 1.8rem;
             padding: 1.6rem 1.6rem;
             backdrop-filter: blur(4px);
             margin-top: 1rem;
         }
+
         .info-item {
-            flex: 1 1 180px;
+            width: 100%;
         }
+
         .info-item .label {
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.03em;
             color: #365977;
             font-weight: 500;
+            margin-bottom: 0.2rem;
         }
+
         .info-item .value {
-            font-size: 1.35rem;
+            font-size: 1.6rem;
+            /* 稍微调大一点，更突出 */
             font-weight: 550;
             color: #102c44;
             font-family: monospace;
             word-break: break-word;
+            line-height: 1.3;
         }
-        /* 移除了所有不必要的样式：.subhead, .interval-badge, .note, .outside-message 等 */
+
+        /* 移除了所有不必要的样式 */
     </style>
 </head>
+
 <body>
     <div class="card" id="app">
         <h1>📅 周区间进度计</h1>
@@ -121,22 +141,18 @@
         <div class="progress-container">
             <div class="label-row">
                 <span class="name" id="segmentName">加载中...</span>
-                <span class="percent" id="percentDisplay">0.00%</span>
+                <span class="percent" id="percentDisplay">0.000%</span>
             </div>
             <div class="progress-bar-bg">
                 <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
             </div>
-            <!-- 精简后只保留当前周偏移 -->
-            <div style="display: flex; justify-content: space-between; margin-top: 10px; color: #2c4b6e; font-size: 0.9rem;">
-                <span id="currentTimeLabel"></span>
-            </div>
         </div>
 
-        <!-- 详细数据网格 (只保留已过/总时长 和 现在时刻) -->
+        <!-- 详细数据网格 - 改为纵向排列，两个info-item分行显示 -->
         <div class="info-grid">
             <div class="info-item">
                 <div class="label">⏳ 已过 / 总时长</div>
-                <div class="value" id="elapsedTotal">-- / --</div>
+                <div class="value" id="elapsedTotal">--:--:-- / --:--:--</div>
             </div>
             <div class="info-item">
                 <div class="label">🕒 现在时刻</div>
@@ -146,7 +162,7 @@
     </div>
 
     <script>
-        (function() {
+        (function () {
             // --- 常量定义: 区间边界（基于一周的分钟偏移量，从周日 00:00 开始计算）
             const MINUTES_PER_WEEK = 7 * 24 * 60;          // 10080分钟
             const SUNDAY_20_00 = 20 * 60;                  // 1200
@@ -154,7 +170,7 @@
 
             const A_START = SUNDAY_20_00;      // 主区间起点: 周日20:00 (1200)
             const A_END = FRIDAY_15_00;         // 主区间终点: 周五15:00 (8100)
-            
+
             // 工具: 获取当前时间对应的本周分钟偏移 (从当周周日00:00开始)
             function getCurrentWeekMinutes() {
                 const now = new Date();
@@ -175,7 +191,7 @@
                         end: A_END,
                         shortName: '主区间 (周日晚至周五下午)'
                     };
-                } 
+                }
                 // 次区间: 周五15:00 ~ 周日20:00 (跨周)
                 else {
                     if (weekMinutes >= A_END) {
@@ -218,6 +234,14 @@
                 return elapsed / totalLength;
             }
 
+            // 将分钟数转换为 HH:MM:SS 格式 (分钟可为浮点数)
+            function formatTimeFromMinutes(totalMinutes) {
+                const hours = Math.floor(totalMinutes / 60);
+                const minutes = Math.floor(totalMinutes % 60);
+                const seconds = Math.floor((totalMinutes * 60) % 60);
+                return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            }
+
             // 主更新函数
             function updateProgress() {
                 const now = new Date();
@@ -226,7 +250,7 @@
                 // 区间信息 & 百分比
                 const intervalInfo = getCurrentIntervalInfo(weekMinutes);
                 const percent = computePercentage(intervalInfo, weekMinutes);
-                const percentFixed = (percent * 100).toFixed(9);
+                const percentFixed = (percent * 100).toFixed(3);
 
                 // 更新界面
                 document.getElementById('segmentName').innerText = intervalInfo.shortName;
@@ -238,32 +262,31 @@
                 const dateStr = now.toLocaleDateString('zh-CN', { weekday: 'short', month: 'numeric', day: 'numeric' }).replace('星期', '周');
                 document.getElementById('nowTime').innerText = `${dateStr} ${timeStr}`;
 
-                // 已过 / 总时长
-                let totalHours, elapsedHours;
+                // 已过 / 总时长 (改为 HH:MM:SS 格式)
                 const mainLen = A_END - A_START;               // 6900分钟
                 const secondaryLen = MINUTES_PER_WEEK - mainLen; // 3180分钟
 
+                let totalMinutes, elapsedMinutes;
                 if (intervalInfo.type === 'MAIN') {
-                    totalHours = mainLen / 60;
-                    elapsedHours = (weekMinutes - A_START) / 60;
-                    if (elapsedHours < 0) elapsedHours = 0;
-                    if (elapsedHours > totalHours) elapsedHours = totalHours;
+                    totalMinutes = mainLen;
+                    elapsedMinutes = (weekMinutes - A_START);
+                    if (elapsedMinutes < 0) elapsedMinutes = 0;
+                    if (elapsedMinutes > totalMinutes) elapsedMinutes = totalMinutes;
                 } else {
-                    totalHours = secondaryLen / 60;
-                    const elapsedMins = percent * secondaryLen;
-                    elapsedHours = elapsedMins / 60;
+                    totalMinutes = secondaryLen;
+                    elapsedMinutes = percent * secondaryLen;
                 }
-                document.getElementById('elapsedTotal').innerText = `${elapsedHours.toFixed(1)}h / ${totalHours.toFixed(1)}h`;
 
-                // 当前周偏移
-                document.getElementById('currentTimeLabel').innerHTML = `⏱️ 当前周偏移: <strong>${weekMinutes.toFixed(2)} 分钟</strong> (从周日00:00起)`;
-                console.log("ref-ed");
+                const elapsedFormatted = formatTimeFromMinutes(elapsedMinutes);
+                const totalFormatted = formatTimeFromMinutes(totalMinutes);
+                document.getElementById('elapsedTotal').innerText = `${elapsedFormatted} / ${totalFormatted}`;
             }
 
             // 初始化并每秒刷新
             updateProgress();
-            setInterval(updateProgress, 100);
+            setInterval(updateProgress, 200);
         })();
     </script>
 </body>
+
 </html>
