@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>周区间进度 · 双区段</title>
+    <title>周区间进度 · 毫秒精度</title>
     <style>
         * {
             box-sizing: border-box;
@@ -135,13 +135,13 @@
 
 <body>
     <div class="card" id="app">
-        <h1>📅 周区间进度计</h1>
+        <h1>📅 周区间进度计 · 毫秒精度</h1>
 
         <!-- 主要进度显示区域 -->
         <div class="progress-container">
             <div class="label-row">
                 <span class="name" id="segmentName">加载中...</span>
-                <span class="percent" id="percentDisplay">0.000%</span>
+                <span class="percent" id="percentDisplay">0.000000%</span>
             </div>
             <div class="progress-bar-bg">
                 <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
@@ -163,28 +163,34 @@
 
     <script>
         (function () {
-            // --- 常量定义: 区间边界（基于一周的分钟偏移量，从周日 00:00 开始计算）
-            const MINUTES_PER_WEEK = 7 * 24 * 60;          // 10080分钟
-            const SUNDAY_20_00 = 20 * 60;                  // 1200
-            const FRIDAY_15_00 = 5 * 24 * 60 + 15 * 60;    // 8100
+            // --- 常量定义: 区间边界（基于一周的毫秒偏移量，从周日 00:00:00.000 开始计算）
+            const MS_PER_WEEK = 7 * 24 * 60 * 60 * 1000;          // 604800000 毫秒
+            const SUNDAY_20_00_MS = 20 * 60 * 60 * 1000;          // 72000000 毫秒 (20小时)
+            const FRIDAY_15_00_MS = (5 * 24 * 60 * 60 + 15 * 60 * 60) * 1000; // 486000000 毫秒 (5天15小时 = 135小时 = 486000000ms)
 
-            const A_START = SUNDAY_20_00;      // 主区间起点: 周日20:00 (1200)
-            const A_END = FRIDAY_15_00;         // 主区间终点: 周五15:00 (8100)
+            const A_START = SUNDAY_20_00_MS;      // 主区间起点: 周日20:00 (72000000ms)
+            const A_END = FRIDAY_15_00_MS;         // 主区间终点: 周五15:00 (486000000ms)
 
-            // 工具: 获取当前时间对应的本周分钟偏移 (从当周周日00:00开始)
-            function getCurrentWeekMinutes() {
+            // 工具: 获取当前时间对应的本周毫秒偏移 (从当周周日00:00:00.000开始)
+            function getCurrentWeekMilliseconds() {
                 const now = new Date();
                 const dayOfWeek = now.getDay(); // 0 (周日) 到 6
                 const hours = now.getHours();
                 const minutes = now.getMinutes();
                 const seconds = now.getSeconds();
-                return dayOfWeek * 24 * 60 + hours * 60 + minutes + seconds / 60;
+                const milliseconds = now.getMilliseconds(); // 获取毫秒!
+
+                return dayOfWeek * 24 * 60 * 60 * 1000 +
+                    hours * 60 * 60 * 1000 +
+                    minutes * 60 * 1000 +
+                    seconds * 1000 +
+                    milliseconds;
             }
 
-            // 判断当前分钟偏移属于哪个区间, 并返回区间类型, 起点, 终点 (处理卷绕)
-            function getCurrentIntervalInfo(weekMinutes) {
+            // 判断当前毫秒偏移属于哪个区间, 并返回区间类型, 起点, 终点 (处理卷绕)
+            function getCurrentIntervalInfo(weekMs) {
                 // 主区间: 周日20:00 ~ 周五15:00 (不跨周)
-                if (weekMinutes >= A_START && weekMinutes < A_END) {
+                if (weekMs >= A_START && weekMs < A_END) {
                     return {
                         type: 'MAIN',
                         start: A_START,
@@ -194,97 +200,104 @@
                 }
                 // 次区间: 周五15:00 ~ 周日20:00 (跨周)
                 else {
-                    if (weekMinutes >= A_END) {
-                        // 情况 A: [8100, 10080) 周五15:00到周六结束
+                    if (weekMs >= A_END) {
+                        // 情况 A: [486000000, 604800000) 周五15:00到周六结束
                         return {
                             type: 'SECONDARY',
                             start: A_END,
-                            end: A_START + MINUTES_PER_WEEK, // 11280 (虚拟终点)
+                            end: A_START + MS_PER_WEEK, // 72000000 + 604800000 = 676800000 (虚拟终点)
                             shortName: '次区间 (周五下午至周日晚上)'
                         };
                     } else {
-                        // 情况 B: [0, 1200) 周日凌晨到周日20:00前
+                        // 情况 B: [0, 72000000) 周日凌晨到周日20:00前
                         return {
                             type: 'SECONDARY',
-                            start: A_END - MINUTES_PER_WEEK, // -1980 (虚拟起点)
-                            end: A_START,                     // 1200
+                            start: A_END - MS_PER_WEEK, // 486000000 - 604800000 = -118800000 (虚拟起点)
+                            end: A_START,                // 72000000
                             shortName: '次区间 (周五下午至周日晚上)'
                         };
                     }
                 }
             }
 
-            // 给定区间信息和当前分钟, 计算比例 (0~1)
-            function computePercentage(intervalInfo, currentMinutes) {
+            // 给定区间信息和当前毫秒, 计算比例 (0~1) - 毫秒精度
+            function computePercentage(intervalInfo, currentMs) {
                 let { start, end } = intervalInfo;
-                let linearCurrent = currentMinutes;
+                let linearCurrent = currentMs;
 
                 if (start < 0) {
-                    linearCurrent = currentMinutes + MINUTES_PER_WEEK;
+                    linearCurrent = currentMs + MS_PER_WEEK;
                 }
-                if (end > MINUTES_PER_WEEK && currentMinutes < A_START) {
-                    linearCurrent = currentMinutes + MINUTES_PER_WEEK;
+                if (end > MS_PER_WEEK && currentMs < A_START) {
+                    linearCurrent = currentMs + MS_PER_WEEK;
                 }
 
-                const totalLength = end - start; // 正数
+                const totalLength = end - start; // 正数 (毫秒)
                 if (totalLength <= 0) return 0;
 
                 let elapsed = linearCurrent - start;
                 elapsed = Math.min(Math.max(elapsed, 0), totalLength);
-                return elapsed / totalLength;
+                return elapsed / totalLength; // 返回毫秒级的精确比例
             }
 
-            // 将分钟数转换为 HH:MM:SS 格式 (分钟可为浮点数)
-            function formatTimeFromMinutes(totalMinutes) {
-                const hours = Math.floor(totalMinutes / 60);
-                const minutes = Math.floor(totalMinutes % 60);
-                const seconds = Math.floor((totalMinutes * 60) % 60);
+            // 将毫秒数转换为 HH:MM:SS 格式 (注意：不显示毫秒，保持原有格式)
+            function formatTimeFromMilliseconds(totalMs) {
+                const totalSeconds = Math.floor(totalMs / 1000);
+                const hours = Math.floor(totalSeconds / 3600);
+                const minutes = Math.floor((totalSeconds % 3600) / 60);
+                const seconds = totalSeconds % 60;
                 return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             }
 
             // 主更新函数
             function updateProgress() {
                 const now = new Date();
-                const weekMinutes = getCurrentWeekMinutes();
+                const weekMs = getCurrentWeekMilliseconds(); // 毫秒级精度
 
                 // 区间信息 & 百分比
-                const intervalInfo = getCurrentIntervalInfo(weekMinutes);
-                const percent = computePercentage(intervalInfo, weekMinutes);
-                const percentFixed = (percent * 100).toFixed(4);
+                const intervalInfo = getCurrentIntervalInfo(weekMs);
+                const percent = computePercentage(intervalInfo, weekMs);
+                const percentFixed = (percent * 100).toFixed(6); // 显示6位小数，对应毫秒级精度
 
                 // 更新界面
                 document.getElementById('segmentName').innerText = intervalInfo.shortName;
                 document.getElementById('percentDisplay').innerText = percentFixed + '%';
                 document.getElementById('progressFill').style.width = percentFixed + '%';
 
-                // 当前时刻 (日期 + 时间)
-                const timeStr = now.toLocaleTimeString('zh-CN', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                // 当前时刻 (日期 + 时间，包含毫秒)
+                const timeStr = now.toLocaleTimeString('zh-CN', {
+                    hour12: false,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+                    fractionalSecondDigits: 3  // 显示毫秒
+                });
                 const dateStr = now.toLocaleDateString('zh-CN', { weekday: 'short', month: 'numeric', day: 'numeric' }).replace('星期', '周');
                 document.getElementById('nowTime').innerText = `${dateStr} ${timeStr}`;
 
-                // 已过 / 总时长 (改为 HH:MM:SS 格式)
-                const mainLen = A_END - A_START;               // 6900分钟
-                const secondaryLen = MINUTES_PER_WEEK - mainLen; // 3180分钟
+                // 已过 / 总时长 (毫秒转换为 HH:MM:SS)
+                const mainLen = A_END - A_START;               // 414000000毫秒 = 6900分钟 = 115小时
+                const secondaryLen = MS_PER_WEEK - mainLen;     // 190800000毫秒 = 3180分钟 = 53小时
 
-                let totalMinutes, elapsedMinutes;
+                let totalMs, elapsedMs;
                 if (intervalInfo.type === 'MAIN') {
-                    totalMinutes = mainLen;
-                    elapsedMinutes = (weekMinutes - A_START);
-                    if (elapsedMinutes < 0) elapsedMinutes = 0;
-                    if (elapsedMinutes > totalMinutes) elapsedMinutes = totalMinutes;
+                    totalMs = mainLen;
+                    elapsedMs = (weekMs - A_START);
+                    if (elapsedMs < 0) elapsedMs = 0;
+                    if (elapsedMs > totalMs) elapsedMs = totalMs;
                 } else {
-                    totalMinutes = secondaryLen;
-                    elapsedMinutes = percent * secondaryLen;
+                    totalMs = secondaryLen;
+                    elapsedMs = percent * secondaryLen;
                 }
 
-                const elapsedFormatted = formatTimeFromMinutes(elapsedMinutes);
-                const totalFormatted = formatTimeFromMinutes(totalMinutes);
+                const elapsedFormatted = formatTimeFromMilliseconds(elapsedMs);
+                const totalFormatted = formatTimeFromMilliseconds(totalMs);
                 document.getElementById('elapsedTotal').innerText = `${elapsedFormatted} / ${totalFormatted}`;
             }
 
-            // 初始化并每秒刷新
+            // 初始化并高频刷新 (50ms 让毫秒变化更明显)
             updateProgress();
-            setInterval(updateProgress, 200);
+            setInterval(updateProgress, 50);
         })();
     </script>
 </body>
