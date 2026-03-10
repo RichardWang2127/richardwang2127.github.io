@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>周区间进度 · 毫秒精度</title>
+    <title>周区间进度</title>
     <style>
         * {
             box-sizing: border-box;
@@ -135,7 +135,7 @@
 
 <body>
     <div class="card" id="app">
-        <h1>📅 周区间进度计 · 毫秒精度</h1>
+        <h1>📅 周区间进度计</h1>
 
         <!-- 主要进度显示区域 -->
         <div class="progress-container">
@@ -257,7 +257,7 @@
                 // 区间信息 & 百分比
                 const intervalInfo = getCurrentIntervalInfo(weekMs);
                 const percent = computePercentage(intervalInfo, weekMs);
-                const percentFixed = (percent * 100).toFixed(6); // 显示6位小数，对应毫秒级精度
+                const percentFixed = (percent * 100).toFixed(4); // 显示6位小数，对应毫秒级精度
 
                 // 更新界面
                 document.getElementById('segmentName').innerText = intervalInfo.shortName;
@@ -297,7 +297,7 @@
 
             // 初始化并高频刷新 (50ms 让毫秒变化更明显)
             updateProgress();
-            setInterval(updateProgress, 50);
+            setInterval(updateProgress, 100);
         })();
     </script>
 </body>
