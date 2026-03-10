@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>时段追踪</title>
+    <title>时段追踪 · 精简</title>
     <style>
         * {
             box-sizing: border-box;
@@ -45,19 +45,6 @@
             gap: 0.5rem;
         }
 
-        /* 当前时段标识 */
-        .current-badge {
-            background: white;
-            border-radius: 60px;
-            padding: 0.5rem 1.2rem;
-            font-weight: 500;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
-            display: inline-block;
-            margin-bottom: 1.5rem;
-            border: 1px solid rgba(79, 122, 166, 0.3);
-            font-size: clamp(1rem, 4vw, 1.3rem);
-        }
-
         .progress-container {
             background: white;
             border-radius: 2rem;
@@ -79,6 +66,14 @@
             font-weight: 600;
             color: #153454;
             font-size: clamp(1rem, 4vw, 1.3rem);
+        }
+
+        .label-row .name span {
+            font-weight: 400;
+            color: #4f6180;
+            font-size: 0.9em;
+            margin-left: 0.5rem;
+            font-family: monospace;
         }
 
         .label-row .percent {
@@ -107,7 +102,7 @@
             box-shadow: 0 0 10px #5d8fc0;
         }
 
-        /* 时间信息网格 - 纵向 */
+        /* 时间信息网格 - 只保留两行 */
         .info-grid {
             display: flex;
             flex-direction: column;
@@ -168,26 +163,19 @@
     <div class="card">
         <h1>⏳ 时段进度</h1>
 
-        <!-- 当前时段标识 -->
-        <div class="current-badge" id="currentBadge">⏰ 加载中...</div>
-
         <!-- 进度显示区域 -->
         <div class="progress-container">
             <div class="label-row">
-                <span class="name" id="segmentName">--</span>
-                <span class="percent" id="percentDisplay">0.00%</span>
+                <span class="name" id="segmentName">-- <span id="timeRange"></span></span>
+                <span class="percent" id="percentDisplay">0.0000%</span>
             </div>
             <div class="progress-bar-bg">
                 <div class="progress-fill" id="progressFill" style="width: 0%;"></div>
             </div>
         </div>
 
-        <!-- 详细信息 -->
+        <!-- 详细信息 - 只保留已过/剩余 和 现在时刻 -->
         <div class="info-grid">
-            <div class="info-item">
-                <span class="label">🕒 当前时段</span>
-                <span class="value" id="currentPeriod">--:-- 至 --:--</span>
-            </div>
             <div class="info-item">
                 <span class="label">⏳ 已过 / 剩余</span>
                 <span class="value" id="timeRemaining">--:--:-- / --:--:--</span>
@@ -205,116 +193,111 @@
     <script>
         (function () {
             // --- 时段定义 (24小时制，精确到秒) ---
-            // 每个时段: [名称, 开始(小时,分钟,秒), 结束(小时,分钟,秒)]
             const PERIODS = [
                 { name: '晚自习', start: [18, 30, 0], end: [20, 30, 0] },
-                { name: '回宿舍', start: [20, 30, 0], end: [22, 0, 0] },
+                { name: '宿舍时段', start: [20, 30, 0], end: [22, 0, 0] },
                 { name: '交手机', start: [22, 0, 0], end: [22, 10, 0] },
-                { name: '空闲', start: [22, 10, 0], end: [22, 25, 0] },
+                { name: '宿舍时段', start: [22, 10, 0], end: [22, 25, 0] },
                 { name: '准备熄灯', start: [22, 25, 0], end: [22, 29, 59] },
                 { name: '熄灯时间', start: [22, 30, 0], end: [6, 50, 0] },     // 跨午夜
                 { name: '宿舍内务', start: [6, 50, 0], end: [7, 20, 0] },
                 { name: '早餐&教室', start: [7, 20, 0], end: [7, 55, 0] },
-                { name: '空闲', start: [7, 55, 0], end: [18, 30, 0] }
+                { name: '在校学习', start: [7, 55, 0], end: [18, 30, 0] }
             ];
 
-            // 辅助: 将小时、分钟、秒转换为从午夜开始的秒数
-            function toSeconds(h, m, s) {
-                return h * 3600 + m * 60 + s;
+            // 辅助: 将小时、分钟、秒转换为从午夜开始的毫秒数 (使用毫秒精度)
+            function toMilliseconds(h, m, s) {
+                return (h * 3600 + m * 60 + s) * 1000;
             }
 
-            // 辅助: 将秒数格式化为 HH:MM:SS
-            function formatSeconds(sec, includeSeconds = true) {
-                const h = Math.floor(sec / 3600);
-                const m = Math.floor((sec % 3600) / 60);
-                const s = sec % 60;
-                if (includeSeconds) {
-                    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
-                } else {
-                    return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
-                }
-            }
-
-            // 获取当前时间对应的秒数 (从午夜开始)
-            function getCurrentSeconds() {
+            // 获取当前时间对应的毫秒数 (从午夜开始)
+            function getCurrentMilliseconds() {
                 const now = new Date();
-                return now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds();
+                return (now.getHours() * 3600 + now.getMinutes() * 60 + now.getSeconds()) * 1000 + now.getMilliseconds();
             }
 
-            // 获取完整当前时间对象，用于显示
+            // 获取完整当前时间对象
             function getCurrentDateTime() {
                 return new Date();
             }
 
-            // 根据当前秒数查找所属时段 (处理跨午夜)
-            function findCurrentPeriod(currentSec) {
+            // 格式化毫秒数为 HH:MM:SS
+            function formatMilliseconds(ms) {
+                const totalSeconds = Math.floor(ms / 1000);
+                const h = Math.floor(totalSeconds / 3600);
+                const m = Math.floor((totalSeconds % 3600) / 60);
+                const s = totalSeconds % 60;
+                return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}:${s.toString().padStart(2, '0')}`;
+            }
+
+            // 根据当前毫秒数查找所属时段 (处理跨午夜)
+            function findCurrentPeriod(currentMs) {
                 for (let period of PERIODS) {
-                    const startSec = toSeconds(period.start[0], period.start[1], period.start[2]);
-                    let endSec = toSeconds(period.end[0], period.end[1], period.end[2]);
+                    const startMs = toMilliseconds(period.start[0], period.start[1], period.start[2]);
+                    let endMs = toMilliseconds(period.end[0], period.end[1], period.end[2]);
 
                     // 处理跨午夜: 如果结束时间小于开始时间，表示结束在第二天
-                    if (endSec < startSec) {
-                        // 如果当前时间大于等于开始时间，或者当前时间小于结束时间（第二天凌晨）
-                        if (currentSec >= startSec || currentSec < endSec) {
+                    if (endMs < startMs) {
+                        if (currentMs >= startMs || currentMs < endMs) {
                             return period;
                         }
                     } else {
-                        // 正常时段
-                        if (currentSec >= startSec && currentSec < endSec) {
+                        if (currentMs >= startMs && currentMs < endMs) {
                             return period;
                         }
                     }
                 }
-                // 理论上不会到这里，因为时段覆盖全天，但万一返回第一个
                 return PERIODS[0];
             }
 
-            // 计算当前时段的进度和剩余时间 (返回百分比, 已过秒数, 总秒数)
-            function computeProgress(period, currentSec) {
-                const startSec = toSeconds(period.start[0], period.start[1], period.start[2]);
-                let endSec = toSeconds(period.end[0], period.end[1], period.end[2]);
+            // 计算当前时段的进度和剩余时间 (毫秒精度)
+            function computeProgress(period, currentMs) {
+                const startMs = toMilliseconds(period.start[0], period.start[1], period.start[2]);
+                let endMs = toMilliseconds(period.end[0], period.end[1], period.end[2]);
 
-                // 处理跨午夜
-                let totalSec, elapsedSec;
-                if (endSec < startSec) {
-                    // 跨午夜时段，总长度 = (24h - start) + end
-                    totalSec = (24 * 3600 - startSec) + endSec;
-                    if (currentSec >= startSec) {
-                        // 今天部分
-                        elapsedSec = currentSec - startSec;
+                let totalMs, elapsedMs;
+                if (endMs < startMs) {
+                    // 跨午夜时段
+                    totalMs = (24 * 3600 * 1000 - startMs) + endMs;
+                    if (currentMs >= startMs) {
+                        elapsedMs = currentMs - startMs;
                     } else {
-                        // 过了午夜，进入第二天部分
-                        elapsedSec = (24 * 3600 - startSec) + currentSec;
+                        elapsedMs = (24 * 3600 * 1000 - startMs) + currentMs;
                     }
                 } else {
-                    totalSec = endSec - startSec;
-                    elapsedSec = currentSec - startSec;
-                    if (elapsedSec < 0) elapsedSec = 0;
-                    if (elapsedSec > totalSec) elapsedSec = totalSec;
+                    totalMs = endMs - startMs;
+                    elapsedMs = currentMs - startMs;
+                    if (elapsedMs < 0) elapsedMs = 0;
+                    if (elapsedMs > totalMs) elapsedMs = totalMs;
                 }
 
-                const percent = (elapsedSec / totalSec) * 100;
+                const percent = (elapsedMs / totalMs) * 100;
                 return {
                     percent,
-                    elapsedSec,
-                    totalSec
+                    elapsedMs,
+                    totalMs
                 };
             }
 
             // 格式化剩余时间 (已过/剩余)
-            function formatRemaining(elapsed, total) {
-                const remaining = total - elapsed;
-                return `${formatSeconds(elapsed)} / ${formatSeconds(remaining)}`;
+            function formatRemaining(elapsedMs, totalMs) {
+                const remainingMs = totalMs - elapsedMs;
+                return `${formatMilliseconds(elapsedMs)} / ${formatMilliseconds(remainingMs)}`;
             }
 
-            // 格式化时段字符串
-            function formatPeriodTime(period) {
-                const start = `${period.start[0].toString().padStart(2, '0')}:${period.start[1].toString().padStart(2, '0')}`;
-                let end = `${period.end[0].toString().padStart(2, '0')}:${period.end[1].toString().padStart(2, '0')}`;
-                if (period.end[2] !== undefined && period.end[2] !== 0) {
-                    end += `:${period.end[2].toString().padStart(2, '0')}`;
+            // 格式化时段起止时间 (用于显示在名称旁边)
+            function formatTimeRange(period) {
+                const startHour = period.start[0].toString().padStart(2, '0');
+                const startMin = period.start[1].toString().padStart(2, '0');
+                const endHour = period.end[0].toString().padStart(2, '0');
+                const endMin = period.end[1].toString().padStart(2, '0');
+
+                // 如果结束秒数不是0，才显示秒
+                if (period.end[2] !== 0) {
+                    const endSec = period.end[2].toString().padStart(2, '0');
+                    return `(${startHour}:${startMin}-${endHour}:${endMin}:${endSec})`;
                 }
-                return `${start} 至 ${end}`;
+                return `(${startHour}:${startMin}-${endHour}:${endMin})`;
             }
 
             // 生成时段概览小字
@@ -332,28 +315,32 @@
             // 主更新函数
             function update() {
                 const now = getCurrentDateTime();
-                const currentSec = getCurrentSeconds();
+                const currentMs = getCurrentMilliseconds();
 
                 // 查找当前时段
-                const period = findCurrentPeriod(currentSec);
+                const period = findCurrentPeriod(currentMs);
 
-                // 计算进度
-                const { percent, elapsedSec, totalSec } = computeProgress(period, currentSec);
-                const percentFixed = percent.toFixed(4);
+                // 计算进度 (毫秒精度)
+                const { percent, elapsedMs, totalMs } = computeProgress(period, currentMs);
+                const percentFixed = percent.toFixed(2); // 6位小数对应毫秒级精度
 
                 // 更新界面
-                document.getElementById('currentBadge').innerHTML = `📌 当前 · ${period.name}`;
-                document.getElementById('segmentName').innerText = period.name;
+                document.getElementById('segmentName').innerHTML = `${period.name} <span id="timeRange">${formatTimeRange(period)}</span>`;
                 document.getElementById('percentDisplay').innerText = percentFixed + '%';
                 document.getElementById('progressFill').style.width = percentFixed + '%';
-                document.getElementById('currentPeriod').innerText = formatPeriodTime(period);
-                document.getElementById('timeRemaining').innerText = formatRemaining(elapsedSec, totalSec);
+                document.getElementById('timeRemaining').innerText = formatRemaining(elapsedMs, totalMs);
 
-                // 当前时刻完整显示
+                // 当前时刻完整显示 (包含毫秒)
                 const year = now.getFullYear();
                 const month = (now.getMonth() + 1).toString().padStart(2, '0');
                 const day = now.getDate().toString().padStart(2, '0');
-                const timeStr = now.toLocaleTimeString('zh-CN', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+                const timeStr = now.toLocaleTimeString('zh-CN', {
+                    hour12: false,
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    second: '2-digit',
+
+                });
                 const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
                 const weekday = weekdays[now.getDay()];
                 document.getElementById('nowTime').innerText = `${year}/${month}/${day} ${weekday} ${timeStr}`;
@@ -365,9 +352,9 @@
                 }
             }
 
-            // 初始化并高频刷新
+            // 初始化并高频刷新 (50ms 让毫秒变化更明显)
             update();
-            setInterval(update, 100); // 100ms 刷新，让秒和进度平滑
+            setInterval(update, 50);
         })();
     </script>
 </body>
