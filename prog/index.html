@@ -250,7 +250,7 @@
                 // 区间信息 & 百分比
                 const intervalInfo = getCurrentIntervalInfo(weekMinutes);
                 const percent = computePercentage(intervalInfo, weekMinutes);
-                const percentFixed = (percent * 100).toFixed(3);
+                const percentFixed = (percent * 100).toFixed(4);
 
                 // 更新界面
                 document.getElementById('segmentName').innerText = intervalInfo.shortName;
