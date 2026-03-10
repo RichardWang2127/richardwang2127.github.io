@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>当前时间</title>
+    <style>
+        /* 风格统一，完全自适应窗口大小 */
+        * {
+            box-sizing: border-box;
+            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(145deg, #f0f4fa 0%, #d9e2ef 100%);
+            min-height: 100vh;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 2.5rem;
+            box-shadow: 0 25px 40px -10px rgba(0, 20, 40, 0.25), inset 0 0 0 1px rgba(255, 255, 255, 0.6);
+            padding: min(15vh, 4rem) min(5vw, 2rem);
+            width: 100%;
+            transition: all 0.2s ease;
+            text-align: center;
+            max-width: 1000px;
+            /* 移除max-width限制，让卡片完全自适应 */
+        }
+
+        /* 大号时间显示 - 使用视口单位实现真正自适应 */
+        .clock {
+            font-size: clamp(2rem, 10vw, 8rem);
+            font-weight: 600;
+            font-family: 'Inter', 'JetBrains Mono', monospace;
+            color: #0a2a44;
+            line-height: 1.2;
+            letter-spacing: max(2px, 0.5vw);
+            margin-bottom: max(0.3rem, 1vh);
+            word-break: keep-all;
+        }
+
+        .date {
+            font-size: clamp(1.2rem, 5vw, 3.5rem);
+            font-weight: 500;
+            color: #365977;
+            font-family: monospace;
+            margin-top: max(0.2rem, 0.5vh);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <div class="clock" id="clock">--:--:--</div>
+        <div class="date" id="date">----年--月--日 周-</div>
+    </div>
+
+    <script>
+        (function () {
+            // 极简时间更新函数，只更新时间和日期
+            function updateSimpleTime() {
+                const now = new Date();
+
+                // 格式化时间 HH:MM:SS
+                const hours = now.getHours().toString().padStart(2, '0');
+                const minutes = now.getMinutes().toString().padStart(2, '0');
+                const seconds = now.getSeconds().toString().padStart(2, '0');
+                const timeString = `${hours}:${minutes}:${seconds}`;
+                document.getElementById('clock').innerText = timeString;
+
+                // 格式化日期：YYYY年MM月DD日 周X
+                const year = now.getFullYear();
+                const month = (now.getMonth() + 1).toString().padStart(2, '0');
+                const day = now.getDate().toString().padStart(2, '0');
+                const weekdays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+                const weekday = weekdays[now.getDay()];
+                const dateString = `${year}年${month}月${day}日 ${weekday}`;
+                document.getElementById('date').innerText = dateString;
+            }
+
+            // 初始化立即显示
+            updateSimpleTime();
+            // 每50毫秒刷新一次
+            setInterval(updateSimpleTime, 50);
+        })();
+    </script>
+</body>
+
+</html>
