@@ -312,7 +312,7 @@
 				<label for="single-paper-type">试卷类型</label>
 				<select id="single-paper-type">
 					<option value="ms">答案 - ms</option>
-					<option value="qp">试题 - qp</option>					
+					<option value="qp">试题 - qp</option>
 				</select>
 			</div>
 		</div>
@@ -563,8 +563,14 @@
 			const { subject, paper, year, season, paperType } = data;
 			const fileName = `${subject}_${season}${year}_${paperType}_${paper}.pdf`;
 
-			const papaUrl = `/redirect/papacambridge/${fileName}`;
-			const bestexamUrl = `/redirect/beh/${fileName}`;
+			// 生成链接
+			const papaUrl = `https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/${fileName}`;
+
+			// 对于BestExamHelp，需要科目名称
+			const subjectInfo = subjectMap.find(sub => sub.code === subject);
+			const subjectName = subjectInfo ? subjectInfo.name.split('(')[0].trim().toLowerCase().replace(/\s+/g, '-') : subject.toLowerCase();
+			const bestexamUrl = `https://bestexamhelp.com/exam/cambridge-igcse/${subjectName}-${subject}/${20}${year}/${fileName}`;
+
 
 			// 显示结果
 			resultUrl.textContent = `文件名: ${fileName}`;

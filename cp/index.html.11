@@ -18,7 +18,7 @@
 			color: #333;
 			line-height: 1.6;
 			padding: 20px;
-			max-width: 1200px;
+			max-width: 800px;
 			margin: 0 auto;
 		}
 
@@ -230,6 +230,12 @@
 			color: white;
 		}
 
+		.updated-notify {
+			background-color: #82BF24;
+			color: white;
+			/* animation: fadeIn 0.25s; */
+		}
+
 		.link-btn:hover {
 			opacity: 0.9;
 			transform: translateY(-2px);
@@ -283,11 +289,10 @@
 <body>
 	<div class="container">
 		<header>
-			<h1>IGCSE真题导航器</h1>
-			<p class="subtitle">快速定位IGCSE历年真题PDF文件 - 支持两种输入格式</p>
+			<h1>IGCSE真题导航</h1>
 		</header>
 
-		<div class="mode-selector">
+		<div class="mode-selector" style="display: none;">
 			<button class="mode-btn active" data-mode="single">格式一: 代码格式</button>
 			<button class="mode-btn" data-mode="multi">格式二: 多项输入</button>
 		</div>
@@ -295,20 +300,19 @@
 		<!-- 模式一: 单行代码格式 -->
 		<div id="single-mode" class="input-mode active">
 			<div class="form-group">
-				<label for="single-code">输入完整代码 (例如: 0580/41/M/J/21)</label>
-				<input type="text" id="single-code" placeholder="科目/试卷/季节1/季节2/年份">
-				<div class="format-example">
+				<label for="single-code">输入完整代码 (可在任何一页试题最下方找到)</label>
+				<input type="text" id="single-code" placeholder="格式：0721/99/I/J/99">
+				<!-- <div class="format-example">
 					格式: subject/paper/mon1/mon2/year<br>
 					示例: 0580/41/M/J/21 或 0625/22/O/N/19<br>
-					说明: subject(4位), paper(2位), mon1/mon2(大写字母), year(2位)
-				</div>
+				</div> -->
 			</div>
 			<!-- 添加试卷类型选择 -->
 			<div class="form-group">
 				<label for="single-paper-type">试卷类型</label>
 				<select id="single-paper-type">
-					<option value="qp">试题 (Question Paper) - qp</option>
-					<option value="ms">答案 (Mark Scheme) - ms</option>
+					<option value="ms">答案 - ms</option>
+					<option value="qp">试题 - qp</option>					
 				</select>
 			</div>
 		</div>
@@ -364,11 +368,15 @@
 		<div id="error-message" class="error-message"></div>
 
 		<!-- 按钮区域 -->
-		<div class="btn-group">
+		<!-- <div class="btn-group">
 			<button id="generate-btn" class="primary-btn">生成真题链接</button>
 			<button id="clear-btn" class="secondary-btn">清空输入</button>
-		</div>
+		</div> -->
 
+		<!-- 信息提示框 -->
+		<div class="info-box">
+			<p><strong>输入/更改信息后，自动生成/修改链接。</strong></p>
+		</div>
 		<!-- 结果区域 -->
 		<div id="result-section" class="result-section">
 			<h3 class="result-title">生成的真题链接:</h3>
@@ -376,21 +384,10 @@
 			<div class="link-buttons">
 				<a id="papa-link" class="link-btn papa-btn" target="_blank">前往 PapaCambridge</a>
 				<a id="bestexam-link" class="link-btn bestexam-btn" target="_blank">前往 BestExamHelp</a>
+				<a id="notify" class="link-btn updated-notify" style="display: none;">已更新链接</a>
 			</div>
 		</div>
-
-		<!-- 信息提示框 -->
-		<div class="info-box">
-			<p><strong>使用说明:</strong></p>
-			<p>1. 格式一: 直接输入完整代码，如 0580/41/M/J/21</p>
-			<p>2. 格式二: 分别选择/输入科目代码、试卷编号、年份、考季和试卷类型</p>
-			<p>3. 点击"生成真题链接"后，会自动生成两个网站的链接，点击即可访问</p>
-		</div>
 	</div>
-
-	<footer>
-		<p>IGCSE真题导航器 &copy; 2023 | 数据来源: PapaCambridge 和 BestExamHelp</p>
-	</footer>
 
 	<script>
 		// 科目代码与名称映射
@@ -422,14 +419,13 @@
 		const yearInput = document.getElementById('year');
 		const seasonSelect = document.getElementById('season');
 		const paperTypeSelect = document.getElementById('paper-type');
-		const generateBtn = document.getElementById('generate-btn');
-		const clearBtn = document.getElementById('clear-btn');
 		const errorMessage = document.getElementById('error-message');
 		const resultSection = document.getElementById('result-section');
 		const resultUrl = document.getElementById('result-url');
 		const papaLink = document.getElementById('papa-link');
 		const bestexamLink = document.getElementById('bestexam-link');
 		const singlePaperTypeSelect = document.getElementById('single-paper-type');
+		const updateNofity = document.getElementById('notify');
 
 		// 初始化科目选择下拉菜单
 		function initSubjectSelect() {
@@ -459,21 +455,11 @@
 			});
 		});
 
-		// 清空输入
-		clearBtn.addEventListener('click', () => {
-			singleCodeInput.value = '';
-			singlePaperTypeSelect.value = 'qp';
-			subjectCodeSelect.value = '';
-			paperNumberInput.value = '';
-			yearInput.value = '';
-			seasonSelect.value = 'w';
-			paperTypeSelect.value = 'qp';
-			clearError();
-			hideResult();
-		});
-
 		// 生成链接
-		generateBtn.addEventListener('click', generateLinks);
+		singleCodeInput.addEventListener('input', generateLinks);
+		paperTypeSelect.addEventListener('click', generateLinks);
+		singlePaperTypeSelect.addEventListener('click', generateLinks);
+		generateLinks();
 
 		// 解析单行代码格式
 		function parseSingleCode(code) {
@@ -577,13 +563,8 @@
 			const { subject, paper, year, season, paperType } = data;
 			const fileName = `${subject}_${season}${year}_${paperType}_${paper}.pdf`;
 
-			// 生成链接
-			const papaUrl = `https://pastpapers.papacambridge.com/directories/CAIE/CAIE-pastpapers/upload/${fileName}`;
-
-			// 对于BestExamHelp，需要科目名称
-			const subjectInfo = subjectMap.find(sub => sub.code === subject);
-			const subjectName = subjectInfo ? subjectInfo.name.split('(')[0].trim().toLowerCase().replace(/\s+/g, '-') : subject.toLowerCase();
-			const bestexamUrl = `https://bestexamhelp.com/exam/cambridge-igcse/${subjectName}-${subject}/${20}${year}/${fileName}`;
+			const papaUrl = `/redirect/papacambridge/${fileName}`;
+			const bestexamUrl = `/redirect/beh/${fileName}`;
 
 			// 显示结果
 			resultUrl.textContent = `文件名: ${fileName}`;
@@ -593,6 +574,10 @@
 			resultSection.classList.add('active');
 
 			// 自动滚动到结果区域
+			// updateNofity.style.display = "block";
+			// setTimeout(() => {
+			// 	updateNofity.style.display = "none";
+			// }, 2000);
 			resultSection.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 		}
 
