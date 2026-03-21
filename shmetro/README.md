@@ -19,4 +19,11 @@ Change between train number and carriage number
 | Github | richardwang2127 |
 
 
+#### 项目历程
+- 2025.5.11 立项[个人网站前身]
+- 2025.5.15 创建GitHub仓库
+- 2025.6.28 完成1~18号线转换功能
+- ~现在 暂停更新
+
+
 [前往页面]: https://ciallo0721.org/shmetro/
