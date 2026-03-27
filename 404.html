@@ -532,6 +532,10 @@
             const errorDetails = document.getElementById('errorDetails');
             const currentPath = window.location.pathname;
 
+            if (currentPath === '/cp') {
+                window.location.href = '/cp/';
+            }
+
             if (errorDetails) {
                 errorDetails.innerHTML = `
                     <strong>请求路径:</strong><br>
