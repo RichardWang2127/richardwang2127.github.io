@@ -1,11 +1,6 @@
 # RichardWang2127的网站 RichardWang2127's Website
 
-### [我的网页 My Website] (推荐, 位于我的个人域名 Recommended. Located at my domain)
-
-[//]: # (### [备用链接 Spare Link-1] &#40;位于第三方网站Netlify. Located at Netlify-third party&#41;)
-
-[//]: # ()
-[//]: # (### [备用链接 Spare Link-2] &#40;位于Github. Located at GitHub&#41;)
+### [我的网页 My Website]
 
 ## 上海地铁列车查询 Shanghai Metro Train Query
 
@@ -18,6 +13,13 @@
 | Bilibili | 宁波轨道交通1号线                    |
 | Email    | richard.wang2011@outlook.com |
 | Github   | richardwang2127              |
+
+#### 项目历程
+- 2025.5.11 上海地铁列车查询项目立项，可被视作个人网站的前身
+- 2025.5.12 创建第一个html文件
+- 2025.5.15 创建此GitHub仓库，上海地铁工具占用"/"地址
+- 2026.6.7 个人网站首页正式创建，使用"/"，原上海地铁查询工具被迁移至"/shmetro/"
+- 来日方长……
 
 [我的网页 My Website]: https://ciallo0721.org
 
